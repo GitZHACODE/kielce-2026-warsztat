@@ -1,0 +1,768 @@
+<Archive name="Root">
+  <items count="1">
+    <item name="ArchiveVersion" type_name="gh_version" type_code="80">
+      <Major>0</Major>
+      <Minor>2</Minor>
+      <Revision>2</Revision>
+    </item>
+  </items>
+  <chunks count="1">
+    <chunk name="Clipboard">
+      <items count="1">
+        <item name="plugin_version" type_name="gh_version" type_code="80">
+          <Major>1</Major>
+          <Minor>0</Minor>
+          <Revision>8</Revision>
+        </item>
+      </items>
+      <chunks count="7">
+        <chunk name="DocumentHeader">
+          <items count="5">
+            <item name="DocumentID" type_name="gh_guid" type_code="9">db25f379-a241-5de3-b646-b5c694bb5497</item>
+            <item name="Preview" type_name="gh_string" type_code="10">Shaded</item>
+            <item name="PreviewMeshType" type_name="gh_int32" type_code="3">1</item>
+            <item name="PreviewNormal" type_name="gh_drawing_color" type_code="36">
+              <ARGB>100;150;0;0</ARGB>
+            </item>
+            <item name="PreviewSelected" type_name="gh_drawing_color" type_code="36">
+              <ARGB>100;0;150;0</ARGB>
+            </item>
+          </items>
+        </chunk>
+        <chunk name="DefinitionProperties">
+          <items count="4">
+            <item name="Date" type_name="gh_date" type_code="8">639160225397381479</item>
+            <item name="Description" type_name="gh_string" type_code="10"></item>
+            <item name="KeepOpen" type_name="gh_bool" type_code="1">false</item>
+            <item name="Name" type_name="gh_string" type_code="10"></item>
+          </items>
+          <chunks count="3">
+            <chunk name="Revisions">
+              <items count="1">
+                <item name="RevisionCount" type_name="gh_int32" type_code="3">0</item>
+              </items>
+            </chunk>
+            <chunk name="Projection">
+              <items count="2">
+                <item name="Target" type_name="gh_drawing_point" type_code="30">
+                  <X>0</X>
+                  <Y>0</Y>
+                </item>
+                <item name="Zoom" type_name="gh_single" type_code="5">1</item>
+              </items>
+            </chunk>
+            <chunk name="Views">
+              <items count="1">
+                <item name="ViewCount" type_name="gh_int32" type_code="3">0</item>
+              </items>
+            </chunk>
+          </chunks>
+        </chunk>
+        <chunk name="RcpLayout">
+          <items count="1">
+            <item name="GroupCount" type_name="gh_int32" type_code="3">0</item>
+          </items>
+        </chunk>
+        <chunk name="ValueTable">
+          <items count="0"></items>
+        </chunk>
+        <chunk name="Author">
+          <items count="1">
+            <item name="Name" type_name="gh_string" type_code="10">Aleksander Mastalski</item>
+          </items>
+        </chunk>
+        <chunk name="GHALibraries">
+          <items count="1">
+            <item name="Count" type_name="gh_int32" type_code="3">1</item>
+          </items>
+          <chunks count="1">
+            <chunk name="Library" index="0">
+              <items count="4">
+                <item name="Author" type_name="gh_string" type_code="10">Robert McNeel &amp; Associates</item>
+                <item name="Id" type_name="gh_guid" type_code="9">00000000-0000-0000-0000-000000000000</item>
+                <item name="Name" type_name="gh_string" type_code="10">Grasshopper</item>
+                <item name="Version" type_name="gh_string" type_code="10">8.27.26019.16021</item>
+              </items>
+            </chunk>
+          </chunks>
+        </chunk>
+        <chunk name="DefinitionObjects">
+          <items count="1">
+            <item name="ObjectCount" type_name="gh_int32" type_code="3">1</item>
+          </items>
+          <chunks count="1">
+            <chunk name="Object" index="0">
+              <items count="2">
+                <item name="GUID" type_name="gh_guid" type_code="9">719467e6-7cf5-4848-99b0-c5dd57e5442c</item>
+                <item name="Name" type_name="gh_string" type_code="10">Python 3 Script</item>
+              </items>
+              <chunks count="1">
+                <chunk name="Container">
+                  <items count="14">
+                    <item name="Description" type_name="gh_string" type_code="10">Karta 06. Zamienia prostokątne obrysy kondygnacji (warstwa Kondygnacje ze szkicu 05_szkic_bryly_rhino.py) w jedną gładką, skręconą i wybrzuszoną bryłę o zaokrąglonych narożach, a potem tnie ją z powrotem na płyty kondygnacji, które można podpiąć do kontroli MPZP z karty 05. Bez podpiętego wejścia buduje bryłę z domyślnej masy Solna wbudowanej w skrypt, żeby wklejony komponent od razu coś pokazywał.
+[src b3c38ad3]</item>
+                    <item name="GraftStandardOutputLines" type_name="gh_bool" type_code="1">true</item>
+                    <item name="InstanceGuid" type_name="gh_guid" type_code="9">f2d1f9fe-c105-5d77-a2ef-52ad7d898b0b</item>
+                    <item name="MarshGuids" type_name="gh_bool" type_code="1">true</item>
+                    <item name="MarshInputs" type_name="gh_bool" type_code="1">true</item>
+                    <item name="MarshOutputs" type_name="gh_bool" type_code="1">true</item>
+                    <item name="Name" type_name="gh_string" type_code="10">Python 3 Script</item>
+                    <item name="NickName" type_name="gh_string" type_code="10">06_bryla_gh</item>
+                    <item name="ScriptComponentVersion" type_name="gh_int32" type_code="3">3</item>
+                    <item name="Tooltip" type_name="gh_string" type_code="10">Karta 06. Zamienia prostokątne obrysy kondygnacji (warstwa Kondygnacje ze szkicu 05_szkic_bryly_rhino.py) w jedną gładką, skręconą i wybrzuszoną bryłę o zaokrąglonych narożach, a potem tnie ją z powrotem na płyty kondygnacji, które można podpiąć do kontroli MPZP z karty 05. Bez podpiętego wejścia buduje bryłę z domyślnej masy Solna wbudowanej w skrypt, żeby wklejony komponent od razu coś pokazywał.
+[src b3c38ad3]</item>
+                    <item name="UsingLibraryInputParam" type_name="gh_bool" type_code="1">false</item>
+                    <item name="UsingScriptInputParam" type_name="gh_bool" type_code="1">false</item>
+                    <item name="UsingScriptOutputParam" type_name="gh_bool" type_code="1">false</item>
+                    <item name="UsingStandardOutputParam" type_name="gh_bool" type_code="1">true</item>
+                  </items>
+                  <chunks count="4">
+                    <chunk name="Attributes">
+                      <items count="3">
+                        <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                          <X>100</X>
+                          <Y>100</Y>
+                          <W>84</W>
+                          <H>408</H>
+                        </item>
+                        <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                          <X>142</X>
+                          <Y>304.0</Y>
+                        </item>
+                        <item name="Selected" type_name="gh_bool" type_code="1">true</item>
+                      </items>
+                    </chunk>
+                    <chunk name="ParameterData">
+                      <items count="17">
+                      <item name="InputCount" type_name="gh_int32" type_code="3">8</item>
+                      <item name="InputId" index="0" type_name="gh_guid" type_code="9">08908df5-fa14-4982-9ab2-1aa0927566aa</item>
+                      <item name="InputId" index="1" type_name="gh_guid" type_code="9">08908df5-fa14-4982-9ab2-1aa0927566aa</item>
+                      <item name="InputId" index="2" type_name="gh_guid" type_code="9">08908df5-fa14-4982-9ab2-1aa0927566aa</item>
+                      <item name="InputId" index="3" type_name="gh_guid" type_code="9">08908df5-fa14-4982-9ab2-1aa0927566aa</item>
+                      <item name="InputId" index="4" type_name="gh_guid" type_code="9">08908df5-fa14-4982-9ab2-1aa0927566aa</item>
+                      <item name="InputId" index="5" type_name="gh_guid" type_code="9">08908df5-fa14-4982-9ab2-1aa0927566aa</item>
+                      <item name="InputId" index="6" type_name="gh_guid" type_code="9">08908df5-fa14-4982-9ab2-1aa0927566aa</item>
+                      <item name="InputId" index="7" type_name="gh_guid" type_code="9">08908df5-fa14-4982-9ab2-1aa0927566aa</item>
+                      <item name="OutputCount" type_name="gh_int32" type_code="3">7</item>
+                      <item name="OutputId" index="0" type_name="gh_guid" type_code="9">3ede854e-c753-40eb-84cb-b48008f14fd4</item>
+                      <item name="OutputId" index="1" type_name="gh_guid" type_code="9">08908df5-fa14-4982-9ab2-1aa0927566aa</item>
+                      <item name="OutputId" index="2" type_name="gh_guid" type_code="9">08908df5-fa14-4982-9ab2-1aa0927566aa</item>
+                      <item name="OutputId" index="3" type_name="gh_guid" type_code="9">08908df5-fa14-4982-9ab2-1aa0927566aa</item>
+                      <item name="OutputId" index="4" type_name="gh_guid" type_code="9">08908df5-fa14-4982-9ab2-1aa0927566aa</item>
+                      <item name="OutputId" index="5" type_name="gh_guid" type_code="9">08908df5-fa14-4982-9ab2-1aa0927566aa</item>
+                      <item name="OutputId" index="6" type_name="gh_guid" type_code="9">08908df5-fa14-4982-9ab2-1aa0927566aa</item>
+                      </items>
+                      <chunks count="15">
+                        <chunk name="InputParam" index="0">
+                          <items count="13">
+                            <item name="Access" type_name="gh_int32" type_code="3">1</item>
+                            <item name="AllowTreeAccess" type_name="gh_bool" type_code="1">true</item>
+                            <item name="Description" type_name="gh_string" type_code="10">(Curve) Po jednej zamkniętej płaskiej krzywej na kondygnację, na wysokości stropu. Krzywa o najwyższym Z &lt;= 0 to kondygnacja podziemna: nie wchodzi do bryły i przechodzi bez zmian do kondygnacje_nowe. Puste wejście: siedem kondygnacji masy Solna z tabeli DOMYSLNA_MASA, z ostrzeżeniem w pierwszej linii raportu.</item>
+                            <item name="InstanceGuid" type_name="gh_guid" type_code="9">471e2d70-08c7-5a95-b2a5-f168ac41b26d</item>
+                            <item name="Name" type_name="gh_string" type_code="10">kondygnacje</item>
+                            <item name="NickName" type_name="gh_string" type_code="10">kondygnacje</item>
+                            <item name="Optional" type_name="gh_bool" type_code="1">true</item>
+                            <item name="ScriptParamAccess" type_name="gh_int32" type_code="3">1</item>
+                            <item name="ScriptParameterVersion" type_name="gh_int32" type_code="3">2</item>
+                            <item name="ShowTypeHints" type_name="gh_bool" type_code="1">true</item>
+                            <item name="SourceCount" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ToolTip" type_name="gh_string" type_code="10">(Curve) Po jednej zamkniętej płaskiej krzywej na kondygnację, na wysokości stropu. Krzywa o najwyższym Z &lt;= 0 to kondygnacja podziemna: nie wchodzi do bryły i przechodzi bez zmian do kondygnacje_nowe. Puste wejście: siedem kondygnacji masy Solna z tabeli DOMYSLNA_MASA, z ostrzeżeniem w pierwszej linii raportu.</item>
+                            <item name="TypeHintID" type_name="gh_guid" type_code="9">9ba89ec2-5315-435f-a621-b66c5fa2f301</item>
+                          </items>
+                          <chunks count="2">
+                            <chunk name="Attributes">
+                              <items count="3">
+                                <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                                  <X>273</X>
+                                  <Y>105</Y>
+                                  <W>31</W>
+                                  <H>136</H>
+                                </item>
+                                <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                                  <X>288.5</X>
+                                  <Y>173</Y>
+                                </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
+                              </items>
+                            </chunk>
+                            <chunk name="ConverterData">
+                              <items count="2">
+                                <item name="AssemblyName" type_name="gh_string" type_code="10">RhinoCommon</item>
+                                <item name="TypeName" type_name="gh_string" type_code="10">Rhino.Geometry.Curve</item>
+                              </items>
+                            </chunk>
+                          </chunks>
+                        </chunk>
+                        <chunk name="InputParam" index="1">
+                          <items count="12">
+                            <item name="AllowTreeAccess" type_name="gh_bool" type_code="1">true</item>
+                            <item name="Description" type_name="gh_string" type_code="10">(float) Całkowity skręt bryły od terenu do dachu, w stopniach, wokół osi pionowej przez środek obrysu parteru (domyślnie 12).</item>
+                            <item name="InstanceGuid" type_name="gh_guid" type_code="9">59fbd0be-d219-5fdc-af8c-900323704ba1</item>
+                            <item name="Name" type_name="gh_string" type_code="10">skret_deg</item>
+                            <item name="NickName" type_name="gh_string" type_code="10">skret_deg</item>
+                            <item name="Optional" type_name="gh_bool" type_code="1">true</item>
+                            <item name="ScriptParamAccess" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ScriptParameterVersion" type_name="gh_int32" type_code="3">2</item>
+                            <item name="ShowTypeHints" type_name="gh_bool" type_code="1">true</item>
+                            <item name="SourceCount" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ToolTip" type_name="gh_string" type_code="10">(float) Całkowity skręt bryły od terenu do dachu, w stopniach, wokół osi pionowej przez środek obrysu parteru (domyślnie 12).</item>
+                            <item name="TypeHintID" type_name="gh_guid" type_code="9">9d51e32e-c038-4352-9554-f4137ca91b9a</item>
+                          </items>
+                          <chunks count="2">
+                            <chunk name="Attributes">
+                              <items count="3">
+                                <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                                  <X>273</X>
+                                  <Y>241</Y>
+                                  <W>31</W>
+                                  <H>136</H>
+                                </item>
+                                <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                                  <X>288.5</X>
+                                  <Y>309</Y>
+                                </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
+                              </items>
+                            </chunk>
+                            <chunk name="ConverterData">
+                              <items count="2">
+                                <item name="AssemblyName" type_name="gh_string" type_code="10">System.Private.CoreLib</item>
+                                <item name="TypeName" type_name="gh_string" type_code="10">System.Double</item>
+                              </items>
+                            </chunk>
+                          </chunks>
+                        </chunk>
+                        <chunk name="InputParam" index="2">
+                          <items count="12">
+                            <item name="AllowTreeAccess" type_name="gh_bool" type_code="1">true</item>
+                            <item name="Description" type_name="gh_string" type_code="10">(float) Wybrzuszenie w połowie wysokości: każdy przekrój skaluje się wokół własnego środka o 1 + wybrzuszenie * sin(pi * t), gdzie t = z / z_max (domyślnie 0.10).</item>
+                            <item name="InstanceGuid" type_name="gh_guid" type_code="9">630fe758-2c84-53a7-8180-ef0c08dd6092</item>
+                            <item name="Name" type_name="gh_string" type_code="10">wybrzuszenie</item>
+                            <item name="NickName" type_name="gh_string" type_code="10">wybrzuszenie</item>
+                            <item name="Optional" type_name="gh_bool" type_code="1">true</item>
+                            <item name="ScriptParamAccess" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ScriptParameterVersion" type_name="gh_int32" type_code="3">2</item>
+                            <item name="ShowTypeHints" type_name="gh_bool" type_code="1">true</item>
+                            <item name="SourceCount" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ToolTip" type_name="gh_string" type_code="10">(float) Wybrzuszenie w połowie wysokości: każdy przekrój skaluje się wokół własnego środka o 1 + wybrzuszenie * sin(pi * t), gdzie t = z / z_max (domyślnie 0.10).</item>
+                            <item name="TypeHintID" type_name="gh_guid" type_code="9">9d51e32e-c038-4352-9554-f4137ca91b9a</item>
+                          </items>
+                          <chunks count="2">
+                            <chunk name="Attributes">
+                              <items count="3">
+                                <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                                  <X>273</X>
+                                  <Y>377</Y>
+                                  <W>31</W>
+                                  <H>136</H>
+                                </item>
+                                <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                                  <X>288.5</X>
+                                  <Y>445</Y>
+                                </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
+                              </items>
+                            </chunk>
+                            <chunk name="ConverterData">
+                              <items count="2">
+                                <item name="AssemblyName" type_name="gh_string" type_code="10">System.Private.CoreLib</item>
+                                <item name="TypeName" type_name="gh_string" type_code="10">System.Double</item>
+                              </items>
+                            </chunk>
+                          </chunks>
+                        </chunk>
+                        <chunk name="InputParam" index="3">
+                          <items count="12">
+                            <item name="AllowTreeAccess" type_name="gh_bool" type_code="1">true</item>
+                            <item name="Description" type_name="gh_string" type_code="10">(float) Zaokrąglenie naroży od 0 do 1; promień = zaokraglenie * 0.49 * krótszy bok obrysu (domyślnie 0.6).</item>
+                            <item name="InstanceGuid" type_name="gh_guid" type_code="9">51a997b5-9de0-512c-9da3-d4493b608cc8</item>
+                            <item name="Name" type_name="gh_string" type_code="10">zaokraglenie</item>
+                            <item name="NickName" type_name="gh_string" type_code="10">zaokraglenie</item>
+                            <item name="Optional" type_name="gh_bool" type_code="1">true</item>
+                            <item name="ScriptParamAccess" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ScriptParameterVersion" type_name="gh_int32" type_code="3">2</item>
+                            <item name="ShowTypeHints" type_name="gh_bool" type_code="1">true</item>
+                            <item name="SourceCount" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ToolTip" type_name="gh_string" type_code="10">(float) Zaokrąglenie naroży od 0 do 1; promień = zaokraglenie * 0.49 * krótszy bok obrysu (domyślnie 0.6).</item>
+                            <item name="TypeHintID" type_name="gh_guid" type_code="9">9d51e32e-c038-4352-9554-f4137ca91b9a</item>
+                          </items>
+                          <chunks count="2">
+                            <chunk name="Attributes">
+                              <items count="3">
+                                <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                                  <X>273</X>
+                                  <Y>513</Y>
+                                  <W>31</W>
+                                  <H>136</H>
+                                </item>
+                                <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                                  <X>288.5</X>
+                                  <Y>581</Y>
+                                </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
+                              </items>
+                            </chunk>
+                            <chunk name="ConverterData">
+                              <items count="2">
+                                <item name="AssemblyName" type_name="gh_string" type_code="10">System.Private.CoreLib</item>
+                                <item name="TypeName" type_name="gh_string" type_code="10">System.Double</item>
+                              </items>
+                            </chunk>
+                          </chunks>
+                        </chunk>
+                        <chunk name="InputParam" index="4">
+                          <items count="12">
+                            <item name="AllowTreeAccess" type_name="gh_bool" type_code="1">true</item>
+                            <item name="Description" type_name="gh_string" type_code="10">(float) Przesunięcie szczytu bryły w metrach wzdłuż osi X świata (domyślnie 0).</item>
+                            <item name="InstanceGuid" type_name="gh_guid" type_code="9">3921d1d8-9076-5dd2-8d46-1abcf14d7d4b</item>
+                            <item name="Name" type_name="gh_string" type_code="10">pochylenie_x_m</item>
+                            <item name="NickName" type_name="gh_string" type_code="10">pochylenie_x_m</item>
+                            <item name="Optional" type_name="gh_bool" type_code="1">true</item>
+                            <item name="ScriptParamAccess" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ScriptParameterVersion" type_name="gh_int32" type_code="3">2</item>
+                            <item name="ShowTypeHints" type_name="gh_bool" type_code="1">true</item>
+                            <item name="SourceCount" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ToolTip" type_name="gh_string" type_code="10">(float) Przesunięcie szczytu bryły w metrach wzdłuż osi X świata (domyślnie 0).</item>
+                            <item name="TypeHintID" type_name="gh_guid" type_code="9">9d51e32e-c038-4352-9554-f4137ca91b9a</item>
+                          </items>
+                          <chunks count="2">
+                            <chunk name="Attributes">
+                              <items count="3">
+                                <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                                  <X>273</X>
+                                  <Y>649</Y>
+                                  <W>31</W>
+                                  <H>136</H>
+                                </item>
+                                <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                                  <X>288.5</X>
+                                  <Y>717</Y>
+                                </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
+                              </items>
+                            </chunk>
+                            <chunk name="ConverterData">
+                              <items count="2">
+                                <item name="AssemblyName" type_name="gh_string" type_code="10">System.Private.CoreLib</item>
+                                <item name="TypeName" type_name="gh_string" type_code="10">System.Double</item>
+                              </items>
+                            </chunk>
+                          </chunks>
+                        </chunk>
+                        <chunk name="InputParam" index="5">
+                          <items count="12">
+                            <item name="AllowTreeAccess" type_name="gh_bool" type_code="1">true</item>
+                            <item name="Description" type_name="gh_string" type_code="10">(float) Przesunięcie szczytu bryły w metrach wzdłuż osi Y świata (domyślnie 0).</item>
+                            <item name="InstanceGuid" type_name="gh_guid" type_code="9">f8910201-5e9f-54bf-82f3-b5517ea987c3</item>
+                            <item name="Name" type_name="gh_string" type_code="10">pochylenie_y_m</item>
+                            <item name="NickName" type_name="gh_string" type_code="10">pochylenie_y_m</item>
+                            <item name="Optional" type_name="gh_bool" type_code="1">true</item>
+                            <item name="ScriptParamAccess" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ScriptParameterVersion" type_name="gh_int32" type_code="3">2</item>
+                            <item name="ShowTypeHints" type_name="gh_bool" type_code="1">true</item>
+                            <item name="SourceCount" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ToolTip" type_name="gh_string" type_code="10">(float) Przesunięcie szczytu bryły w metrach wzdłuż osi Y świata (domyślnie 0).</item>
+                            <item name="TypeHintID" type_name="gh_guid" type_code="9">9d51e32e-c038-4352-9554-f4137ca91b9a</item>
+                          </items>
+                          <chunks count="2">
+                            <chunk name="Attributes">
+                              <items count="3">
+                                <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                                  <X>273</X>
+                                  <Y>785</Y>
+                                  <W>31</W>
+                                  <H>136</H>
+                                </item>
+                                <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                                  <X>288.5</X>
+                                  <Y>853</Y>
+                                </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
+                              </items>
+                            </chunk>
+                            <chunk name="ConverterData">
+                              <items count="2">
+                                <item name="AssemblyName" type_name="gh_string" type_code="10">System.Private.CoreLib</item>
+                                <item name="TypeName" type_name="gh_string" type_code="10">System.Double</item>
+                              </items>
+                            </chunk>
+                          </chunks>
+                        </chunk>
+                        <chunk name="InputParam" index="6">
+                          <items count="12">
+                            <item name="AllowTreeAccess" type_name="gh_bool" type_code="1">true</item>
+                            <item name="Description" type_name="gh_string" type_code="10">(int) Liczba punktów kontrolnych każdego przebudowanego przekroju (domyślnie 32).</item>
+                            <item name="InstanceGuid" type_name="gh_guid" type_code="9">9d30cf7f-1835-5209-9c2c-02f2a6a60e59</item>
+                            <item name="Name" type_name="gh_string" type_code="10">punkty_profilu</item>
+                            <item name="NickName" type_name="gh_string" type_code="10">punkty_profilu</item>
+                            <item name="Optional" type_name="gh_bool" type_code="1">true</item>
+                            <item name="ScriptParamAccess" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ScriptParameterVersion" type_name="gh_int32" type_code="3">2</item>
+                            <item name="ShowTypeHints" type_name="gh_bool" type_code="1">true</item>
+                            <item name="SourceCount" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ToolTip" type_name="gh_string" type_code="10">(int) Liczba punktów kontrolnych każdego przebudowanego przekroju (domyślnie 32).</item>
+                            <item name="TypeHintID" type_name="gh_guid" type_code="9">48d01794-d3d8-4aef-990e-127168822244</item>
+                          </items>
+                          <chunks count="2">
+                            <chunk name="Attributes">
+                              <items count="3">
+                                <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                                  <X>273</X>
+                                  <Y>921</Y>
+                                  <W>31</W>
+                                  <H>136</H>
+                                </item>
+                                <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                                  <X>288.5</X>
+                                  <Y>989</Y>
+                                </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
+                              </items>
+                            </chunk>
+                            <chunk name="ConverterData">
+                              <items count="2">
+                                <item name="AssemblyName" type_name="gh_string" type_code="10">System.Private.CoreLib</item>
+                                <item name="TypeName" type_name="gh_string" type_code="10">System.Int32</item>
+                              </items>
+                            </chunk>
+                          </chunks>
+                        </chunk>
+                        <chunk name="InputParam" index="7">
+                          <items count="12">
+                            <item name="AllowTreeAccess" type_name="gh_bool" type_code="1">true</item>
+                            <item name="Description" type_name="gh_string" type_code="10">(float) Rozstaw poziomych konturów do podglądu, w metrach; 0 wyłącza (domyślnie 0.5).</item>
+                            <item name="InstanceGuid" type_name="gh_guid" type_code="9">ac57949f-338a-5b14-9fdb-f01478158f53</item>
+                            <item name="Name" type_name="gh_string" type_code="10">kontury_co_m</item>
+                            <item name="NickName" type_name="gh_string" type_code="10">kontury_co_m</item>
+                            <item name="Optional" type_name="gh_bool" type_code="1">true</item>
+                            <item name="ScriptParamAccess" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ScriptParameterVersion" type_name="gh_int32" type_code="3">2</item>
+                            <item name="ShowTypeHints" type_name="gh_bool" type_code="1">true</item>
+                            <item name="SourceCount" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ToolTip" type_name="gh_string" type_code="10">(float) Rozstaw poziomych konturów do podglądu, w metrach; 0 wyłącza (domyślnie 0.5).</item>
+                            <item name="TypeHintID" type_name="gh_guid" type_code="9">9d51e32e-c038-4352-9554-f4137ca91b9a</item>
+                          </items>
+                          <chunks count="2">
+                            <chunk name="Attributes">
+                              <items count="3">
+                                <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                                  <X>273</X>
+                                  <Y>1057</Y>
+                                  <W>31</W>
+                                  <H>136</H>
+                                </item>
+                                <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                                  <X>288.5</X>
+                                  <Y>1125</Y>
+                                </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
+                              </items>
+                            </chunk>
+                            <chunk name="ConverterData">
+                              <items count="2">
+                                <item name="AssemblyName" type_name="gh_string" type_code="10">System.Private.CoreLib</item>
+                                <item name="TypeName" type_name="gh_string" type_code="10">System.Double</item>
+                              </items>
+                            </chunk>
+                          </chunks>
+                        </chunk>
+                        <chunk name="OutputParam" index="0">
+                          <items count="6">
+                            <item name="Description" type_name="gh_string" type_code="10">Standard output and error contents collected during script run</item>
+                            <item name="InstanceGuid" type_name="gh_guid" type_code="9">56946878-5cb8-5d30-b19c-8d606ea870d4</item>
+                            <item name="Name" type_name="gh_string" type_code="10">out</item>
+                            <item name="NickName" type_name="gh_string" type_code="10">out</item>
+                            <item name="Optional" type_name="gh_bool" type_code="1">false</item>
+                            <item name="SourceCount" type_name="gh_int32" type_code="3">0</item>
+                          </items>
+                          <chunks count="1">
+                            <chunk name="Attributes">
+                              <items count="3">
+                                <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                                  <X>328</X>
+                                  <Y>105</Y>
+                                  <W>25</W>
+                                  <H>136</H>
+                                </item>
+                                <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                                  <X>340.5</X>
+                                  <Y>173</Y>
+                                </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
+                              </items>
+                            </chunk>
+                          </chunks>
+                        </chunk>
+                        <chunk name="OutputParam" index="1">
+                          <items count="12">
+                            <item name="AllowTreeAccess" type_name="gh_bool" type_code="1">false</item>
+                            <item name="Description" type_name="gh_string" type_code="10">(Brep) Zamknięta bryła z pokrywami, zorientowana na zewnątrz.</item>
+                            <item name="InstanceGuid" type_name="gh_guid" type_code="9">ebf277c1-ed80-5d89-858e-e0b9fe6f5bc9</item>
+                            <item name="Name" type_name="gh_string" type_code="10">bryla</item>
+                            <item name="NickName" type_name="gh_string" type_code="10">bryla</item>
+                            <item name="Optional" type_name="gh_bool" type_code="1">false</item>
+                            <item name="ScriptParamAccess" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ScriptParameterVersion" type_name="gh_int32" type_code="3">2</item>
+                            <item name="ShowTypeHints" type_name="gh_bool" type_code="1">true</item>
+                            <item name="SourceCount" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ToolTip" type_name="gh_string" type_code="10">(Brep) Zamknięta bryła z pokrywami, zorientowana na zewnątrz.</item>
+                            <item name="TypeHintID" type_name="gh_guid" type_code="9">6a184b65-baa3-42d1-a548-3915b401de53</item>
+                          </items>
+                          <chunks count="2">
+                            <chunk name="Attributes">
+                              <items count="3">
+                                <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                                  <X>328</X>
+                                  <Y>241</Y>
+                                  <W>31</W>
+                                  <H>136</H>
+                                </item>
+                                <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                                  <X>343.5</X>
+                                  <Y>309</Y>
+                                </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
+                              </items>
+                            </chunk>
+                            <chunk name="ConverterData">
+                              <items count="2">
+                                <item name="AssemblyName" type_name="gh_string" type_code="10">System.Private.CoreLib</item>
+                                <item name="TypeName" type_name="gh_string" type_code="10">System.Object</item>
+                              </items>
+                            </chunk>
+                          </chunks>
+                        </chunk>
+                        <chunk name="OutputParam" index="2">
+                          <items count="12">
+                            <item name="AllowTreeAccess" type_name="gh_bool" type_code="1">false</item>
+                            <item name="Description" type_name="gh_string" type_code="10">(list[Curve]) Krzywe podziemne bez zmian, potem nowe obrysy kondygnacji na wysokościach stropów; pasuje do wejścia kondygnacje w komponencie 05.</item>
+                            <item name="InstanceGuid" type_name="gh_guid" type_code="9">7b271e19-bc87-565a-b630-eacfd1c12e5a</item>
+                            <item name="Name" type_name="gh_string" type_code="10">kondygnacje_nowe</item>
+                            <item name="NickName" type_name="gh_string" type_code="10">kondygnacje_nowe</item>
+                            <item name="Optional" type_name="gh_bool" type_code="1">false</item>
+                            <item name="ScriptParamAccess" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ScriptParameterVersion" type_name="gh_int32" type_code="3">2</item>
+                            <item name="ShowTypeHints" type_name="gh_bool" type_code="1">true</item>
+                            <item name="SourceCount" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ToolTip" type_name="gh_string" type_code="10">(list[Curve]) Krzywe podziemne bez zmian, potem nowe obrysy kondygnacji na wysokościach stropów; pasuje do wejścia kondygnacje w komponencie 05.</item>
+                            <item name="TypeHintID" type_name="gh_guid" type_code="9">6a184b65-baa3-42d1-a548-3915b401de53</item>
+                          </items>
+                          <chunks count="2">
+                            <chunk name="Attributes">
+                              <items count="3">
+                                <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                                  <X>328</X>
+                                  <Y>377</Y>
+                                  <W>31</W>
+                                  <H>136</H>
+                                </item>
+                                <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                                  <X>343.5</X>
+                                  <Y>445</Y>
+                                </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
+                              </items>
+                            </chunk>
+                            <chunk name="ConverterData">
+                              <items count="2">
+                                <item name="AssemblyName" type_name="gh_string" type_code="10">System.Private.CoreLib</item>
+                                <item name="TypeName" type_name="gh_string" type_code="10">System.Object</item>
+                              </items>
+                            </chunk>
+                          </chunks>
+                        </chunk>
+                        <chunk name="OutputParam" index="3">
+                          <items count="12">
+                            <item name="AllowTreeAccess" type_name="gh_bool" type_code="1">false</item>
+                            <item name="Description" type_name="gh_string" type_code="10">(Curve) Obrys zabudowy: suma nowych obrysów nadziemnych zrzutowana na Z = 0; pasuje do wejścia zabudowa w komponencie 05.</item>
+                            <item name="InstanceGuid" type_name="gh_guid" type_code="9">664ca57d-258f-5069-81b6-77e46f109d60</item>
+                            <item name="Name" type_name="gh_string" type_code="10">zabudowa_nowa</item>
+                            <item name="NickName" type_name="gh_string" type_code="10">zabudowa_nowa</item>
+                            <item name="Optional" type_name="gh_bool" type_code="1">false</item>
+                            <item name="ScriptParamAccess" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ScriptParameterVersion" type_name="gh_int32" type_code="3">2</item>
+                            <item name="ShowTypeHints" type_name="gh_bool" type_code="1">true</item>
+                            <item name="SourceCount" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ToolTip" type_name="gh_string" type_code="10">(Curve) Obrys zabudowy: suma nowych obrysów nadziemnych zrzutowana na Z = 0; pasuje do wejścia zabudowa w komponencie 05.</item>
+                            <item name="TypeHintID" type_name="gh_guid" type_code="9">6a184b65-baa3-42d1-a548-3915b401de53</item>
+                          </items>
+                          <chunks count="2">
+                            <chunk name="Attributes">
+                              <items count="3">
+                                <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                                  <X>328</X>
+                                  <Y>513</Y>
+                                  <W>31</W>
+                                  <H>136</H>
+                                </item>
+                                <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                                  <X>343.5</X>
+                                  <Y>581</Y>
+                                </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
+                              </items>
+                            </chunk>
+                            <chunk name="ConverterData">
+                              <items count="2">
+                                <item name="AssemblyName" type_name="gh_string" type_code="10">System.Private.CoreLib</item>
+                                <item name="TypeName" type_name="gh_string" type_code="10">System.Object</item>
+                              </items>
+                            </chunk>
+                          </chunks>
+                        </chunk>
+                        <chunk name="OutputParam" index="4">
+                          <items count="12">
+                            <item name="AllowTreeAccess" type_name="gh_bool" type_code="1">false</item>
+                            <item name="Description" type_name="gh_string" type_code="10">(list[Brep]) Płaskie płyty kondygnacji nadziemnych zbudowane z nowych obrysów (garaż nie dostaje płyty, bo nie należy do bryły).</item>
+                            <item name="InstanceGuid" type_name="gh_guid" type_code="9">a52582df-afbf-5938-994f-4943b74c11aa</item>
+                            <item name="Name" type_name="gh_string" type_code="10">plyty</item>
+                            <item name="NickName" type_name="gh_string" type_code="10">plyty</item>
+                            <item name="Optional" type_name="gh_bool" type_code="1">false</item>
+                            <item name="ScriptParamAccess" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ScriptParameterVersion" type_name="gh_int32" type_code="3">2</item>
+                            <item name="ShowTypeHints" type_name="gh_bool" type_code="1">true</item>
+                            <item name="SourceCount" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ToolTip" type_name="gh_string" type_code="10">(list[Brep]) Płaskie płyty kondygnacji nadziemnych zbudowane z nowych obrysów (garaż nie dostaje płyty, bo nie należy do bryły).</item>
+                            <item name="TypeHintID" type_name="gh_guid" type_code="9">6a184b65-baa3-42d1-a548-3915b401de53</item>
+                          </items>
+                          <chunks count="2">
+                            <chunk name="Attributes">
+                              <items count="3">
+                                <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                                  <X>328</X>
+                                  <Y>649</Y>
+                                  <W>31</W>
+                                  <H>136</H>
+                                </item>
+                                <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                                  <X>343.5</X>
+                                  <Y>717</Y>
+                                </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
+                              </items>
+                            </chunk>
+                            <chunk name="ConverterData">
+                              <items count="2">
+                                <item name="AssemblyName" type_name="gh_string" type_code="10">System.Private.CoreLib</item>
+                                <item name="TypeName" type_name="gh_string" type_code="10">System.Object</item>
+                              </items>
+                            </chunk>
+                          </chunks>
+                        </chunk>
+                        <chunk name="OutputParam" index="5">
+                          <items count="12">
+                            <item name="AllowTreeAccess" type_name="gh_bool" type_code="1">false</item>
+                            <item name="Description" type_name="gh_string" type_code="10">(list[Curve]) Poziome kontury bryły do podglądu.</item>
+                            <item name="InstanceGuid" type_name="gh_guid" type_code="9">c694b4d8-14bf-5bb3-8613-115c35ef11d3</item>
+                            <item name="Name" type_name="gh_string" type_code="10">kontury</item>
+                            <item name="NickName" type_name="gh_string" type_code="10">kontury</item>
+                            <item name="Optional" type_name="gh_bool" type_code="1">false</item>
+                            <item name="ScriptParamAccess" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ScriptParameterVersion" type_name="gh_int32" type_code="3">2</item>
+                            <item name="ShowTypeHints" type_name="gh_bool" type_code="1">true</item>
+                            <item name="SourceCount" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ToolTip" type_name="gh_string" type_code="10">(list[Curve]) Poziome kontury bryły do podglądu.</item>
+                            <item name="TypeHintID" type_name="gh_guid" type_code="9">6a184b65-baa3-42d1-a548-3915b401de53</item>
+                          </items>
+                          <chunks count="2">
+                            <chunk name="Attributes">
+                              <items count="3">
+                                <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                                  <X>328</X>
+                                  <Y>785</Y>
+                                  <W>31</W>
+                                  <H>136</H>
+                                </item>
+                                <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                                  <X>343.5</X>
+                                  <Y>853</Y>
+                                </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
+                              </items>
+                            </chunk>
+                            <chunk name="ConverterData">
+                              <items count="2">
+                                <item name="AssemblyName" type_name="gh_string" type_code="10">System.Private.CoreLib</item>
+                                <item name="TypeName" type_name="gh_string" type_code="10">System.Object</item>
+                              </items>
+                            </chunk>
+                          </chunks>
+                        </chunk>
+                        <chunk name="OutputParam" index="6">
+                          <items count="12">
+                            <item name="AllowTreeAccess" type_name="gh_bool" type_code="1">false</item>
+                            <item name="Description" type_name="gh_string" type_code="10">(list[str]) Powierzchnie nowych kondygnacji wobec szkicu, suma Po, wysokość, liczba kondygnacji, obrys, objętość i ostrzeżenia.</item>
+                            <item name="InstanceGuid" type_name="gh_guid" type_code="9">2816d0b2-88c0-5000-80c8-d04a129b678a</item>
+                            <item name="Name" type_name="gh_string" type_code="10">raport</item>
+                            <item name="NickName" type_name="gh_string" type_code="10">raport</item>
+                            <item name="Optional" type_name="gh_bool" type_code="1">false</item>
+                            <item name="ScriptParamAccess" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ScriptParameterVersion" type_name="gh_int32" type_code="3">2</item>
+                            <item name="ShowTypeHints" type_name="gh_bool" type_code="1">true</item>
+                            <item name="SourceCount" type_name="gh_int32" type_code="3">0</item>
+                            <item name="ToolTip" type_name="gh_string" type_code="10">(list[str]) Powierzchnie nowych kondygnacji wobec szkicu, suma Po, wysokość, liczba kondygnacji, obrys, objętość i ostrzeżenia.</item>
+                            <item name="TypeHintID" type_name="gh_guid" type_code="9">6a184b65-baa3-42d1-a548-3915b401de53</item>
+                          </items>
+                          <chunks count="2">
+                            <chunk name="Attributes">
+                              <items count="3">
+                                <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                                  <X>328</X>
+                                  <Y>921</Y>
+                                  <W>31</W>
+                                  <H>136</H>
+                                </item>
+                                <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                                  <X>343.5</X>
+                                  <Y>989</Y>
+                                </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
+                              </items>
+                            </chunk>
+                            <chunk name="ConverterData">
+                              <items count="2">
+                                <item name="AssemblyName" type_name="gh_string" type_code="10">System.Private.CoreLib</item>
+                                <item name="TypeName" type_name="gh_string" type_code="10">System.Object</item>
+                              </items>
+                            </chunk>
+                          </chunks>
+                        </chunk>
+                      </chunks>
+                    </chunk>
+                    <chunk name="Script">
+                      <items count="5">
+                        <item name="MarshGuids" type_name="gh_bool" type_code="1">true</item>
+                        <item name="MarshInputs" type_name="gh_bool" type_code="1">true</item>
+                        <item name="MarshOutputs" type_name="gh_bool" type_code="1">true</item>
+                        <item name="Text" type_name="gh_string" type_code="10">IyEgcHl0aG9uIDMNCiIiIg0KMDZfYnJ5bGFfZ2ggLSBwYXJhbWV0cnljem5hIGJyecWCYSB6IG9icnlzw7N3IGtvbmR5Z25hY2ppDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpQdXJwb3NlOg0KICAgIEthcnRhIDA2LiBaYW1pZW5pYSBwcm9zdG9rxIV0bmUgb2JyeXN5IGtvbmR5Z25hY2ppICh3YXJzdHdhIEtvbmR5Z25hY2plDQogICAgemUgc3praWN1IDA1X3N6a2ljX2JyeWx5X3JoaW5vLnB5KSB3IGplZG7EhSBnxYJhZGvEhSwgc2tyxJljb27EhSBpDQogICAgd3licnp1c3pvbsSFIGJyecWCxJkgbyB6YW9rcsSFZ2xvbnljaCBuYXJvxbxhY2gsIGEgcG90ZW0gdG5pZSBqxIUgeiBwb3dyb3RlbQ0KICAgIG5hIHDFgnl0eSBrb25keWduYWNqaSwga3TDs3JlIG1vxbxuYSBwb2RwacSFxIcgZG8ga29udHJvbGkgTVBaUCB6IGthcnR5IDA1Lg0KICAgIEJleiBwb2RwacSZdGVnbyB3ZWrFm2NpYSBidWR1amUgYnJ5xYLEmSB6IGRvbXnFm2xuZWogbWFzeSBTb2xuYSB3YnVkb3dhbmVqDQogICAgdyBza3J5cHQsIMW8ZWJ5IHdrbGVqb255IGtvbXBvbmVudCBvZCByYXp1IGNvxZsgcG9rYXp5d2HFgi4NCg0KSW5wdXRzIChHcmFzc2hvcHBlcik6DQogICAga29uZHlnbmFjamUgOiBDdXJ2ZSBAbGlzdCBvcHRpb25hbA0KICAgICAgICBQbyBqZWRuZWogemFta25pxJl0ZWogcMWCYXNraWVqIGtyenl3ZWogbmEga29uZHlnbmFjasSZLCBuYSB3eXNva2/Fm2NpDQogICAgICAgIHN0cm9wdS4gS3J6eXdhIG8gbmFqd3nFvHN6eW0gWiA8PSAwIHRvIGtvbmR5Z25hY2phIHBvZHppZW1uYTogbmllDQogICAgICAgIHdjaG9kemkgZG8gYnJ5xYJ5IGkgcHJ6ZWNob2R6aSBiZXogem1pYW4gZG8ga29uZHlnbmFjamVfbm93ZS4NCiAgICAgICAgUHVzdGUgd2VqxZtjaWU6IHNpZWRlbSBrb25keWduYWNqaSBtYXN5IFNvbG5hIHogdGFiZWxpIERPTVlTTE5BX01BU0EsDQogICAgICAgIHogb3N0cnplxbxlbmllbSB3IHBpZXJ3c3plaiBsaW5paSByYXBvcnR1Lg0KICAgIHNrcmV0X2RlZyA6IGZsb2F0IEBpdGVtIG9wdGlvbmFsDQogICAgICAgIENhxYJrb3dpdHkgc2tyxJl0IGJyecWCeSBvZCB0ZXJlbnUgZG8gZGFjaHUsIHcgc3RvcG5pYWNoLCB3b2vDs8WCIG9zaQ0KICAgICAgICBwaW9ub3dlaiBwcnpleiDFm3JvZGVrIG9icnlzdSBwYXJ0ZXJ1IChkb215xZtsbmllIDEyKS4NCiAgICB3eWJyenVzemVuaWUgOiBmbG9hdCBAaXRlbSBvcHRpb25hbA0KICAgICAgICBXeWJyenVzemVuaWUgdyBwb8WCb3dpZSB3eXNva2/Fm2NpOiBrYcW8ZHkgcHJ6ZWtyw7NqIHNrYWx1amUgc2nEmSB3b2vDs8WCDQogICAgICAgIHfFgmFzbmVnbyDFm3JvZGthIG8gMSArIHd5YnJ6dXN6ZW5pZSAqIHNpbihwaSAqIHQpLCBnZHppZSB0ID0geiAvIHpfbWF4DQogICAgICAgIChkb215xZtsbmllIDAuMTApLg0KICAgIHphb2tyYWdsZW5pZSA6IGZsb2F0IEBpdGVtIG9wdGlvbmFsDQogICAgICAgIFphb2tyxIVnbGVuaWUgbmFyb8W8eSBvZCAwIGRvIDE7IHByb21pZcWEID0gemFva3JhZ2xlbmllICogMC40OSAqIGtyw7N0c3p5DQogICAgICAgIGJvayBvYnJ5c3UgKGRvbXnFm2xuaWUgMC42KS4NCiAgICBwb2NoeWxlbmllX3hfbSA6IGZsb2F0IEBpdGVtIG9wdGlvbmFsDQogICAgICAgIFByemVzdW5pxJljaWUgc3pjenl0dSBicnnFgnkgdyBtZXRyYWNoIHd6ZMWCdcW8IG9zaSBYIMWbd2lhdGEgKGRvbXnFm2xuaWUgMCkuDQogICAgcG9jaHlsZW5pZV95X20gOiBmbG9hdCBAaXRlbSBvcHRpb25hbA0KICAgICAgICBQcnplc3VuacSZY2llIHN6Y3p5dHUgYnJ5xYJ5IHcgbWV0cmFjaCB3emTFgnXFvCBvc2kgWSDFm3dpYXRhIChkb215xZtsbmllIDApLg0KICAgIHB1bmt0eV9wcm9maWx1IDogaW50IEBpdGVtIG9wdGlvbmFsDQogICAgICAgIExpY3piYSBwdW5rdMOzdyBrb250cm9sbnljaCBrYcW8ZGVnbyBwcnplYnVkb3dhbmVnbyBwcnpla3JvanUgKGRvbXnFm2xuaWUgMzIpLg0KICAgIGtvbnR1cnlfY29fbSA6IGZsb2F0IEBpdGVtIG9wdGlvbmFsDQogICAgICAgIFJvenN0YXcgcG96aW9teWNoIGtvbnR1csOzdyBkbyBwb2RnbMSFZHUsIHcgbWV0cmFjaDsgMCB3ecWCxIVjemEgKGRvbXnFm2xuaWUgMC41KS4NCg0KT3V0cHV0cyAoR3Jhc3Nob3BwZXIpOg0KICAgIGJyeWxhIDogQnJlcA0KICAgICAgICBaYW1rbmnEmXRhIGJyecWCYSB6IHBva3J5d2FtaSwgem9yaWVudG93YW5hIG5hIHpld27EhXRyei4NCiAgICBrb25keWduYWNqZV9ub3dlIDogbGlzdFtDdXJ2ZV0NCiAgICAgICAgS3J6eXdlIHBvZHppZW1uZSBiZXogem1pYW4sIHBvdGVtIG5vd2Ugb2JyeXN5IGtvbmR5Z25hY2ppIG5hDQogICAgICAgIHd5c29rb8WbY2lhY2ggc3Ryb3DDs3c7IHBhc3VqZSBkbyB3ZWrFm2NpYSBrb25keWduYWNqZSB3IGtvbXBvbmVuY2llIDA1Lg0KICAgIHphYnVkb3dhX25vd2EgOiBDdXJ2ZQ0KICAgICAgICBPYnJ5cyB6YWJ1ZG93eTogc3VtYSBub3d5Y2ggb2JyeXPDs3cgbmFkemllbW55Y2ggenJ6dXRvd2FuYSBuYSBaID0gMDsNCiAgICAgICAgcGFzdWplIGRvIHdlasWbY2lhIHphYnVkb3dhIHcga29tcG9uZW5jaWUgMDUuDQogICAgcGx5dHkgOiBsaXN0W0JyZXBdDQogICAgICAgIFDFgmFza2llIHDFgnl0eSBrb25keWduYWNqaSBuYWR6aWVtbnljaCB6YnVkb3dhbmUgeiBub3d5Y2ggb2JyeXPDs3cNCiAgICAgICAgKGdhcmHFvCBuaWUgZG9zdGFqZSBwxYJ5dHksIGJvIG5pZSBuYWxlxbx5IGRvIGJyecWCeSkuDQogICAga29udHVyeSA6IGxpc3RbQ3VydmVdDQogICAgICAgIFBvemlvbWUga29udHVyeSBicnnFgnkgZG8gcG9kZ2zEhWR1Lg0KICAgIHJhcG9ydCA6IGxpc3Rbc3RyXQ0KICAgICAgICBQb3dpZXJ6Y2huaWUgbm93eWNoIGtvbmR5Z25hY2ppIHdvYmVjIHN6a2ljdSwgc3VtYSBQbywgd3lzb2tvxZvEhywNCiAgICAgICAgbGljemJhIGtvbmR5Z25hY2ppLCBvYnJ5cywgb2JqxJl0b8WbxIcgaSBvc3RyemXFvGVuaWEuDQoNClJ1bnRpbWU6DQogICAgIyEgcHl0aG9uIDMgKFJoaW5vIDgsIGtvbXBvbmVudCBQeXRob24gMyBTY3JpcHQpDQoiIiINCg0KaW1wb3J0IG1hdGgNCmltcG9ydCBzeXMNCg0KdHJ5Og0KICAgIGltcG9ydCBSaGluby5HZW9tZXRyeSBhcyByZw0KICAgIGZyb20gU3lzdGVtLkNvbGxlY3Rpb25zLkdlbmVyaWMgaW1wb3J0IExpc3QNCiAgICBXX1JISU5PID0gVHJ1ZQ0KZXhjZXB0IEltcG9ydEVycm9yOg0KICAgIFdfUkhJTk8gPSBGYWxzZQ0KDQoNCiMgV2FydG/Fm2NpIGRvbXnFm2xuZSBzdXdha8Ozdzsga29tcG9uZW50IHXFvHl3YSBpY2gsIGdkeSB3ZWrFm2NpZSBqZXN0IG5pZXBvZHBpxJl0ZS4NCkRPTVlTTE5FID0gew0KICAgICJza3JldF9kZWciOiAxMi4wLA0KICAgICJ3eWJyenVzemVuaWUiOiAwLjEwLA0KICAgICJ6YW9rcmFnbGVuaWUiOiAwLjYsDQogICAgInBvY2h5bGVuaWVfeF9tIjogMC4wLA0KICAgICJwb2NoeWxlbmllX3lfbSI6IDAuMCwNCiAgICAicHVua3R5X3Byb2ZpbHUiOiAzMiwNCiAgICAia29udHVyeV9jb19tIjogMC41LA0KfQ0KVE9MID0gMC4wMDEgICAgICAgICAgICAjIHRvbGVyYW5jamEgbW9kZWx1IHcgbWV0cmFjaA0KS0FUX1RPTCA9IDAuMDEgICAgICAgICAjIHRvbGVyYW5jamEga8SFdG93YSB3IHJhZGlhbmFjaA0KQ0lFQ0lFX1BPTklaRUpfTSA9IDAuMDAxICAgIyBjacSZY2llIDEgbW0gcG9kIHN0cm9wZW0sIMW8ZWJ5IG5pZSB0cmFmacSHIHcgcG9rcnl3xJkgYnJ5xYJ5DQpNSU5fUFVOS1RZX1BST0ZJTFUgPSA4DQoNCiMgRG9tecWbbG5hIG1hc2EgIlNvbG5hIjoga29waWEgdGFiZWxpIFBST1NUT0tBVFkgeiAwNV9zemtpY19icnlseV9yaGluby5weSwNCiMgKHdhcnN0d2EsIHgwLCB5MCwgeDEsIHkxLCB6KTsgdHUgdcW8eXdhbmUgc8SFIHR5bGtvIHdpZXJzemUgS29uZHlnbmFjamUuDQojIFBvd3TDs3J6b25hIGNlbG93bzogc2tyeXB0IHdrbGVqb255IGRvIGtvbXBvbmVudHUgbmllIGltcG9ydHVqZSB6IHJvendpYXphbmlhLy4NCkRPTVlTTE5BX01BU0EgPSBbDQogICAgKCJEemlhbGthIiwgICAgICAwLjAsICAwLjAsIDUwLjAsIDM3LjAsICAwLjApLCAgICMgMTg1MCBtMg0KICAgICgiWmFidWRvd2EiLCAgICAgNi4wLCAgNS4wLCA0My4wLCAzMS4wLCAgMC4wKSwgICAjIDk2MiBtMg0KICAgICgiS29uZHlnbmFjamUiLCAgNS4wLCAgMS4wLCA0NS4wLCAzNi4wLCAtMy4wKSwgICAjIDE0MDAgbTIgLSBnYXJhxbwgcG9kemllbW55DQogICAgKCJLb25keWduYWNqZSIsICA2LjAsICA1LjAsIDQzLjAsIDMxLjAsICA0LjIpLCAgICMgOTYyIG0yDQogICAgKCJLb25keWduYWNqZSIsICA2LjAsICA1LjAsIDQzLjAsIDMxLjAsICA3LjQpLCAgICMgOTYyIG0yDQogICAgKCJLb25keWduYWNqZSIsICA2LjAsICA1LjAsIDQzLjAsIDMxLjAsIDEwLjYpLCAgICMgOTYyIG0yDQogICAgKCJLb25keWduYWNqZSIsICA2LjAsICA1LjAsIDQzLjAsIDMxLjAsIDEzLjgpLCAgICMgOTYyIG0yDQogICAgKCJLb25keWduYWNqZSIsICA3LjIsICA2LjUsIDQxLjIsIDI5LjUsIDE3LjIpLCAgICMgNzgyIG0yIC0gY29mbmnEmWNpZQ0KICAgICgiS29uZHlnbmFjamUiLCAgOC4wLCAgNy4wLCA0MS4wLCAyOS4wLCAyMC42KSwgICAjIDcyNiBtMiAtIGNvZm5pxJljaWUNCiAgICAoIlBCQy1ncnVudCIsICAgMzAuMCwgMzEuMCwgNTAuMCwgMzcuMCwgIDAuMCksICAgIyAxMjAgbTINCiAgICAoIlBCQy10YXJhc3kiLCAgMTAuMCwgMTAuMCwgMjAuMCwgMTkuMCwgMjAuNiksICAgIyA5MCBtMiAoPj0gMTAgbTIsIGxpY3p5IHNpxJkpDQogICAgKCJQQkMtdGFyYXN5IiwgIDI1LjAsIDEwLjAsIDI5LjAsIDEyLjAsIDIwLjYpLCAgICMgOCBtMiAoPCAxMCBtMiwgbmllIGxpY3p5IHNpxJkpDQpdDQoNCg0KIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCiMgQ3p5c3RhIGFyeXRtZXR5a2EgKGJleiBSaGlubykgLSBzcHJhd2R6YW5hIHByemV6IC0tdGVzdA0KIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCmRlZiBza2FsYSh0LCB3eWJyenVzemVuaWUpOg0KICAgICIiIldzcMOzxYJjenlubmlrIHNrYWxpIHByemVrcm9qdSBuYSB3eXNva2/Fm2NpIHd6Z2zEmWRuZWogdCAoMCAtIHRlcmVuLCAxIC0gZGFjaCkuIiIiDQogICAgcmV0dXJuIDEuMCArIHd5YnJ6dXN6ZW5pZSAqIG1hdGguc2luKG1hdGgucGkgKiB0KQ0KDQoNCmRlZiBrYXRfc2tyZXR1X3JhZCh0LCBza3JldF9kZWcpOg0KICAgICIiIkvEhXQgc2tyxJl0dSBwcnpla3JvanUgbmEgd3lzb2tvxZtjaSB3emdsxJlkbmVqIHQsIHcgcmFkaWFuYWNoLiIiIg0KICAgIHJldHVybiBtYXRoLnJhZGlhbnMoc2tyZXRfZGVnKSAqIHQNCg0KDQpkZWYgcHJvbWllbl96YW9rcmFnbGVuaWEoc3plcm9rb3NjLCBnbGVib2tvc2MsIHphb2tyYWdsZW5pZSk6DQogICAgIiIiUHJvbWllxYQgemFva3LEhWdsZW5pYSBuYXJvxbx5OiB6YW9rcmFnbGVuaWUgKiAwLjQ5ICoga3LDs3RzenkgYm9rLCBjenlsaSBwcnp5DQogICAgemFva3JhZ2xlbmllIDEgbmllbWFsIHBvxYJvd2Ega3LDs3RzemVnbyBib2t1ICgwLjQ5LCBuaWUgMC41KSwgdGFrIGJ5IGR3YQ0KICAgIHphb2tyxIVnbGVuaWEgbmllIHplc3rFgnkgc2nEmSBuYSBrcsOzdHN6ZWoga3Jhd8SZZHppLiIiIg0KICAgIGlmIHphb2tyYWdsZW5pZSA8PSAwLjA6DQogICAgICAgIHJldHVybiAwLjANCiAgICByZXR1cm4gbWluKG1heCh6YW9rcmFnbGVuaWUsIDAuMCksIDEuMCkgKiAwLjQ5ICogbWluKHN6ZXJva29zYywgZ2xlYm9rb3NjKQ0KDQoNCmRlZiBwb2R6aWVsX3dnX3oocGFyeSk6DQogICAgIiIiRHppZWxpIHBhcnkgKHosIG9iaWVrdCkgbmEgKHBvZHppZW1uZSwgbmFkemllbW5lKSB3ZWTFgnVnIHJ6xJlkbmVqIHo7DQogICAgendyYWNhIHNhbWUgb2JpZWt0eSwga2HFvGRhIGxpc3RhIHJvc27EhWNvIHBvIHouIFogPD0gMCB0byBrb25keWduYWNqYSBwb2R6aWVtbmEuIiIiDQogICAgcG9zb3J0b3dhbmUgPSBzb3J0ZWQocGFyeSwga2V5PWxhbWJkYSBwYXJhOiBwYXJhWzBdKQ0KICAgIHBvZHppZW1uZSA9IFtvYmlla3QgZm9yIHosIG9iaWVrdCBpbiBwb3NvcnRvd2FuZSBpZiB6IDw9IDAuMF0NCiAgICBuYWR6aWVtbmUgPSBbb2JpZWt0IGZvciB6LCBvYmlla3QgaW4gcG9zb3J0b3dhbmUgaWYgeiA+IDAuMF0NCiAgICByZXR1cm4gcG9kemllbW5lLCBuYWR6aWVtbmUNCg0KDQpkZWYgd3lzb2tvc2NpX3ByemVrcm9qb3coel9uYWR6aWVtbmUpOg0KICAgICIiIlJ6xJlkbmUgcHJ6ZWtyb2rDs3cgbG9mdHU6IHRlcmVuICgwLjApIGkga2HFvGR5IHN0cm9wIG5hZHppZW1ueSByb3NuxIVjby4iIiINCiAgICByZXR1cm4gWzAuMF0gKyBzb3J0ZWQoel9uYWR6aWVtbmUpDQoNCg0KZGVmIGxpbmlhX2tvbmR5Z25hY2ppKG5yLCBub3dhX20yLCBzemtpY19tMik6DQogICAgcmV0dXJuICJrb25keWduYWNqYSB7fTogezouMWZ9IG0yIChzemtpYyB7Oi4xZn0gbTIpIi5mb3JtYXQobnIsIG5vd2FfbTIsIHN6a2ljX20yKQ0KDQoNCmRlZiBsaW5pZV9yYXBvcnR1KHBvbGFfbm93ZSwgcG9sYV9zemtpY3UsIHd5c29rb3NjX20sIG9iamV0b3NjX20zLCBvYnJ5c19tMik6DQogICAgIiIiU2vFgmFkYSByYXBvcnQgeiBww7NsIG5vd3ljaCBrb25keWduYWNqaSwgd3lzb2tvxZtjaSwgb2JyeXN1IGkgb2JqxJl0b8WbY2kuIiIiDQogICAgbGluaWUgPSBbXQ0KICAgIGZvciBpLCAobm93YSwgc3praWMpIGluIGVudW1lcmF0ZSh6aXAocG9sYV9ub3dlLCBwb2xhX3N6a2ljdSkpOg0KICAgICAgICBsaW5pZS5hcHBlbmQobGluaWFfa29uZHlnbmFjamkoaSArIDEsIG5vd2EsIHN6a2ljKSkNCiAgICBsaW5pZS5hcHBlbmQoInN1bWEgUG8gKG5hZHppZW1uZSk6IHs6LjFmfSBtMiAoc3praWMgezouMWZ9IG0yKSIuZm9ybWF0KA0KICAgICAgICBzdW0ocG9sYV9ub3dlKSwgc3VtKHBvbGFfc3praWN1KSkpDQogICAgbGluaWUuYXBwZW5kKCJ3eXNva2/Fm8SHOiB7Oi4xZn0gbSAvIHt9IGtvbmQuIi5mb3JtYXQod3lzb2tvc2NfbSwgbGVuKHBvbGFfbm93ZSkpKQ0KICAgIGxpbmllLmFwcGVuZCgib2JyeXMgemFidWRvd3k6IHs6LjFmfSBtMiIuZm9ybWF0KG9icnlzX20yKSkNCiAgICBsaW5pZS5hcHBlbmQoIm9iasSZdG/Fm8SHOiB7Oi4wZn0gbTMiLmZvcm1hdChvYmpldG9zY19tMykpDQogICAgcmV0dXJuIGxpbmllDQoNCg0KIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCiMgR2VvbWV0cmlhIChSaGlub0NvbW1vbikNCiMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpkZWYgX2xpc3RhKGtyenl3ZSk6DQogICAgIiIiTWV0b2R5IFJoaW5vQ29tbW9uIG9jemVrdWrEhWNlIElFbnVtZXJhYmxlPEN1cnZlPiBwb3RyemVidWrEhSBsaXN0eSAuTkVULA0KICAgIG5pZSBsaXN0eSBQeXRob25hIC0gdyBrYcW8ZHltIMWbcm9kb3dpc2t1IENQeXRob24geiBweXRob25uZXQuIiIiDQogICAgbGlzdGEgPSBMaXN0W3JnLkN1cnZlXSgpDQogICAgZm9yIGtyenl3YSBpbiBrcnp5d2U6DQogICAgICAgIGxpc3RhLkFkZChrcnp5d2EpDQogICAgcmV0dXJuIGxpc3RhDQoNCg0KZGVmIGtyenl3ZV9kb215c2xuZSh3YXJzdHdhKToNCiAgICAiIiJaYW1rbmnEmXRlIHByb3N0b2vEhXR5IGRvbXnFm2xuZWogbWFzeSBTb2xuYSB6IGplZG5laiB3YXJzdHd5LCBuYSByesSZZG5laiBaIHogdGFiZWxpLiIiIg0KICAgIGtyenl3ZSA9IFtdDQogICAgZm9yIG5hendhLCB4MCwgeTAsIHgxLCB5MSwgeiBpbiBET01ZU0xOQV9NQVNBOg0KICAgICAgICBpZiBuYXp3YSAhPSB3YXJzdHdhOg0KICAgICAgICAgICAgY29udGludWUNCiAgICAgICAga3J6eXdhID0gcmcuUmVjdGFuZ2xlM2QocmcuUGxhbmUuV29ybGRYWSwgcmcuSW50ZXJ2YWwoeDAsIHgxKSwgcmcuSW50ZXJ2YWwoeTAsIHkxKSkuVG9OdXJic0N1cnZlKCkNCiAgICAgICAga3J6eXdhLlRyYW5zZm9ybShyZy5UcmFuc2Zvcm0uVHJhbnNsYXRpb24oMC4wLCAwLjAsIHopKQ0KICAgICAgICBrcnp5d2UuYXBwZW5kKGtyenl3YSkNCiAgICByZXR1cm4ga3J6eXdlDQoNCg0KZGVmIF9wb2xlKGtyenl3YSk6DQogICAgYW1wID0gcmcuQXJlYU1hc3NQcm9wZXJ0aWVzLkNvbXB1dGUoa3J6eXdhKQ0KICAgIHJldHVybiBhbXAuQXJlYSBpZiBhbXAgaXMgbm90IE5vbmUgZWxzZSAwLjANCg0KDQpkZWYgX3Nyb2Rlayhrcnp5d2EpOg0KICAgIGFtcCA9IHJnLkFyZWFNYXNzUHJvcGVydGllcy5Db21wdXRlKGtyenl3YSkNCiAgICBpZiBhbXAgaXMgbm90IE5vbmU6DQogICAgICAgIHJldHVybiBhbXAuQ2VudHJvaWQNCiAgICByZXR1cm4ga3J6eXdhLkdldEJvdW5kaW5nQm94KFRydWUpLkNlbnRlcg0KDQoNCmRlZiBfZ29yYShrcnp5d2EpOg0KICAgIHJldHVybiBrcnp5d2EuR2V0Qm91bmRpbmdCb3goVHJ1ZSkuTWF4LloNCg0KDQpkZWYgX3ByemVjaXduaWVfZG9femVnYXJhKGtyenl3YSk6DQogICAgIiIiV3N6eXN0a2llIHByemVrcm9qZSBtdXN6xIUgbWllxIcgdGVuIHNhbSBraWVydW5laywgaW5hY3plaiBsb2Z0IHNpxJkgc2tyxJljYS4iIiINCiAgICBpZiBrcnp5d2EuQ2xvc2VkQ3VydmVPcmllbnRhdGlvbihyZy5WZWN0b3IzZC5aQXhpcykgPT0gcmcuQ3VydmVPcmllbnRhdGlvbi5DbG9ja3dpc2U6DQogICAgICAgIGtyenl3YS5SZXZlcnNlKCkNCiAgICByZXR1cm4ga3J6eXdhDQoNCg0KZGVmIF96YW9rcmFnbGlqKGtyenl3YSwgemFva3JhZ2xlbmllLCBibGVkeSk6DQogICAgIyBCb2tpIGJyYW5lIHogcHJvc3RvcGFkxYJvxZtjaWFudSB3IG9zaWFjaCDFm3dpYXRhLCBwcnplZCBza3LEmXRlbTogZGxhIHN6a2ljdQ0KICAgICMgIlNvbG5hIiAocHJvc3Rva8SFdHkgdyBvc2lhY2gpIHRvIGRva8WCYWRuZSB3eW1pYXJ5OyBkbGEgb2JyeXN1IG9icsOzY29uZWdvDQogICAgIyB3IHBsYW5pZSBib2sgamVzdCBwcnplc3phY293YW55IGkgZmlsbGV0IG1vxbxlIHp3csOzY2nEhyBOb25lIC0gd3RlZHkNCiAgICAjIHByemVrcsOzaiB6b3N0YWplIG9zdHJ5LCB6IG9zdHJ6ZcW8ZW5pZW0sIGEgbG9mdCBpIHRhayBzacSZIGJ1ZHVqZS4NCiAgICBiYiA9IGtyenl3YS5HZXRCb3VuZGluZ0JveChUcnVlKQ0KICAgIHByb21pZW4gPSBwcm9taWVuX3phb2tyYWdsZW5pYShiYi5NYXguWCAtIGJiLk1pbi5YLCBiYi5NYXguWSAtIGJiLk1pbi5ZLCB6YW9rcmFnbGVuaWUpDQogICAgaWYgcHJvbWllbiA8PSAwLjA6DQogICAgICAgIHJldHVybiBrcnp5d2ENCiAgICB3eW5payA9IHJnLkN1cnZlLkNyZWF0ZUZpbGxldENvcm5lcnNDdXJ2ZShrcnp5d2EsIHByb21pZW4sIFRPTCwgS0FUX1RPTCkNCiAgICBpZiB3eW5payBpcyBOb25lOg0KICAgICAgICBibGVkeS5hcHBlbmQoInphb2tyxIVnbGVuaWUgbyBwcm9taWVuaXUgezouMmZ9IG0gbmllIHBvd2lvZMWCbyBzacSZLCBwcnpla3LDs2ogem9zdGFqZSBvc3RyeSIuZm9ybWF0KHByb21pZW4pKQ0KICAgICAgICByZXR1cm4ga3J6eXdhDQogICAgcmV0dXJuIHd5bmlrDQoNCg0KZGVmIF91c3Rhd19zemV3KGtyenl3YSwgb3NfeHksIGtpZXJ1bmVrX3JhZCwgeik6DQogICAgIiIiUHJ6ZXN1d2EgcG9jesSFdGVrIGtyenl3ZWogemFta25pxJl0ZWogdyBzdHJvbsSZIGtpZXJ1bmVrX3JhZCBvZCBvc2ksIMW8ZWJ5DQogICAgc3p3eSBrb2xlam55Y2ggcHJ6ZWtyb2rDs3cgbGXFvGHFgnkgbmFkIHNvYsSFIChwbyB1d3pnbMSZZG5pZW5pdSBza3LEmXR1KS4iIiINCiAgICBjZWwgPSByZy5Qb2ludDNkKG9zX3h5LlggKyAxMDAwLjAgKiBtYXRoLmNvcyhraWVydW5la19yYWQpLA0KICAgICAgICAgICAgICAgICAgICAgb3NfeHkuWSArIDEwMDAuMCAqIG1hdGguc2luKGtpZXJ1bmVrX3JhZCksIHopDQogICAgcmMsIHQgPSBrcnp5d2EuQ2xvc2VzdFBvaW50KGNlbCkNCiAgICBpZiByYzoNCiAgICAgICAga3J6eXdhLkNoYW5nZUNsb3NlZEN1cnZlU2VhbSh0KQ0KICAgIHJldHVybiBrcnp5d2ENCg0KDQpkZWYgX3ByemVrcm9qX25hX3d5c29rb3NjaShicnlsYSwgeik6DQogICAgIiIiWmFta25pxJl0eSBvYnJ5cyBicnnFgnkgbmEgcnrEmWRuZWogeiAobmFqd2nEmWtzenksIGdkeSBqZXN0IGljaCBraWxrYSkuIiIiDQogICAgcGxhc3pjenl6bmEgPSByZy5QbGFuZShyZy5Qb2ludDNkKDAuMCwgMC4wLCB6KSwgcmcuVmVjdG9yM2QuWkF4aXMpDQogICAgcmMsIGtyenl3ZSwgX3B1bmt0eSA9IHJnLkludGVyc2VjdC5JbnRlcnNlY3Rpb24uQnJlcFBsYW5lKGJyeWxhLCBwbGFzemN6eXpuYSwgVE9MKQ0KICAgIGlmIG5vdCByYyBvciBrcnp5d2UgaXMgTm9uZSBvciBsZW4oa3J6eXdlKSA9PSAwOg0KICAgICAgICByZXR1cm4gTm9uZQ0KICAgIHBvbGFjem9uZSA9IHJnLkN1cnZlLkpvaW5DdXJ2ZXMoa3J6eXdlLCBUT0wpDQogICAga2FuZHlkYWNpID0gW2MgZm9yIGMgaW4gcG9sYWN6b25lIGlmIGMuSXNDbG9zZWRdDQogICAgIyBPdHdhcnRlIGZyYWdtZW50eSBuaWUgc8SFIG9icnlzZW0ga29uZHlnbmFjamk6IGxlcGllaiBicmFrIHByemVrcm9qdQ0KICAgICMgKGkgb3N0cnplxbxlbmllIHUgd3l3b8WCdWrEhWNlZ28pIG5pxbwgcMWCeXRhIG8gcG9sdSAwIHcga29udHJvbGkgeiBrYXJ0eSAwNS4NCiAgICByZXR1cm4gbWF4KGthbmR5ZGFjaSwga2V5PV9wb2xlKSBpZiBrYW5keWRhY2kgZWxzZSBOb25lDQoNCg0KZGVmIF9vYnJ5cyhrcnp5d2VfbmFkemllbW5lLCBibGVkeSk6DQogICAgIiIiUnp1dCB3c3p5c3RraWNoIG5vd3ljaCBvYnJ5c8OzdyBuYSB0ZXJlbiBpIGljaCBzdW1hIGxvZ2ljem5hLiIiIg0KICAgIHJ6dXR5ID0gW10NCiAgICBmb3Iga3J6eXdhIGluIGtyenl3ZV9uYWR6aWVtbmU6DQogICAgICAgIHJ6dXQgPSByZy5DdXJ2ZS5Qcm9qZWN0VG9QbGFuZShrcnp5d2EsIHJnLlBsYW5lLldvcmxkWFkpDQogICAgICAgIGlmIHJ6dXQgaXMgbm90IE5vbmU6DQogICAgICAgICAgICByenV0eS5hcHBlbmQocnp1dCkNCiAgICBpZiBub3Qgcnp1dHk6DQogICAgICAgIHJldHVybiBOb25lDQogICAgaWYgbGVuKHJ6dXR5KSA9PSAxOg0KICAgICAgICByZXR1cm4gcnp1dHlbMF0NCiAgICBzdW1hID0gcmcuQ3VydmUuQ3JlYXRlQm9vbGVhblVuaW9uKF9saXN0YShyenV0eSksIFRPTCkNCiAgICBpZiBzdW1hIGlzIE5vbmUgb3IgbGVuKHN1bWEpID09IDA6DQogICAgICAgIGJsZWR5LmFwcGVuZCgic3VtYSBsb2dpY3puYSByenV0w7N3IG5pZSBwb3dpb2TFgmEgc2nEmSwgb2JyeXMgPSBuYWp3acSZa3N6eSByenV0IikNCiAgICAgICAgcmV0dXJuIG1heChyenV0eSwga2V5PV9wb2xlKQ0KICAgIHJldHVybiBtYXgobGlzdChzdW1hKSwga2V5PV9wb2xlKQ0KDQoNCmRlZiB6YnVkdWpfYnJ5bGUoa29uZHlnbmFjamUsIHNrcmV0X2RlZywgd3licnp1c3plbmllLCB6YW9rcmFnbGVuaWUsDQogICAgICAgICAgICAgICAgIHBvY2h5bGVuaWVfeF9tLCBwb2NoeWxlbmllX3lfbSwgcHVua3R5X3Byb2ZpbHUsIGtvbnR1cnlfY29fbSk6DQogICAgIiIiQnVkdWplIGJyecWCxJkgaSBwxYJ5dHkgeiBsaXN0eSBrcnp5d3ljaCBrb25keWduYWNqaS4gWndyYWNhIHPFgm93bmlrIHoNCiAgICBrbHVjemFtaSBicnlsYSwga29uZHlnbmFjamVfbm93ZSwgemFidWRvd2Ffbm93YSwgcGx5dHksIGtvbnR1cnksIHJhcG9ydCwgYmxlZHkuIiIiDQogICAgYmxlZHkgPSBbXQ0KICAgIHd5bmlrID0geyJicnlsYSI6IE5vbmUsICJrb25keWduYWNqZV9ub3dlIjogW10sICJ6YWJ1ZG93YV9ub3dhIjogTm9uZSwNCiAgICAgICAgICAgICAicGx5dHkiOiBbXSwgImtvbnR1cnkiOiBbXSwgInJhcG9ydCI6IFtdLCAiYmxlZHkiOiBibGVkeX0NCg0KICAgICMgUG9qZWR5bmN6YSBrcnp5d2EgemFtaWFzdCBsaXN0eSAod2VqxZtjaWUgdXN0YXdpb25lIG5hIGl0ZW0pIHRlxbwgbWEgZHppYcWCYcSHLg0KICAgIGlmIGtvbmR5Z25hY2plIGlzIG5vdCBOb25lIGFuZCBub3QgaXNpbnN0YW5jZShrb25keWduYWNqZSwgKGxpc3QsIHR1cGxlKSk6DQogICAgICAgIGtvbmR5Z25hY2plID0gW2tvbmR5Z25hY2plXQ0KICAgIGtyenl3ZSA9IFtrIGZvciBrIGluIGtvbmR5Z25hY2plIGlmIGsgaXMgbm90IE5vbmVdDQogICAgcG9kemllbW5lLCBuYWR6aWVtbmUgPSBwb2R6aWVsX3dnX3ooWyhfZ29yYShrKSwgaykgZm9yIGsgaW4ga3J6eXdlXSkNCiAgICBpZiBsZW4obmFkemllbW5lKSA8IDI6DQogICAgICAgIGJsZWR5LmFwcGVuZCgicG90cnplYm5lIHPEhSBjbyBuYWptbmllaiBkd2llIGtvbmR5Z25hY2plIG5hZHppZW1uZSAoWiA+IDApLCBqZXN0IHt9Ii5mb3JtYXQobGVuKG5hZHppZW1uZSkpKQ0KICAgICAgICByZXR1cm4gd3luaWsNCg0KICAgIHpfc3Ryb3BvdyA9IFtfZ29yYShrKSBmb3IgayBpbiBuYWR6aWVtbmVdDQogICAgel9tYXggPSB6X3N0cm9wb3dbLTFdDQogICAgcG9sYV9zemtpY3UgPSBbX3BvbGUoaykgZm9yIGsgaW4gbmFkemllbW5lXQ0KDQogICAgIyAxKSBTZWtjamUgbG9mdHU6IHBhcnRlciBza29waW93YW55IG5hIHRlcmVuICh0ID0gMCksIHBvdGVtIGthxbxkeSBzdHJvcC4NCiAgICB6cm9kbGEgPSBsaXN0KHppcChbbmFkemllbW5lWzBdXSArIG5hZHppZW1uZSwgd3lzb2tvc2NpX3ByemVrcm9qb3coel9zdHJvcG93KSkpDQogICAgb3NfeHkgPSBfc3JvZGVrKG5hZHppZW1uZVswXSkNCiAgICBraWVydW5la18wID0gTm9uZQ0KICAgIHByemVrcm9qZSA9IFtdDQogICAgZm9yIGtyenl3YSwgeiBpbiB6cm9kbGE6DQogICAgICAgIHNla2NqYSA9IGtyenl3YS5EdXBsaWNhdGVDdXJ2ZSgpDQogICAgICAgIGR6ID0geiAtIF9nb3JhKHNla2NqYSkNCiAgICAgICAgaWYgYWJzKGR6KSA+IFRPTDoNCiAgICAgICAgICAgIHNla2NqYS5UcmFuc2Zvcm0ocmcuVHJhbnNmb3JtLlRyYW5zbGF0aW9uKDAuMCwgMC4wLCBkeikpDQogICAgICAgIHQgPSB6IC8gel9tYXggaWYgel9tYXggPiAwLjAgZWxzZSAwLjANCg0KICAgICAgICBzZWtjamEgPSBfcHJ6ZWNpd25pZV9kb196ZWdhcmEoc2VrY2phKQ0KICAgICAgICBzZWtjamEgPSBfemFva3JhZ2xpaihzZWtjamEsIHphb2tyYWdsZW5pZSwgYmxlZHkpLlRvTnVyYnNDdXJ2ZSgpDQoNCiAgICAgICAgc3JvZGVrID0gX3Nyb2RlayhzZWtjamEpDQogICAgICAgIHNla2NqYS5UcmFuc2Zvcm0ocmcuVHJhbnNmb3JtLlNjYWxlKHNyb2Rlaywgc2thbGEodCwgd3licnp1c3plbmllKSkpDQogICAgICAgIGthdCA9IGthdF9za3JldHVfcmFkKHQsIHNrcmV0X2RlZykNCiAgICAgICAgc2VrY2phLlRyYW5zZm9ybShyZy5UcmFuc2Zvcm0uUm90YXRpb24oa2F0LCByZy5WZWN0b3IzZC5aQXhpcywgcmcuUG9pbnQzZChvc194eS5YLCBvc194eS5ZLCB6KSkpDQogICAgICAgIHNla2NqYS5UcmFuc2Zvcm0ocmcuVHJhbnNmb3JtLlRyYW5zbGF0aW9uKHBvY2h5bGVuaWVfeF9tICogdCwgcG9jaHlsZW5pZV95X20gKiB0LCAwLjApKQ0KDQogICAgICAgICMgMikgU3pldzoga2llcnVuZWsgcG9jesSFdGt1IHBhcnRlcnUgb2Jyw7Njb255IG8gc2tyxJl0IGRhbmVnbyBwcnpla3JvanUuDQogICAgICAgIGlmIGtpZXJ1bmVrXzAgaXMgTm9uZToNCiAgICAgICAgICAgIHAwID0gc2VrY2phLlBvaW50QXRTdGFydA0KICAgICAgICAgICAga2llcnVuZWtfMCA9IG1hdGguYXRhbjIocDAuWSAtIG9zX3h5LlksIHAwLlggLSBvc194eS5YKQ0KICAgICAgICBfdXN0YXdfc3pldyhzZWtjamEsIG9zX3h5LCBraWVydW5la18wICsga2F0LCB6KQ0KICAgICAgICBwcnpla3JvamUuYXBwZW5kKHNla2NqYSkNCg0KICAgICMgMykgTG9mdCB6IHByemVidWRvd8SFIHByemVrcm9qw7N3IGRvIHdzcMOzbG5laiBsaWN6YnkgcHVua3TDs3csIHBva3J5d3ksIG9yaWVudGFjamEuDQogICAgcHVua3R5ID0gbWF4KGludChwdW5rdHlfcHJvZmlsdSksIE1JTl9QVU5LVFlfUFJPRklMVSkNCiAgICBicmVwcyA9IHJnLkJyZXAuQ3JlYXRlRnJvbUxvZnRSZWJ1aWxkKF9saXN0YShwcnpla3JvamUpLCByZy5Qb2ludDNkLlVuc2V0LCByZy5Qb2ludDNkLlVuc2V0LA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmcuTG9mdFR5cGUuTm9ybWFsLCBGYWxzZSwgcHVua3R5KQ0KICAgIGlmIGJyZXBzIGlzIE5vbmUgb3IgbGVuKGJyZXBzKSA9PSAwOg0KICAgICAgICBibGVkeS5hcHBlbmQoImxvZnQgbmllIHBvd2nDs2TFgiBzacSZIC0gc3ByYXdkxbosIGN6eSBrcnp5d2Ugc8SFIHphbWtuacSZdGUgaSBwxYJhc2tpZSIpDQogICAgICAgIHJldHVybiB3eW5paw0KICAgIGlmIGxlbihicmVwcykgPiAxOg0KICAgICAgICBibGVkeS5hcHBlbmQoImxvZnQgendyw7NjacWCIHt9IHBvd2llcnpjaG5pLCB1xbx5dG8gcGllcndzemVqIi5mb3JtYXQobGVuKGJyZXBzKSkpDQogICAgYnJ5bGEgPSBicmVwc1swXQ0KICAgIHphbWtuaWV0YSA9IGJyeWxhLkNhcFBsYW5hckhvbGVzKFRPTCkNCiAgICBpZiB6YW1rbmlldGEgaXMgTm9uZToNCiAgICAgICAgYmxlZHkuYXBwZW5kKCJuaWUgdWRhxYJvIHNpxJkgemFta27EhcSHIGJyecWCeSBwb2tyeXdhbWkgKENhcFBsYW5hckhvbGVzKSIpDQogICAgZWxzZToNCiAgICAgICAgYnJ5bGEgPSB6YW1rbmlldGENCiAgICBpZiBicnlsYS5Tb2xpZE9yaWVudGF0aW9uID09IHJnLkJyZXBTb2xpZE9yaWVudGF0aW9uLklud2FyZDoNCiAgICAgICAgYnJ5bGEuRmxpcCgpDQogICAgaWYgbm90IGJyeWxhLklzU29saWQ6DQogICAgICAgIGJsZWR5LmFwcGVuZCgiYnJ5xYJhIG5pZSBqZXN0IHphbWtuacSZdGEgKHByemVrcm9qZSBzacSZIHByemVjaW5hasSFIC0gem1uaWVqc3ogd3licnp1c3plbmllIGFsYm8gc2tyxJl0KTsgIg0KICAgICAgICAgICAgICAgICAgICAgIm9iasSZdG/Fm8SHIGkgcMWCeXR5IG5pZXBld25lIikNCiAgICB3eW5pa1siYnJ5bGEiXSA9IGJyeWxhDQoNCiAgICAjIDQpIE5vd2Ugb2JyeXN5IGtvbmR5Z25hY2ppOiBjacSZY2llIDEgbW0gcG9kIGthxbxkeW0gc3Ryb3BlbS4gUG9sYSBzemtpY3UNCiAgICAjICAgIGlkxIUgdyBwYXJ6ZSB6IHVkYW55bWkgY2nEmWNpYW1pLCDFvGVieSByYXBvcnQgbmllIHByemVzdW7EhcWCIHNpxJkgcG8gbHVjZS4NCiAgICBub3dlID0gW10NCiAgICBwb2xhX3N6a2ljdV9ub3d5Y2ggPSBbXQ0KICAgIGZvciB6LCBwb2xlX3N6a2ljdSBpbiB6aXAoel9zdHJvcG93LCBwb2xhX3N6a2ljdSk6DQogICAgICAgIG9icnlzID0gX3ByemVrcm9qX25hX3d5c29rb3NjaShicnlsYSwgeiAtIENJRUNJRV9QT05JWkVKX00pDQogICAgICAgIGlmIG9icnlzIGlzIE5vbmU6DQogICAgICAgICAgICBibGVkeS5hcHBlbmQoImJyYWsgemFta25pxJl0ZWdvIHByemVrcm9qdSBuYSB3eXNva2/Fm2NpIHs6LjFmfSBtIi5mb3JtYXQoeikpDQogICAgICAgICAgICBjb250aW51ZQ0KICAgICAgICBub3dlLmFwcGVuZChvYnJ5cykNCiAgICAgICAgcG9sYV9zemtpY3Vfbm93eWNoLmFwcGVuZChwb2xlX3N6a2ljdSkNCiAgICB3eW5pa1sia29uZHlnbmFjamVfbm93ZSJdID0gbGlzdChwb2R6aWVtbmUpICsgbm93ZQ0KDQogICAgcGx5dHkgPSBbXQ0KICAgIGZvciBvYnJ5cyBpbiBub3dlOg0KICAgICAgICBwbGFza2llID0gcmcuQnJlcC5DcmVhdGVQbGFuYXJCcmVwcyhvYnJ5cywgVE9MKQ0KICAgICAgICBpZiBwbGFza2llIGlzIG5vdCBOb25lOg0KICAgICAgICAgICAgcGx5dHkuZXh0ZW5kKGxpc3QocGxhc2tpZSkpDQogICAgd3luaWtbInBseXR5Il0gPSBwbHl0eQ0KDQogICAgaWYga29udHVyeV9jb19tIGFuZCBrb250dXJ5X2NvX20gPiAwLjA6DQogICAgICAgIGtvbnR1cnkgPSByZy5CcmVwLkNyZWF0ZUNvbnRvdXJDdXJ2ZXMoYnJ5bGEsIHJnLlBvaW50M2QoMC4wLCAwLjAsIDAuMCksDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmcuUG9pbnQzZCgwLjAsIDAuMCwgel9tYXgpLCBrb250dXJ5X2NvX20pDQogICAgICAgIHd5bmlrWyJrb250dXJ5Il0gPSBsaXN0KGtvbnR1cnkpIGlmIGtvbnR1cnkgaXMgbm90IE5vbmUgZWxzZSBbXQ0KDQogICAgIyA1KSBPYnJ5cyB6YWJ1ZG93eTogc3VtYSByenV0w7N3IG5vd3ljaCBvYnJ5c8OzdyBuYSB0ZXJlbi4NCiAgICBvYnJ5c196YWJ1ZG93eSA9IF9vYnJ5cyhub3dlLCBibGVkeSkNCiAgICB3eW5pa1siemFidWRvd2Ffbm93YSJdID0gb2JyeXNfemFidWRvd3kNCg0KICAgIHZtcCA9IHJnLlZvbHVtZU1hc3NQcm9wZXJ0aWVzLkNvbXB1dGUoYnJ5bGEpDQogICAgb2JqZXRvc2MgPSBhYnModm1wLlZvbHVtZSkgaWYgdm1wIGlzIG5vdCBOb25lIGVsc2UgMC4wDQogICAgd3lzb2tvc2MgPSBtYXgoX2dvcmEoaykgZm9yIGsgaW4gbm93ZSkgaWYgbm93ZSBlbHNlIDAuMA0KICAgIHd5bmlrWyJyYXBvcnQiXSA9IGxpbmllX3JhcG9ydHUoW19wb2xlKGspIGZvciBrIGluIG5vd2VdLCBwb2xhX3N6a2ljdV9ub3d5Y2gsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB3eXNva29zYywgb2JqZXRvc2MsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfcG9sZShvYnJ5c196YWJ1ZG93eSkgaWYgb2JyeXNfemFidWRvd3kgaXMgbm90IE5vbmUgZWxzZSAwLjApDQogICAgcmV0dXJuIHd5bmlrDQoNCg0KIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCiMgS29tcG9uZW50IEdyYXNzaG9wcGVyIC0gd2VqxZtjaWEgY3p5dGFuZSB6IGdsb2JhbHMoKSwgxbxlYnkgcGxpayBkemlhxYJhxYIgdGFrxbxlDQojIHVydWNob21pb255IHBvemEga29tcG9uZW50ZW0gKHd0ZWR5IHdlasWbxIcgbmllIG1hIGkgcmFwb3J0IHRvIG3Ds3dpKS4NCiMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpkZWYgX3dlanNjaWUobmF6d2EsIGRvbXlzbG5hKToNCiAgICB3YXJ0b3NjID0gZ2xvYmFscygpLmdldChuYXp3YSkNCiAgICByZXR1cm4gZG9teXNsbmEgaWYgd2FydG9zYyBpcyBOb25lIGVsc2Ugd2FydG9zYw0KDQoNCmJyeWxhID0gTm9uZQ0Ka29uZHlnbmFjamVfbm93ZSA9IFtdDQp6YWJ1ZG93YV9ub3dhID0gTm9uZQ0KcGx5dHkgPSBbXQ0Ka29udHVyeSA9IFtdDQpyYXBvcnQgPSBbXQ0KDQppZiBub3QgV19SSElOTzoNCiAgICByYXBvcnQgPSBbInV3YWdhOiBpbXBvcnQgUmhpbm8gbmllIHBvd2nDs2TFgiBzacSZIC0ga29tcG9uZW50IGR6aWHFgmEgcG96YSBSaGlubyBhbGJvIHcgbmllb2JzxYJ1Z2l3YW5laiB3ZXJzamkuIl0NCmVsc2U6DQogICAgX2tyenl3ZSA9IF93ZWpzY2llKCJrb25keWduYWNqZSIsIFtdKQ0KICAgIGlmIG5vdCBpc2luc3RhbmNlKF9rcnp5d2UsIChsaXN0LCB0dXBsZSkpOg0KICAgICAgICBfa3J6eXdlID0gW19rcnp5d2VdDQogICAgX2tyenl3ZSA9IFtrIGZvciBrIGluIF9rcnp5d2UgaWYgayBpcyBub3QgTm9uZV0NCiAgICBfdXdhZ2kgPSBbXQ0KICAgIGlmIG5vdCBfa3J6eXdlOg0KICAgICAgICAjIFdrbGVqb255IGtvbXBvbmVudCBiZXoga2FibGkgbWEgb2QgcmF6dSBjb8WbIHBva2F6YcSHLg0KICAgICAgICBfa3J6eXdlID0ga3J6eXdlX2RvbXlzbG5lKCJLb25keWduYWNqZSIpDQogICAgICAgIF91d2FnaSA9IFsidXdhZ2E6IHdlasWbY2llIGtvbmR5Z25hY2plIHB1c3RlIC0gdcW8eXRvIGRvbXnFm2xuZWogbWFzeSBTb2xuYSB3YnVkb3dhbmVqIHcgc2tyeXB0Il0NCiAgICBfd3luaWsgPSB6YnVkdWpfYnJ5bGUoDQogICAgICAgIF9rcnp5d2UsDQogICAgICAgIGZsb2F0KF93ZWpzY2llKCJza3JldF9kZWciLCBET01ZU0xORVsic2tyZXRfZGVnIl0pKSwNCiAgICAgICAgZmxvYXQoX3dlanNjaWUoInd5YnJ6dXN6ZW5pZSIsIERPTVlTTE5FWyJ3eWJyenVzemVuaWUiXSkpLA0KICAgICAgICBmbG9hdChfd2Vqc2NpZSgiemFva3JhZ2xlbmllIiwgRE9NWVNMTkVbInphb2tyYWdsZW5pZSJdKSksDQogICAgICAgIGZsb2F0KF93ZWpzY2llKCJwb2NoeWxlbmllX3hfbSIsIERPTVlTTE5FWyJwb2NoeWxlbmllX3hfbSJdKSksDQogICAgICAgIGZsb2F0KF93ZWpzY2llKCJwb2NoeWxlbmllX3lfbSIsIERPTVlTTE5FWyJwb2NoeWxlbmllX3lfbSJdKSksDQogICAgICAgIGludChfd2Vqc2NpZSgicHVua3R5X3Byb2ZpbHUiLCBET01ZU0xORVsicHVua3R5X3Byb2ZpbHUiXSkpLA0KICAgICAgICBmbG9hdChfd2Vqc2NpZSgia29udHVyeV9jb19tIiwgRE9NWVNMTkVbImtvbnR1cnlfY29fbSJdKSksDQogICAgKQ0KICAgIGJyeWxhID0gX3d5bmlrWyJicnlsYSJdDQogICAga29uZHlnbmFjamVfbm93ZSA9IF93eW5pa1sia29uZHlnbmFjamVfbm93ZSJdDQogICAgemFidWRvd2Ffbm93YSA9IF93eW5pa1siemFidWRvd2Ffbm93YSJdDQogICAgcGx5dHkgPSBfd3luaWtbInBseXR5Il0NCiAgICBrb250dXJ5ID0gX3d5bmlrWyJrb250dXJ5Il0NCiAgICByYXBvcnQgPSBfdXdhZ2kgKyBbInV3YWdhOiAiICsgYiBmb3IgYiBpbiBfd3luaWtbImJsZWR5Il1dICsgX3d5bmlrWyJyYXBvcnQiXQ0KDQoNCmRlZiBfc2VsZnRlc3QoKToNCiAgICAiIiJTcHJhd2R6YSBjenlzdMSFIGFyeXRtZXR5a8SZIGJleiBSaGlubyAod3l3b8WCYW5pZTogLS10ZXN0KS4iIiINCiAgICB0cnk6DQogICAgICAgIHN5cy5zdGRvdXQucmVjb25maWd1cmUoZW5jb2Rpbmc9InV0Zi04IikNCiAgICBleGNlcHQgQXR0cmlidXRlRXJyb3I6DQogICAgICAgIHBhc3MNCg0KICAgIGFzc2VydCBza2FsYSgwLjAsIDAuMSkgPT0gMS4wDQogICAgYXNzZXJ0IGFicyhza2FsYSgwLjUsIDAuMSkgLSAxLjEpIDwgMWUtOQ0KICAgIGFzc2VydCBhYnMoc2thbGEoMS4wLCAwLjEpIC0gMS4wKSA8IDFlLTkNCiAgICBhc3NlcnQga2F0X3NrcmV0dV9yYWQoMC4wLCAxMi4wKSA9PSAwLjANCiAgICBhc3NlcnQgYWJzKGthdF9za3JldHVfcmFkKDEuMCwgMTIuMCkgLSBtYXRoLnJhZGlhbnMoMTIuMCkpIDwgMWUtMTINCiAgICBhc3NlcnQgcHJvbWllbl96YW9rcmFnbGVuaWEoMzcuMCwgMjYuMCwgMS4wKSA9PSAwLjQ5ICogMjYuMA0KICAgIGFzc2VydCBwcm9taWVuX3phb2tyYWdsZW5pYSgzNy4wLCAyNi4wLCAwLjApID09IDAuMA0KICAgIGFzc2VydCBwcm9taWVuX3phb2tyYWdsZW5pYSgzNy4wLCAyNi4wLCAyLjApID09IDAuNDkgKiAyNi4wLCAiemFva3JhZ2xlbmllID4gMSBtYSBiecSHIHByenljacSZdGUgZG8gMSINCiAgICBwYXJ5ID0gWygyMC42LCAiazYiKSwgKC0zLjAsICJnYXJheiIpLCAoNC4yLCAiazEiKSwgKDEzLjgsICJrNCIpLCAoNy40LCAiazIiKSwgKDE3LjIsICJrNSIpLCAoMTAuNiwgImszIildDQogICAgYXNzZXJ0IHBvZHppZWxfd2dfeihwYXJ5KSA9PSAoWyJnYXJheiJdLCBbImsxIiwgImsyIiwgImszIiwgIms0IiwgIms1IiwgIms2Il0pLCBwb2R6aWVsX3dnX3oocGFyeSkNCiAgICBhc3NlcnQgd3lzb2tvc2NpX3ByemVrcm9qb3coWzQuMiwgNy40LCAxMC42LCAxMy44LCAxNy4yLCAyMC42XSkgPT0gWw0KICAgICAgICAwLjAsIDQuMiwgNy40LCAxMC42LCAxMy44LCAxNy4yLCAyMC42XQ0KICAgIGFzc2VydCBsaW5pYV9rb25keWduYWNqaSgxLCA5NjQuMiwgOTYyLjApID09ICJrb25keWduYWNqYSAxOiA5NjQuMiBtMiAoc3praWMgOTYyLjAgbTIpIg0KICAgIGxpbmllID0gbGluaWVfcmFwb3J0dShbOTY0LjIsIDgwMC4wXSwgWzk2Mi4wLCA3ODIuMF0sIDIwLjYsIDE5MDAwLjQsIDExNjAuMCkNCiAgICBhc3NlcnQgbGluaWVbMl0gPT0gInN1bWEgUG8gKG5hZHppZW1uZSk6IDE3NjQuMiBtMiAoc3praWMgMTc0NC4wIG0yKSIsIGxpbmllWzJdDQogICAgYXNzZXJ0IGxpbmllWzNdID09ICJ3eXNva2/Fm8SHOiAyMC42IG0gLyAyIGtvbmQuIiwgbGluaWVbM10NCiAgICBhc3NlcnQgbGluaWVbNF0gPT0gIm9icnlzIHphYnVkb3d5OiAxMTYwLjAgbTIiLCBsaW5pZVs0XQ0KICAgIGFzc2VydCBsaW5pZVs1XSA9PSAib2JqxJl0b8WbxIc6IDE5MDAwIG0zIiwgbGluaWVbNV0NCiAgICAjIFdidWRvd2FuYSBtYXNhIGRvbXnFm2xuYSBtdXNpIHpnYWR6YcSHIHNpxJkgemUgc3praWNlbSAwNV9zemtpY19icnlseV9yaGluby5weS4NCiAgICBhc3NlcnQgbGVuKERPTVlTTE5BX01BU0EpID09IDEyLCBsZW4oRE9NWVNMTkFfTUFTQSkNCiAgICBrb25kID0gWyh4MSAtIHgwKSAqICh5MSAtIHkwKSBmb3IgdywgeDAsIHkwLCB4MSwgeTEsIHogaW4gRE9NWVNMTkFfTUFTQSBpZiB3ID09ICJLb25keWduYWNqZSJdDQogICAgYXNzZXJ0IGtvbmQgPT0gWzE0MDAsIDk2MiwgOTYyLCA5NjIsIDk2MiwgNzgyLCA3MjZdLCBrb25kDQogICAgcHJpbnQoIlNFTEZURVNUIE9LIikNCg0KDQppZiBfX25hbWVfXyA9PSAiX19tYWluX18iIGFuZCBub3QgV19SSElOTyBhbmQgIi0tdGVzdCIgaW4gc3lzLmFyZ3Y6DQogICAgX3NlbGZ0ZXN0KCkNCg==</item>
+                        <item name="Title" type_name="gh_string" type_code="10">06_bryla_gh</item>
+                      </items>
+                      <chunks count="1">
+                      <chunk name="LanguageSpec">
+                        <items count="2">
+                          <item name="Taxon" type_name="gh_string" type_code="10">*.*.python</item>
+                          <item name="Version" type_name="gh_string" type_code="10">3.*</item>
+                        </items>
+                      </chunk>
+                      </chunks>
+                    </chunk>
+                    <chunk name="ScriptEditor">
+                      <items count="1">
+                        <item name="StartBounds" type_name="gh_drawing_rectangle" type_code="34">
+                          <X>200</X>
+                          <Y>200</Y>
+                          <W>550</W>
+                          <H>600</H>
+                        </item>
+                      </items>
+                    </chunk>
+                  </chunks>
+                </chunk>
+              </chunks>
+            </chunk>
+          </chunks>
+        </chunk>
+      </chunks>
+    </chunk>
+  </chunks>
+</Archive>

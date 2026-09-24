@@ -1,0 +1,37 @@
+{
+  "plan": "Miejscowy plan zagospodarowania przestrzennego terenu \"Kielce Centrum - Obszar I.2 Centrum - Solna\"",
+  "uchwala": "Uchwała Nr XLI/1014/2009 Rady Miejskiej w Kielcach z dnia 19 października 2009 r.",
+  "zrodlo_url": "https://bipum.kielce.eu/resource/2289/Cntrum+Solna.doc.pdf",
+  "teren": "U,M 2",
+  "przeznaczenie": "zabudowa o funkcji nieuciążliwych usług metropolitalnych i ogólnomiejskich oraz mieszkaniowej",
+  "definicje": {
+    "intensywnosc": "§4 pkt 29: I = Po / T; Po = suma powierzchni wszystkich kondygnacji nadziemnych liczona po zewnętrznym obrysie muru; T = powierzchnia terenu inwestycji. Kondygnacje podziemne nie wchodzą do Po.",
+    "powierzchnia_biologicznie_czynna": "§4 pkt 17: grunt rodzimy oraz woda powierzchniowa na terenie działki, a także 50% sumy powierzchni tarasów i stropodachów o powierzchni nie mniejszej niż 10 m2 urządzonych jako stałe trawniki lub kwietniki. Tarasy mniejsze niż 10 m2 nie liczą się.",
+    "wysokosc_budynku": "§4 pkt 30: od uśrednionego poziomu chodnika (terenu) przed elewacją frontową do gzymsu lub górnej krawędzi attyki.",
+    "powierzchnia_zabudowy": "Plan nie definiuje. Przyjmij rzut kondygnacji nadziemnych po zewnętrznym obrysie ścian zewnętrznych (upzp art. 2 pkt 35), bez części podziemnych i bez balkonów."
+  },
+  "wskazniki": {
+    "powierzchnia_zabudowy_max_pct": 50,
+    "intensywnosc_max": 3.5,
+    "pbc_min_pct": 10,
+    "wysokosc": {
+      "podstawowa_m": 14.0,
+      "podstawowa_kondygnacje": 4,
+      "maksymalna_m": 21.0,
+      "maksymalna_kondygnacje": 6,
+      "cofniecie_kondygnacji_powyzej_podstawowej_min_m": 1.5,
+      "cofniecie_od": ["KDP-1", "Solna (KDL-6)"]
+    },
+    "dach_nachylenie_max_deg": 25,
+    "parking": {
+      "miejsc_na_mieszkanie_min": 1,
+      "tylko_podziemny": true
+    }
+  },
+  "zrodla_paragrafy": {
+    "wskazniki": "§20 ust. 2 pkt 6",
+    "zabudowa_i_wysokosc": "§20 ust. 2 pkt 7",
+    "parking": "§15 ust. 1 pkt 3 oraz §20 ust. 2 pkt 10 lit. e",
+    "definicje": "§4 pkt 17, 29, 30"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "plan": "",
+  "uchwala": "",
+  "zrodlo_url": "",
+  "teren": "",
+  "przeznaczenie": "",
+  "definicje": {
+    "intensywnosc": "",
+    "powierzchnia_biologicznie_czynna": "",
+    "wysokosc_budynku": "",
+    "powierzchnia_zabudowy": ""
+  },
+  "wskazniki": {
+    "powierzchnia_zabudowy_max_pct": null,
+    "intensywnosc_max": null,
+    "pbc_min_pct": null,
+    "wysokosc": {
+      "podstawowa_m": null,
+      "podstawowa_kondygnacje": null,
+      "maksymalna_m": null,
+      "maksymalna_kondygnacje": null,
+      "cofniecie_kondygnacji_powyzej_podstawowej_min_m": null,
+      "cofniecie_od": []
+    },
+    "dach_nachylenie_max_deg": null,
+    "parking": {
+      "miejsc_na_mieszkanie_min": null,
+      "tylko_podziemny": null
+    }
+  },
+  "zrodla_paragrafy": {
+    "wskazniki": "",
+    "zabudowa_i_wysokosc": "",
+    "parking": "",
+    "definicje": ""
+  }
+}

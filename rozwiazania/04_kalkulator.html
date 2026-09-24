@@ -1,0 +1,957 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalkulator MPZP - U,M 2 (Solna)</title>
+<style>
+/* Paleta w zmiennych CSS: jeden zestaw dla motywu jasnego, drugi dla ciemnego. */
+:root {
+  color-scheme: light dark;
+  --tlo: #f6f3ee;
+  --plaszczyzna: #fffdfa;
+  --plaszczyzna-2: #f1ece4;
+  --tekst: #232629;
+  --tekst-slaby: #5d6268;
+  --linia: #ddd6cb;
+  --akcent: #0b5f5a;
+  --akcent-tlo: #e0eeec;
+  --ok: #17643a;
+  --ok-tlo: #dbeee2;
+  --nie: #93291b;
+  --nie-tlo: #f6ded9;
+  --cien: 0 1px 3px rgba(35, 38, 41, 0.10);
+  --promien: 8px;
+  /* Nadpisywana ze skryptu zmierzona wysokoscia naglowka; ponizej tylko wartosc awaryjna. */
+  --wys-naglowka: 108px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --tlo: #16181a;
+    --plaszczyzna: #202326;
+    --plaszczyzna-2: #272b2e;
+    --tekst: #eae7e1;
+    --tekst-slaby: #a8adb3;
+    --linia: #353b3f;
+    --akcent: #5cc9be;
+    --akcent-tlo: #13312e;
+    --ok: #7ad69f;
+    --ok-tlo: #17331f;
+    --nie: #f4a396;
+    --nie-tlo: #3b1c17;
+    --cien: 0 1px 3px rgba(0, 0, 0, 0.45);
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--tlo);
+  color: var(--tekst);
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+h1, h2, legend { font-weight: 600; letter-spacing: 0.01em; }
+h1 { font-size: 1.15rem; margin: 0; }
+h2 {
+  font-size: 1rem;
+  margin: 0 0 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tekst-slaby);
+}
+
+:focus-visible {
+  outline: 2px solid var(--akcent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Naglowek przyklejony u gory: tozsamosc planu po lewej, werdykt po prawej. */
+.naglowek {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--plaszczyzna);
+  border-bottom: 1px solid var(--linia);
+  box-shadow: var(--cien);
+}
+.naglowek-tresc {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: center;
+  justify-content: space-between;
+}
+.tozsamosc p { margin: 3px 0 0; font-size: 0.8rem; color: var(--tekst-slaby); }
+.teren {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 9px;
+  border: 1px solid var(--akcent);
+  border-radius: 999px;
+  color: var(--akcent);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+.werdykt {
+  margin: 0;
+  min-width: 14ch;
+  text-align: center;
+  padding: 9px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--linia);
+  background: var(--plaszczyzna-2);
+  color: var(--tekst-slaby);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.werdykt-ok { background: var(--ok-tlo); border-color: var(--ok); color: var(--ok); }
+.werdykt-nie { background: var(--nie-tlo); border-color: var(--nie); color: var(--nie); }
+
+/* Uklad: formularz po lewej, wyniki po prawej i przyklejone przy przewijaniu. */
+.uklad {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 28px 24px 44px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+.kolumna-formularz { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.wyniki { position: sticky; top: calc(var(--wys-naglowka) + 16px); }
+
+.panel {
+  background: var(--plaszczyzna);
+  border: 1px solid var(--linia);
+  border-radius: var(--promien);
+  padding: 24px;
+  box-shadow: var(--cien);
+  min-width: 0;
+}
+
+.pasek-plikow { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.plik {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 16px;
+  border: 1px solid var(--akcent);
+  border-radius: var(--promien);
+  color: var(--akcent);
+  background: var(--akcent-tlo);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.plik input[type="file"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  cursor: pointer;
+}
+.plik:focus-within { outline: 2px solid var(--akcent); outline-offset: 2px; }
+
+.btn {
+  padding: 9px 16px;
+  border: 1px solid var(--linia);
+  border-radius: var(--promien);
+  background: var(--plaszczyzna-2);
+  color: var(--tekst);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn:hover { border-color: var(--akcent); color: var(--akcent); }
+
+.komunikat { margin: 14px 0 0; font-size: 0.85rem; color: var(--tekst-slaby); }
+.komunikat.blad { color: var(--nie); font-weight: 600; }
+.komunikat:empty { display: none; }
+
+fieldset {
+  border: 0;
+  border-top: 1px solid var(--linia);
+  margin: 0 0 22px;
+  padding: 18px 0 0;
+  /* Bez tego pole zbiorcze nie zwezi sie ponizej szerokosci tabeli kondygnacji
+     i na telefonie przewija sie cala strona zamiast samej tabeli. */
+  min-width: 0;
+}
+fieldset:last-of-type { margin-bottom: 0; }
+legend {
+  padding: 0 8px 0 0;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--tekst-slaby);
+}
+
+.siatka-pol {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px 20px;
+}
+.pole { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.pole label { font-size: 0.82rem; color: var(--tekst-slaby); }
+input[type="number"], input[type="text"] {
+  width: 100%;
+  padding: 7px 9px;
+  border: 1px solid var(--linia);
+  border-radius: 5px;
+  background: var(--plaszczyzna);
+  color: var(--tekst);
+  font: inherit;
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
+}
+.pole-checkbox { flex-direction: row; align-items: center; gap: 9px; }
+.pole-checkbox label { font-size: 0.88rem; color: var(--tekst); }
+input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--akcent); margin: 0; }
+
+.przewijak { overflow-x: auto; margin: 0 0 14px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.86rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--linia); vertical-align: middle; }
+thead th {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--tekst-slaby);
+  font-weight: 600;
+}
+
+/* Staly podzial kolumn: wszystkie siedem miesci sie w panelu przy 1440 px,
+   naglowki moga sie zawijac, komorki z polami juz nie. */
+#tabela-kondygnacje { table-layout: fixed; min-width: 604px; }
+#tabela-kondygnacje th, #tabela-kondygnacje td { padding: 7px 8px; }
+#tabela-kondygnacje thead th { white-space: normal; }
+#tabela-kondygnacje td { white-space: nowrap; }
+#tabela-kondygnacje .kol-nazwa { width: 148px; }
+#tabela-kondygnacje .kol-miara { width: 88px; }
+#tabela-kondygnacje .kol-znacznik { width: 74px; }
+#tabela-kondygnacje .kol-usun { width: 50px; }
+#tabela-kondygnacje input[type="text"],
+#tabela-kondygnacje input[type="number"] { width: 100%; }
+.wskazowka-przewijania { display: none; }
+.usun {
+  border: 1px solid var(--linia);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--tekst-slaby);
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 4px 9px;
+  cursor: pointer;
+}
+.usun:hover { color: var(--nie); border-color: var(--nie); }
+
+/* Tabela wynikow: wartosc z paskiem wypelnienia, limit, status i margines.
+   Staly podzial kolumn - bez niego najdluzsze napisy ("27 podziemnych + 3 naziemnych")
+   rozpychaja tabele i cala strona przewija sie w bok na telefonie. */
+#tabela-wynik { table-layout: fixed; }
+#tabela-wynik td, #tabela-wynik th { padding: 11px 10px; overflow-wrap: break-word; }
+#tabela-wynik .w-nazwa { width: 26%; }
+#tabela-wynik .w-wartosc { width: 22%; }
+#tabela-wynik .w-limit { width: 22%; }
+#tabela-wynik .w-status { width: 13%; }
+#tabela-wynik .w-margines { width: 17%; }
+#tabela-wynik .kol-liczba { font-variant-numeric: tabular-nums; }
+.wartosc { display: block; font-size: 0.95rem; font-weight: 600; }
+.pasek {
+  display: block;
+  height: 5px;
+  margin-top: 7px;
+  border-radius: 999px;
+  background: var(--plaszczyzna-2);
+  overflow: hidden;
+}
+.pasek span { display: block; height: 100%; border-radius: 999px; background: var(--ok); }
+tr.rzad-nie .pasek span { background: var(--nie); }
+.status {
+  display: inline-block;
+  min-width: 4ch;
+  text-align: center;
+  padding: 3px 11px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.status-ok { background: var(--ok-tlo); color: var(--ok); border: 1px solid var(--ok); }
+.status-nie { background: var(--nie-tlo); color: var(--nie); border: 1px solid var(--nie); }
+.pusto { color: var(--tekst-slaby); font-style: italic; }
+
+.wyniki-gora { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.wyniki-gora h2 { margin: 0 0 16px; }
+.nota { margin: 16px 0 0; font-size: 0.78rem; color: var(--tekst-slaby); }
+
+footer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px 40px;
+  font-size: 0.78rem;
+  color: var(--tekst-slaby);
+}
+
+@media (max-width: 720px) {
+  .uklad { grid-template-columns: 1fr; padding: 20px 16px 36px; gap: 20px; }
+  .wyniki { position: static; }
+  .naglowek-tresc { padding: 12px 16px; }
+  .panel { padding: 18px 16px; }
+  footer { padding: 0 16px 32px; }
+  .werdykt { max-width: 100%; }
+  /* Ponizej 720 px tabela kondygnacji przewija sie w bok - z zapowiedzia nad tabela. */
+  .wskazowka-przewijania {
+    display: block;
+    margin: 0 0 8px;
+    font-size: 0.78rem;
+    color: var(--tekst-slaby);
+  }
+  .przewijak { border-right: 1px solid var(--linia); }
+}
+
+@media print {
+  .naglowek { position: static; box-shadow: none; }
+  .uklad { display: block; padding: 0; }
+  .kolumna-formularz, .btn, .plik, .pasek-plikow, .komunikat { display: none; }
+  .panel { border: 0; box-shadow: none; padding: 0; }
+  .wyniki { position: static; }
+  .pasek, .pasek span, .status { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+
+<header class="naglowek">
+  <div class="naglowek-tresc">
+    <div class="tozsamosc">
+      <h1>Kalkulator MPZP <span class="teren" id="naglowek-teren">U,M 2</span></h1>
+      <p id="naglowek-plan">Miejscowy plan zagospodarowania przestrzennego terenu "Kielce Centrum - Obszar I.2 Centrum - Solna"</p>
+      <p id="naglowek-uchwala">Uchwała Nr XLI/1014/2009 Rady Miejskiej w Kielcach z dnia 19 października 2009 r.</p>
+    </div>
+    <p class="werdykt" id="werdykt" role="status" aria-live="polite"></p>
+  </div>
+</header>
+
+<main class="uklad">
+
+  <div class="kolumna-formularz">
+
+    <section class="panel" aria-labelledby="tytul-inwestycja">
+      <h2 id="tytul-inwestycja">Inwestycja</h2>
+
+      <div class="pasek-plikow">
+        <label class="plik">
+          <input type="file" id="plik-inwestycja" accept=".json">
+          Wczytaj inwestycja.json
+        </label>
+        <label class="plik">
+          <input type="file" id="plik-plan" accept=".json">
+          Wczytaj plan.json
+        </label>
+      </div>
+      <p class="komunikat" id="komunikat"></p>
+
+      <fieldset>
+        <legend>Działka i zabudowa</legend>
+        <div class="siatka-pol">
+          <div class="pole">
+            <label for="dzialka_m2">Powierzchnia działki (m²)</label>
+            <input id="dzialka_m2" type="number" step="0.1" value="1850">
+          </div>
+          <div class="pole">
+            <label for="zabudowa_m2">Powierzchnia zabudowy (m²)</label>
+            <input id="zabudowa_m2" type="number" step="0.1" value="962">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Kondygnacje</legend>
+        <p class="wskazowka-przewijania">Tabelę kondygnacji przewiń w bok, aby zobaczyć kolumny Nadziemna i Usuń.</p>
+        <div class="przewijak">
+          <table id="tabela-kondygnacje">
+            <thead>
+              <tr>
+                <th scope="col" class="kol-nazwa">Kondygnacja</th>
+                <th scope="col" class="kol-miara">Pow. (m²)</th>
+                <th scope="col" class="kol-miara">Górna krawędź (m)</th>
+                <th scope="col" class="kol-miara">Cofnięcie KDP-1 (m)</th>
+                <th scope="col" class="kol-miara">Cofnięcie Solna (m)</th>
+                <th scope="col" class="kol-znacznik">Nadziemna</th>
+                <th scope="col" class="kol-usun">Usuń</th>
+              </tr>
+            </thead>
+            <tbody id="kondygnacje-body"></tbody>
+          </table>
+        </div>
+        <button type="button" class="btn" id="dodaj-kondygnacje">Dodaj kondygnację</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Teren biologicznie czynny</legend>
+        <div class="siatka-pol">
+          <div class="pole">
+            <label for="grunt_m2">Grunt rodzimy (m²)</label>
+            <input id="grunt_m2" type="number" step="0.1" value="120">
+          </div>
+          <div class="pole">
+            <label for="woda_m2">Woda powierzchniowa (m²)</label>
+            <input id="woda_m2" type="number" step="0.1" value="0">
+          </div>
+          <div class="pole">
+            <label for="tarasy">Tarasy i stropodachy zielone (m², po przecinku)</label>
+            <input id="tarasy" type="text" value="90, 8">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Dach, mieszkania i parking</legend>
+        <div class="siatka-pol">
+          <div class="pole">
+            <label for="dach_deg">Nachylenie dachu (stopnie)</label>
+            <input id="dach_deg" type="number" step="1" value="5">
+          </div>
+          <div class="pole">
+            <label for="mieszkania">Liczba mieszkań (szt.)</label>
+            <input id="mieszkania" type="number" step="1" value="30">
+          </div>
+          <div class="pole">
+            <label for="podziemne">Miejsca postojowe podziemne (szt.)</label>
+            <input id="podziemne" type="number" step="1" value="27">
+          </div>
+          <div class="pole">
+            <label for="naziemne">Miejsca postojowe naziemne (szt.)</label>
+            <input id="naziemne" type="number" step="1" value="3">
+          </div>
+        </div>
+      </fieldset>
+    </section>
+
+    <section class="panel" aria-labelledby="tytul-limity">
+      <h2 id="tytul-limity">Limity planu</h2>
+
+      <fieldset>
+        <legend>Wskaźniki podstawowe</legend>
+        <div class="siatka-pol">
+          <div class="pole">
+            <label for="lim_zabudowa_pct">Powierzchnia zabudowy - max (%)</label>
+            <input id="lim_zabudowa_pct" type="number" step="0.1" value="50">
+          </div>
+          <div class="pole">
+            <label for="lim_intensywnosc">Intensywność zabudowy - max</label>
+            <input id="lim_intensywnosc" type="number" step="0.01" value="3.5">
+          </div>
+          <div class="pole">
+            <label for="lim_pbc_pct">Powierzchnia biologicznie czynna - min (%)</label>
+            <input id="lim_pbc_pct" type="number" step="0.1" value="10">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Wysokość zabudowy</legend>
+        <div class="siatka-pol">
+          <div class="pole">
+            <label for="lim_h_podstawowa_m">Wysokość podstawowa (m)</label>
+            <input id="lim_h_podstawowa_m" type="number" step="0.1" value="14">
+          </div>
+          <div class="pole">
+            <label for="lim_k_podstawowa">Kondygnacje w wysokości podstawowej (szt.)</label>
+            <input id="lim_k_podstawowa" type="number" step="1" value="4">
+          </div>
+          <div class="pole">
+            <label for="lim_h_max_m">Wysokość maksymalna (m)</label>
+            <input id="lim_h_max_m" type="number" step="0.1" value="21">
+          </div>
+          <div class="pole">
+            <label for="lim_k_max">Kondygnacje maksymalne (szt.)</label>
+            <input id="lim_k_max" type="number" step="1" value="6">
+          </div>
+          <div class="pole">
+            <label for="lim_cofniecie_min">Min. cofnięcie powyżej wysokości podstawowej (m)</label>
+            <input id="lim_cofniecie_min" type="number" step="0.1" value="1.5">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Dach i parking</legend>
+        <div class="siatka-pol">
+          <div class="pole">
+            <label for="lim_dach_max_deg">Nachylenie dachu - max (stopnie)</label>
+            <input id="lim_dach_max_deg" type="number" step="1" value="25">
+          </div>
+          <div class="pole">
+            <label for="lim_miejsc_na_mieszkanie">Miejsc postojowych na mieszkanie - min (szt.)</label>
+            <input id="lim_miejsc_na_mieszkanie" type="number" step="0.1" value="1">
+          </div>
+          <div class="pole pole-checkbox">
+            <input id="lim_tylko_podziemny" type="checkbox" checked>
+            <label for="lim_tylko_podziemny">Parking wyłącznie podziemny</label>
+          </div>
+        </div>
+      </fieldset>
+    </section>
+
+  </div>
+
+  <section class="panel wyniki" aria-labelledby="tytul-wynik">
+    <div class="wyniki-gora">
+      <h2 id="tytul-wynik">Wynik</h2>
+      <button type="button" class="btn" id="drukuj">Drukuj</button>
+    </div>
+    <table id="tabela-wynik">
+      <thead>
+        <tr>
+          <th scope="col" class="w-nazwa">Wskaźnik</th>
+          <th scope="col" class="w-wartosc">Wartość</th>
+          <th scope="col" class="w-limit">Limit</th>
+          <th scope="col" class="w-status">Wynik</th>
+          <th scope="col" class="w-margines">Margines</th>
+        </tr>
+      </thead>
+      <tbody id="wynik-body"></tbody>
+    </table>
+    <p class="nota">
+      Pasek pod wartością pokazuje jej stosunek do limitu, przycięty do 100 %.
+      Kolor idzie w parze z napisem OK albo NIE, nigdy sam.
+    </p>
+  </section>
+
+</main>
+
+<div id="selftest" hidden></div>
+
+<footer>
+  Dane inwestycji są fikcyjne (ćwiczeniowe) i służą wyłącznie do nauki. Progi liczbowe
+  pochodzą z uchwały XLI/1014/2009, BIP Kielce (bipum.kielce.eu). Przed użyciem w praktyce
+  zweryfikuj je z planem miejscowym obowiązującym dla własnej działki.
+</footer>
+
+<script>
+// --- LOGIKA ---
+
+function formatujProcent(x) {
+  return x.toFixed(1) + " %";
+}
+
+function oblicz(dane, limity) {
+  var wyniki = [];
+
+  // 1. Powierzchnia zabudowy = powierzchnia zabudowy / powierzchnia dzialki.
+  var pokrycie = (dane.powierzchnia_zabudowy_m2 / dane.dzialka_m2) * 100;
+  var pokrycieLimit = limity.powierzchnia_zabudowy_max_pct;
+  wyniki.push({
+    wskaznik: "Powierzchnia zabudowy",
+    wartosc: formatujProcent(pokrycie),
+    limit: formatujProcent(pokrycieLimit),
+    ok: pokrycie <= pokrycieLimit,
+    margines: formatujProcent(pokrycieLimit - pokrycie)
+  });
+
+  // 2. Intensywnosc = suma powierzchni kondygnacji nadziemnych / powierzchnia dzialki.
+  //    Garaz (kondygnacja podziemna) jest wylaczony.
+  var poNadziemne = dane.kondygnacje
+    .filter(function (k) { return k.nadziemna; })
+    .reduce(function (suma, k) { return suma + k.powierzchnia_m2; }, 0);
+  var intensywnosc = poNadziemne / dane.dzialka_m2;
+  wyniki.push({
+    wskaznik: "Intensywność zabudowy",
+    wartosc: intensywnosc.toFixed(2),
+    limit: limity.intensywnosc_max.toFixed(2),
+    ok: intensywnosc <= limity.intensywnosc_max,
+    margines: (limity.intensywnosc_max - intensywnosc).toFixed(2)
+  });
+
+  // 3. PBC = grunt rodzimy + woda + 50% kazdego tarasu >= 10 m2 (mniejsze licza sie jako 0).
+  var tarasyPbc = (dane.tarasy_zielone || [])
+    .filter(function (t) { return t >= 10; })
+    .reduce(function (suma, t) { return suma + t * 0.5; }, 0);
+  var pbcPowierzchnia = dane.grunt_rodzimy_m2 + dane.woda_powierzchniowa_m2 + tarasyPbc;
+  var pbcProcent = (pbcPowierzchnia / dane.dzialka_m2) * 100;
+  wyniki.push({
+    wskaznik: "Powierzchnia biologicznie czynna",
+    wartosc: formatujProcent(pbcProcent),
+    limit: formatujProcent(limity.pbc_min_pct),
+    ok: pbcProcent >= limity.pbc_min_pct,
+    margines: formatujProcent(pbcProcent - limity.pbc_min_pct)
+  });
+
+  // 4. Wysokosc = najwyzsza gorna krawedz stropu; liczba kondygnacji nadziemnych.
+  var wysokoscMax = Math.max.apply(null, dane.kondygnacje.map(function (k) { return k.gorna_krawedz_m; }));
+  var liczbaNadziemnych = dane.kondygnacje.filter(function (k) { return k.nadziemna; }).length;
+  var wysokoscOk = wysokoscMax <= limity.wysokosc.maksymalna_m
+    && liczbaNadziemnych <= limity.wysokosc.maksymalna_kondygnacje;
+  wyniki.push({
+    wskaznik: "Wysokość i liczba kondygnacji",
+    wartosc: wysokoscMax.toFixed(1) + " m / " + liczbaNadziemnych + " kond.",
+    limit: limity.wysokosc.maksymalna_m.toFixed(1) + " m / " + limity.wysokosc.maksymalna_kondygnacje + " kond.",
+    ok: wysokoscOk,
+    margines: (limity.wysokosc.maksymalna_m - wysokoscMax).toFixed(1) + " m"
+  });
+
+  // 5. Nachylenie dachu.
+  var dachOk = dane.dach_nachylenie_deg <= limity.dach_nachylenie_max_deg;
+  wyniki.push({
+    wskaznik: "Kąt nachylenia dachu",
+    wartosc: dane.dach_nachylenie_deg + "°",
+    limit: limity.dach_nachylenie_max_deg + "°",
+    ok: dachOk,
+    margines: (limity.dach_nachylenie_max_deg - dane.dach_nachylenie_deg) + "°"
+  });
+
+  // 6. Parking = mieszkania x miejsc/mieszkanie; jesli tylko_podziemny, kazde miejsce
+  //    naziemne jest naruszeniem niezaleznie od sumy miejsc.
+  var wymaganeMiejsca = dane.mieszkania * limity.parking.miejsc_na_mieszkanie_min;
+  var podziemne = dane.miejsca_postojowe.podziemne;
+  var naziemne = dane.miejsca_postojowe.naziemne;
+  var parkingOk;
+  var parkingMargines;
+  if (limity.parking.tylko_podziemny) {
+    parkingOk = naziemne === 0 && podziemne >= wymaganeMiejsca;
+    parkingMargines = podziemne - wymaganeMiejsca;
+  } else {
+    parkingOk = (podziemne + naziemne) >= wymaganeMiejsca;
+    parkingMargines = (podziemne + naziemne) - wymaganeMiejsca;
+  }
+  wyniki.push({
+    wskaznik: "Miejsca postojowe",
+    wartosc: podziemne + " podziemnych + " + naziemne + " naziemnych",
+    limit: wymaganeMiejsca + " miejsc" + (limity.parking.tylko_podziemny ? " (wymagany podziemny)" : ""),
+    ok: parkingOk,
+    margines: parkingMargines + " miejsc"
+  });
+
+  return wyniki;
+}
+
+if (typeof module !== "undefined") {
+  module.exports = { oblicz: oblicz };
+}
+
+// --- KONIEC LOGIKI ---
+
+// --- INTERFEJS ---
+// Ponizej tylko obsluga formularza, wczytywania plikow i rysowania tabeli.
+// Cala arytmetyka planu siedzi w bloku LOGIKA powyzej.
+
+// Kondygnacje startowe = dane/inwestycja.json (dane fikcyjne, cwiczeniowe).
+var KONDYGNACJE_START = [
+  { nazwa: "garaż podziemny", nadziemna: false, powierzchnia_m2: 1400.0, gorna_krawedz_m: -0.3, cofniecie_od_KDP1_m: 0.0, cofniecie_od_Solnej_m: 0.0 },
+  { nazwa: "parter - usługi", nadziemna: true, powierzchnia_m2: 962.0, gorna_krawedz_m: 4.2, cofniecie_od_KDP1_m: 0.0, cofniecie_od_Solnej_m: 0.0 },
+  { nazwa: "piętro 2 - mieszkania", nadziemna: true, powierzchnia_m2: 962.0, gorna_krawedz_m: 7.4, cofniecie_od_KDP1_m: 0.0, cofniecie_od_Solnej_m: 0.0 },
+  { nazwa: "piętro 3 - mieszkania", nadziemna: true, powierzchnia_m2: 962.0, gorna_krawedz_m: 10.6, cofniecie_od_KDP1_m: 0.0, cofniecie_od_Solnej_m: 0.0 },
+  { nazwa: "piętro 4 - mieszkania", nadziemna: true, powierzchnia_m2: 962.0, gorna_krawedz_m: 13.8, cofniecie_od_KDP1_m: 0.0, cofniecie_od_Solnej_m: 0.0 },
+  { nazwa: "piętro 5 - cofnięte", nadziemna: true, powierzchnia_m2: 782.0, gorna_krawedz_m: 17.2, cofniecie_od_KDP1_m: 1.5, cofniecie_od_Solnej_m: 1.2 },
+  { nazwa: "piętro 6 - cofnięte", nadziemna: true, powierzchnia_m2: 726.0, gorna_krawedz_m: 20.6, cofniecie_od_KDP1_m: 2.0, cofniecie_od_Solnej_m: 2.0 }
+];
+
+var SZABLON_KONDYGNACJI =
+  "<td><input class='s-nazwa' type='text' aria-label='Nazwa kondygnacji'></td>" +
+  "<td><input class='s-pow' type='number' step='0.1' aria-label='Powierzchnia kondygnacji w m2'></td>" +
+  "<td><input class='s-h' type='number' step='0.1' aria-label='Górna krawędź w metrach'></td>" +
+  "<td><input class='s-kdp' type='number' step='0.1' aria-label='Cofnięcie od KDP-1 w metrach'></td>" +
+  "<td><input class='s-solna' type='number' step='0.1' aria-label='Cofnięcie od Solnej w metrach'></td>" +
+  "<td><input class='s-nad' type='checkbox'></td>" +
+  "<td><button type='button' class='usun' title='Usuń kondygnację'>×</button></td>";
+
+function el(id) {
+  return document.getElementById(id);
+}
+
+function ustawWartosc(id, wartosc) {
+  if (wartosc === undefined || wartosc === null) { return; }
+  el(id).value = wartosc;
+}
+
+// Etykiety zalezne od nazwy kondygnacji: bez nich czytnik ekranu slyszy siedem
+// identycznych pol "Nadziemna" i tyle samo przyciskow "Usuń".
+function odswiezEtykiety(wiersz) {
+  var nazwa = wiersz.querySelector(".s-nazwa").value.trim();
+  var opis = nazwa === "" ? "kondygnacja bez nazwy" : nazwa;
+  wiersz.querySelector(".s-nad").setAttribute("aria-label", "Nadziemna: " + opis);
+  wiersz.querySelector(".usun").setAttribute("aria-label", "Usuń: " + opis);
+}
+
+function dodajKondygnacje(k) {
+  var wiersz = document.createElement("tr");
+  wiersz.className = "storey";
+  wiersz.innerHTML = SZABLON_KONDYGNACJI;
+  el("kondygnacje-body").appendChild(wiersz);
+
+  // Wartosci ustawiane przez DOM, nie przez innerHTML - polskie nazwy z pliku
+  // moga zawierac cudzyslowy i znaki HTML.
+  if (k) {
+    wiersz.querySelector(".s-nazwa").value = k.nazwa === undefined ? "" : k.nazwa;
+    wiersz.querySelector(".s-pow").value = k.powierzchnia_m2;
+    wiersz.querySelector(".s-h").value = k.gorna_krawedz_m;
+    wiersz.querySelector(".s-kdp").value = k.cofniecie_od_KDP1_m === undefined ? 0 : k.cofniecie_od_KDP1_m;
+    wiersz.querySelector(".s-solna").value = k.cofniecie_od_Solnej_m === undefined ? 0 : k.cofniecie_od_Solnej_m;
+    wiersz.querySelector(".s-nad").checked = k.nadziemna === true;
+  } else {
+    wiersz.querySelector(".s-nad").checked = true;
+  }
+
+  odswiezEtykiety(wiersz);
+  wiersz.querySelector(".s-nazwa").addEventListener("input", function () {
+    odswiezEtykiety(wiersz);
+  });
+  wiersz.querySelector(".usun").addEventListener("click", function () {
+    wiersz.parentNode.removeChild(wiersz);
+    przelicz();
+  });
+  return wiersz;
+}
+
+function zbudujKondygnacje(lista) {
+  el("kondygnacje-body").innerHTML = "";
+  lista.forEach(function (k) { dodajKondygnacje(k); });
+}
+
+function czytajFormularz() {
+  var kondygnacje = [];
+  document.querySelectorAll("#tabela-kondygnacje tr.storey").forEach(function (wiersz) {
+    kondygnacje.push({
+      powierzchnia_m2: parseFloat(wiersz.querySelector(".s-pow").value) || 0,
+      gorna_krawedz_m: parseFloat(wiersz.querySelector(".s-h").value) || 0,
+      nadziemna: wiersz.querySelector(".s-nad").checked
+    });
+  });
+
+  var tarasy = el("tarasy").value
+    .split(",")
+    .map(function (s) { return parseFloat(s.trim()); })
+    .filter(function (n) { return !isNaN(n); });
+
+  return {
+    dzialka_m2: parseFloat(el("dzialka_m2").value) || 0,
+    powierzchnia_zabudowy_m2: parseFloat(el("zabudowa_m2").value) || 0,
+    kondygnacje: kondygnacje,
+    grunt_rodzimy_m2: parseFloat(el("grunt_m2").value) || 0,
+    woda_powierzchniowa_m2: parseFloat(el("woda_m2").value) || 0,
+    tarasy_zielone: tarasy,
+    dach_nachylenie_deg: parseFloat(el("dach_deg").value) || 0,
+    mieszkania: parseFloat(el("mieszkania").value) || 0,
+    miejsca_postojowe: {
+      podziemne: parseFloat(el("podziemne").value) || 0,
+      naziemne: parseFloat(el("naziemne").value) || 0
+    }
+  };
+}
+
+function czytajLimity() {
+  return {
+    powierzchnia_zabudowy_max_pct: parseFloat(el("lim_zabudowa_pct").value) || 0,
+    intensywnosc_max: parseFloat(el("lim_intensywnosc").value) || 0,
+    pbc_min_pct: parseFloat(el("lim_pbc_pct").value) || 0,
+    wysokosc: {
+      maksymalna_m: parseFloat(el("lim_h_max_m").value) || 0,
+      maksymalna_kondygnacje: parseFloat(el("lim_k_max").value) || 0
+    },
+    dach_nachylenie_max_deg: parseFloat(el("lim_dach_max_deg").value) || 0,
+    parking: {
+      miejsc_na_mieszkanie_min: parseFloat(el("lim_miejsc_na_mieszkanie").value) || 0,
+      tylko_podziemny: el("lim_tylko_podziemny").checked
+    }
+  };
+}
+
+// Polska odmiana rzeczownika "wskaznik" po liczebniku: 1 -> wskaznik,
+// 2-4 (poza 12-14) -> wskazniki, w pozostalych przypadkach -> wskaznikow.
+function odmienWskaznik(n) {
+  var reszta10 = n % 10;
+  var reszta100 = n % 100;
+  if (n === 1) { return "wskaźnik"; }
+  if (reszta10 >= 2 && reszta10 <= 4 && !(reszta100 >= 12 && reszta100 <= 14)) { return "wskaźniki"; }
+  return "wskaźników";
+}
+
+// Szerokosc paska = wartosc / limit, przycieta do 100 %. Liczby biore z gotowych
+// napisow wiersza, zeby nie powielac arytmetyki z bloku LOGIKA.
+function udzialPaska(w) {
+  var wartosc = Math.abs(parseFloat(w.wartosc));
+  var limit = Math.abs(parseFloat(w.limit));
+  if (!isFinite(wartosc) || !isFinite(limit) || limit === 0) { return 0; }
+  return Math.max(0, Math.min(100, (wartosc / limit) * 100));
+}
+
+function ustawWerdykt(niespelnione) {
+  var werdykt = el("werdykt");
+  if (niespelnione === null) {
+    werdykt.textContent = "";
+    werdykt.className = "werdykt";
+    return;
+  }
+  werdykt.textContent = niespelnione === 0
+    ? "ZGODNE"
+    : "NIEZGODNE (" + niespelnione + " " + odmienWskaznik(niespelnione) + ")";
+  werdykt.className = "werdykt " + (niespelnione === 0 ? "werdykt-ok" : "werdykt-nie");
+}
+
+function renderuj(wyniki) {
+  var tbody = el("wynik-body");
+  tbody.innerHTML = "";
+  var niespelnione = 0;
+
+  wyniki.forEach(function (w) {
+    if (!w.ok) { niespelnione++; }
+    var tr = document.createElement("tr");
+    tr.className = w.ok ? "rzad-ok" : "rzad-nie";
+    tr.innerHTML =
+      "<th scope='row'>" + w.wskaznik + "</th>" +
+      "<td class='kol-liczba'><span class='wartosc'>" + w.wartosc + "</span>" +
+      "<span class='pasek'><span></span></span></td>" +
+      "<td class='kol-liczba'>" + w.limit + "</td>" +
+      "<td><span class='status " + (w.ok ? "status-ok" : "status-nie") + "'>" +
+      (w.ok ? "OK" : "NIE") + "</span></td>" +
+      "<td class='kol-liczba'>" + w.margines + "</td>";
+    tr.querySelector(".pasek span").style.width = udzialPaska(w).toFixed(1) + "%";
+    tbody.appendChild(tr);
+  });
+
+  ustawWerdykt(niespelnione);
+}
+
+function renderujKomunikat(tekst) {
+  el("wynik-body").innerHTML = "<tr><td colspan='5' class='pusto'></td></tr>";
+  el("wynik-body").querySelector("td").textContent = tekst;
+  ustawWerdykt(null);
+}
+
+function pokazKomunikat(tekst, czyBlad) {
+  var pole = el("komunikat");
+  pole.textContent = tekst;
+  pole.className = czyBlad ? "komunikat blad" : "komunikat";
+}
+
+function przelicz() {
+  var dane = czytajFormularz();
+  if (dane.kondygnacje.length === 0) {
+    renderujKomunikat("Dodaj co najmniej jedną kondygnację, aby policzyć wskaźniki.");
+    return;
+  }
+  if (!(dane.dzialka_m2 > 0)) {
+    renderujKomunikat("Podaj powierzchnię działki większą od zera.");
+    return;
+  }
+  renderuj(oblicz(dane, czytajLimity()));
+}
+
+// Mapowanie dane/inwestycja.json na formularz (nazwy pol jak w dane/README.md).
+function wczytajInwestycje(plik) {
+  ustawWartosc("dzialka_m2", plik.dzialka_m2);
+  ustawWartosc("zabudowa_m2", plik.powierzchnia_zabudowy_m2);
+  zbudujKondygnacje(plik.kondygnacje || []);
+  var bio = plik.teren_biologicznie_czynny || {};
+  ustawWartosc("grunt_m2", bio.grunt_rodzimy_m2);
+  ustawWartosc("woda_m2", bio.woda_powierzchniowa_m2);
+  if (bio.tarasy_i_stropodachy_zielone_m2) {
+    el("tarasy").value = bio.tarasy_i_stropodachy_zielone_m2.join(", ");
+  }
+  ustawWartosc("dach_deg", (plik.dach || {}).nachylenie_deg);
+  ustawWartosc("mieszkania", plik.mieszkania);
+  var miejsca = plik.miejsca_postojowe || {};
+  ustawWartosc("podziemne", miejsca.podziemne);
+  ustawWartosc("naziemne", miejsca.naziemne);
+}
+
+// Mapowanie plan.json (moje/ albo rozwiazania/) na pola limitow i na tozsamosc
+// planu w naglowku.
+function wczytajPlan(plik) {
+  var w = plik.wskazniki || {};
+  ustawWartosc("lim_zabudowa_pct", w.powierzchnia_zabudowy_max_pct);
+  ustawWartosc("lim_intensywnosc", w.intensywnosc_max);
+  ustawWartosc("lim_pbc_pct", w.pbc_min_pct);
+  var h = w.wysokosc || {};
+  ustawWartosc("lim_h_podstawowa_m", h.podstawowa_m);
+  ustawWartosc("lim_k_podstawowa", h.podstawowa_kondygnacje);
+  ustawWartosc("lim_h_max_m", h.maksymalna_m);
+  ustawWartosc("lim_k_max", h.maksymalna_kondygnacje);
+  ustawWartosc("lim_cofniecie_min", h.cofniecie_kondygnacji_powyzej_podstawowej_min_m);
+  ustawWartosc("lim_dach_max_deg", w.dach_nachylenie_max_deg);
+  var parking = w.parking || {};
+  ustawWartosc("lim_miejsc_na_mieszkanie", parking.miejsc_na_mieszkanie_min);
+  if (typeof parking.tylko_podziemny === "boolean") {
+    el("lim_tylko_podziemny").checked = parking.tylko_podziemny;
+  }
+  if (plik.teren) { el("naglowek-teren").textContent = plik.teren; }
+  if (plik.plan) { el("naglowek-plan").textContent = plik.plan; }
+  if (plik.uchwala) { el("naglowek-uchwala").textContent = plik.uchwala; }
+}
+
+// FileReader dziala takze przy otwarciu strony z dysku (protokol plikowy).
+function podepnijPlik(idPola, opis, mapuj) {
+  el(idPola).addEventListener("change", function (zdarzenie) {
+    var plik = zdarzenie.target.files && zdarzenie.target.files[0];
+    if (!plik) { return; }
+    var czytnik = new FileReader();
+    czytnik.onerror = function () {
+      pokazKomunikat("Nie udało się odczytać pliku " + plik.name + ".", true);
+    };
+    czytnik.onload = function () {
+      try {
+        mapuj(JSON.parse(czytnik.result));
+      } catch (blad) {
+        pokazKomunikat("Plik " + plik.name + " nie jest poprawnym plikiem JSON: " + blad.message, true);
+        return;
+      }
+      pokazKomunikat("Wczytano " + opis + " z pliku " + plik.name + ".", false);
+      przelicz();
+    };
+    czytnik.readAsText(plik, "utf-8");
+  });
+}
+
+// Panel wynikow przykleja sie pod naglowkiem, wiec jego wysokosc musi byc mierzona,
+// a nie zgadywana: dluzsza nazwa planu z wczytanego pliku zawija naglowek nizej.
+function zmierzNaglowek() {
+  var naglowek = document.querySelector(".naglowek");
+  document.documentElement.style.setProperty("--wys-naglowka", naglowek.offsetHeight + "px");
+}
+
+zbudujKondygnacje(KONDYGNACJE_START);
+zmierzNaglowek();
+if (typeof ResizeObserver === "function") {
+  new ResizeObserver(zmierzNaglowek).observe(document.querySelector(".naglowek"));
+} else {
+  window.addEventListener("resize", zmierzNaglowek);
+}
+
+podepnijPlik("plik-inwestycja", "dane inwestycji", wczytajInwestycje);
+podepnijPlik("plik-plan", "limity planu", wczytajPlan);
+el("dodaj-kondygnacje").addEventListener("click", function () {
+  dodajKondygnacje(null);
+  przelicz();
+});
+el("drukuj").addEventListener("click", function () { window.print(); });
+document.addEventListener("input", przelicz);
+document.addEventListener("change", przelicz);
+
+// Pierwsze przeliczenie na wartosciach domyslnych; ten sam wynik sluzy
+// jednoczesnie do wypelnienia tabeli i do testu samosprawdzajacego ponizej.
+var wynikiPoczatkowe = oblicz(czytajFormularz(), czytajLimity());
+renderuj(wynikiPoczatkowe);
+
+var oczekiwaneOk = [false, true, false, true, true, false];
+var selftestOk = wynikiPoczatkowe.length === oczekiwaneOk.length
+  && wynikiPoczatkowe.every(function (w, i) { return w.ok === oczekiwaneOk[i]; });
+el("selftest").textContent = selftestOk ? "SELFTEST OK" : "SELFTEST FAIL";
+</script>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "nazwa": "Solna - budynek usługowo-mieszkalny",
+  "uwaga": "Dane ćwiczeniowe, fikcyjne. Działka i budynek nie istnieją. Prawdziwe są tylko wskaźniki planu w rozwiazania/plan.json.",
+  "teren_planu": "U,M 2",
+  "dzialka_m2": 1850.0,
+  "powierzchnia_zabudowy_m2": 962.0,
+  "kondygnacje": [
+    {"nr": -1, "nazwa": "garaż podziemny", "nadziemna": false, "powierzchnia_m2": 1400.0, "gorna_krawedz_m": -0.3, "cofniecie_od_KDP1_m": 0.0, "cofniecie_od_Solnej_m": 0.0},
+    {"nr": 1, "nazwa": "parter - usługi", "nadziemna": true, "powierzchnia_m2": 962.0, "gorna_krawedz_m": 4.2, "cofniecie_od_KDP1_m": 0.0, "cofniecie_od_Solnej_m": 0.0},
+    {"nr": 2, "nazwa": "piętro 2 - mieszkania", "nadziemna": true, "powierzchnia_m2": 962.0, "gorna_krawedz_m": 7.4, "cofniecie_od_KDP1_m": 0.0, "cofniecie_od_Solnej_m": 0.0},
+    {"nr": 3, "nazwa": "piętro 3 - mieszkania", "nadziemna": true, "powierzchnia_m2": 962.0, "gorna_krawedz_m": 10.6, "cofniecie_od_KDP1_m": 0.0, "cofniecie_od_Solnej_m": 0.0},
+    {"nr": 4, "nazwa": "piętro 4 - mieszkania", "nadziemna": true, "powierzchnia_m2": 962.0, "gorna_krawedz_m": 13.8, "cofniecie_od_KDP1_m": 0.0, "cofniecie_od_Solnej_m": 0.0},
+    {"nr": 5, "nazwa": "piętro 5 - cofnięte", "nadziemna": true, "powierzchnia_m2": 782.0, "gorna_krawedz_m": 17.2, "cofniecie_od_KDP1_m": 1.5, "cofniecie_od_Solnej_m": 1.2},
+    {"nr": 6, "nazwa": "piętro 6 - cofnięte", "nadziemna": true, "powierzchnia_m2": 726.0, "gorna_krawedz_m": 20.6, "cofniecie_od_KDP1_m": 2.0, "cofniecie_od_Solnej_m": 2.0}
+  ],
+  "balkony_m2": 96.0,
+  "teren_biologicznie_czynny": {
+    "grunt_rodzimy_m2": 120.0,
+    "woda_powierzchniowa_m2": 0.0,
+    "tarasy_i_stropodachy_zielone_m2": [90.0, 8.0]
+  },
+  "dach": {"nachylenie_deg": 5},
+  "mieszkania": 30,
+  "miejsca_postojowe": {"podziemne": 27, "naziemne": 3}
+}
