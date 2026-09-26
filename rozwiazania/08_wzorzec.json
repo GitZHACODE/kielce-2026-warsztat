@@ -1,0 +1,338 @@
+{
+ "wygenerowano": "2026-09-25T17:28:10",
+ "rhino": "8.34.26223.11001",
+ "tolerancje": {
+  "pole_pct": 1.0,
+  "obrys_pct": 1.0,
+  "objetosc_pct": 5.0,
+  "wysokosc_m": 0.001,
+  "udzial_pp": 10.0,
+  "glebokosc_m": 0.05,
+  "powierzchnia_pct": 10.0
+ },
+ "bryly": {
+  "zaaw_domyslny": {
+   "ustawienia": {},
+   "zamknieta": true,
+   "pola_m2": [
+    1023.5538044313154,
+    1068.114433677618,
+    1045.2928793723504,
+    955.3309619265086,
+    665.5741525717875,
+    499.5861359447754
+   ],
+   "obrys_m2": 1087.662407256595,
+   "objetosc_m3": 18779.43964154597,
+   "wysokosc_m": 20.599000000000004,
+   "kondygnacje": 6,
+   "raport": [
+    "uwaga: wejście kondygnacje puste - użyto domyślnej masy Solna wbudowanej w skrypt",
+    "uwaga: wejście atraktor puste - użyto punktu domyślnego (60.0, 18.5, 10.0)",
+    "profil: superelipsa (wykładnik 3.0); skręt 25° (wygładzony); atraktor (60.0, 18.5, 10.0), siła 3.0 m, zasięg 15.0 m",
+    "kondygnacja 1: 1023.6 m2 (szkic 962.0 m2)",
+    "kondygnacja 2: 1068.1 m2 (szkic 962.0 m2)",
+    "kondygnacja 3: 1045.3 m2 (szkic 962.0 m2)",
+    "kondygnacja 4: 955.3 m2 (szkic 962.0 m2)",
+    "kondygnacja 5: 665.6 m2 (szkic 782.0 m2)",
+    "kondygnacja 6: 499.6 m2 (szkic 726.0 m2)",
+    "suma Po (nadziemne): 5257.5 m2 (szkic 5356.0 m2)",
+    "wysokość: 20.6 m / 6 kond.",
+    "obrys zabudowy: 1087.7 m2",
+    "objętość: 18779 m3"
+   ]
+  },
+  "bez_atraktora": {
+   "ustawienia": {
+    "sila_atraktora_m": 0.0
+   },
+   "zamknieta": true,
+   "pola_m2": [
+    943.2467589737417,
+    975.7951201622668,
+    951.823296397671,
+    872.1235006422503,
+    606.9875387411907,
+    460.97134610697543
+   ],
+   "obrys_m2": 996.5284122569539,
+   "objetosc_m3": 17219.64429949198,
+   "wysokosc_m": 20.599000000000004,
+   "kondygnacje": 6,
+   "raport": [
+    "uwaga: wejście kondygnacje puste - użyto domyślnej masy Solna wbudowanej w skrypt",
+    "uwaga: wejście atraktor puste - użyto punktu domyślnego (60.0, 18.5, 10.0)",
+    "profil: superelipsa (wykładnik 3.0); skręt 25° (wygładzony); atraktor: brak",
+    "kondygnacja 1: 943.2 m2 (szkic 962.0 m2)",
+    "kondygnacja 2: 975.8 m2 (szkic 962.0 m2)",
+    "kondygnacja 3: 951.8 m2 (szkic 962.0 m2)",
+    "kondygnacja 4: 872.1 m2 (szkic 962.0 m2)",
+    "kondygnacja 5: 607.0 m2 (szkic 782.0 m2)",
+    "kondygnacja 6: 461.0 m2 (szkic 726.0 m2)",
+    "suma Po (nadziemne): 4810.9 m2 (szkic 5356.0 m2)",
+    "wysokość: 20.6 m / 6 kond.",
+    "obrys zabudowy: 996.5 m2",
+    "objętość: 17220 m3"
+   ]
+  },
+  "karta06": {
+   "ustawienia": {
+    "typ_profilu": 0,
+    "zaokraglenie": 0.6,
+    "skret_deg": 12.0,
+    "profil_skretu": 0,
+    "wybrzuszenie": 0.1,
+    "zwezenie": 1.0,
+    "sila_atraktora_m": 0.0
+   },
+   "zamknieta": true,
+   "pola_m2": [
+    1017.6197178112031,
+    1077.2816282884708,
+    1096.1766631064904,
+    1068.8750694086777,
+    813.0810515259966,
+    685.7242106862806
+   ],
+   "obrys_m2": 1101.8289928629272,
+   "objetosc_m3": 20133.959015046352,
+   "wysokosc_m": 20.599000000000004,
+   "kondygnacje": 6,
+   "raport": [
+    "uwaga: wejście kondygnacje puste - użyto domyślnej masy Solna wbudowanej w skrypt",
+    "uwaga: wejście atraktor puste - użyto punktu domyślnego (60.0, 18.5, 10.0)",
+    "profil: prostokąt zaokrąglony (zaokrąglenie 0.60); skręt 12° (liniowy); atraktor: brak",
+    "kondygnacja 1: 1017.6 m2 (szkic 962.0 m2)",
+    "kondygnacja 2: 1077.3 m2 (szkic 962.0 m2)",
+    "kondygnacja 3: 1096.2 m2 (szkic 962.0 m2)",
+    "kondygnacja 4: 1068.9 m2 (szkic 962.0 m2)",
+    "kondygnacja 5: 813.1 m2 (szkic 782.0 m2)",
+    "kondygnacja 6: 685.7 m2 (szkic 726.0 m2)",
+    "suma Po (nadziemne): 5758.8 m2 (szkic 5356.0 m2)",
+    "wysokość: 20.6 m / 6 kond.",
+    "obrys zabudowy: 1101.8 m2",
+    "objętość: 20134 m3"
+   ]
+  },
+  "wieza": {
+   "ustawienia": {
+    "typ_profilu": 1,
+    "wykladnik_profilu": 2.5,
+    "skret_deg": 45.0,
+    "profil_skretu": 1,
+    "wybrzuszenie": 0.2,
+    "wysokosc_wybrzuszenia": 0.35,
+    "zwezenie": 0.6,
+    "pochylenie_x_m": 2.0,
+    "pochylenie_y_m": 1.0,
+    "sila_atraktora_m": 0.0
+   },
+   "zamknieta": true,
+   "pola_m2": [
+    946.865533651919,
+    853.7734109493115,
+    709.750344277623,
+    556.7130531061251,
+    333.310793260302,
+    219.71638131084117
+   ],
+   "obrys_m2": 949.971959735678,
+   "objetosc_m3": 13652.440283152851,
+   "wysokosc_m": 20.599000000000004,
+   "kondygnacje": 6,
+   "raport": [
+    "uwaga: wejście kondygnacje puste - użyto domyślnej masy Solna wbudowanej w skrypt",
+    "uwaga: wejście atraktor puste - użyto punktu domyślnego (60.0, 18.5, 10.0)",
+    "profil: superelipsa (wykładnik 2.5); skręt 45° (wygładzony); atraktor: brak",
+    "kondygnacja 1: 946.9 m2 (szkic 962.0 m2)",
+    "kondygnacja 2: 853.8 m2 (szkic 962.0 m2)",
+    "kondygnacja 3: 709.8 m2 (szkic 962.0 m2)",
+    "kondygnacja 4: 556.7 m2 (szkic 962.0 m2)",
+    "kondygnacja 5: 333.3 m2 (szkic 782.0 m2)",
+    "kondygnacja 6: 219.7 m2 (szkic 726.0 m2)",
+    "suma Po (nadziemne): 3620.1 m2 (szkic 5356.0 m2)",
+    "wysokość: 20.6 m / 6 kond.",
+    "obrys zabudowy: 950.0 m2",
+    "objętość: 13652 m3"
+   ]
+  },
+  "szkic": {
+   "ustawienia": {
+    "typ_profilu": 0,
+    "zaokraglenie": 0.0,
+    "skret_deg": 0.0,
+    "wybrzuszenie": 0.0,
+    "zwezenie": 1.0,
+    "sila_atraktora_m": 0.0
+   },
+   "zamknieta": true,
+   "pola_m2": [
+    959.0776737891706,
+    959.0797303857964,
+    959.0723653510465,
+    959.1027931585253,
+    778.6611977778382,
+    722.5718831398101
+   ],
+   "obrys_m2": 959.0776737891706,
+   "objetosc_m3": 18742.437751488975,
+   "wysokosc_m": 20.599,
+   "kondygnacje": 6,
+   "raport": [
+    "uwaga: wejście kondygnacje puste - użyto domyślnej masy Solna wbudowanej w skrypt",
+    "uwaga: wejście atraktor puste - użyto punktu domyślnego (60.0, 18.5, 10.0)",
+    "profil: prostokąt zaokrąglony (zaokrąglenie 0.00); skręt 0° (wygładzony); atraktor: brak",
+    "kondygnacja 1: 959.1 m2 (szkic 962.0 m2)",
+    "kondygnacja 2: 959.1 m2 (szkic 962.0 m2)",
+    "kondygnacja 3: 959.1 m2 (szkic 962.0 m2)",
+    "kondygnacja 4: 959.1 m2 (szkic 962.0 m2)",
+    "kondygnacja 5: 778.7 m2 (szkic 782.0 m2)",
+    "kondygnacja 6: 722.6 m2 (szkic 726.0 m2)",
+    "suma Po (nadziemne): 5337.6 m2 (szkic 5356.0 m2)",
+    "wysokość: 20.6 m / 6 kond.",
+    "obrys zabudowy: 959.1 m2",
+    "objętość: 18742 m3"
+   ]
+  }
+ },
+ "elewacje": {
+  "elew_domyslna": {
+   "ustawienia": {},
+   "bryla": "zaaw_domyslny",
+   "paneli": 270,
+   "powyzej_05": 25,
+   "glebokosc_min_m": 0.1002577296940199,
+   "glebokosc_max_m": 0.6267803272229697,
+   "powierzchnia_m2": 2467.0,
+   "raport": [
+    "wzór: romby (diagrid); panel: ścięta piramida z otworem",
+    "paneli: 270 na ścianie o polu 2478 m2",
+    "głębokość paneli (osiągnięta): 0.10-0.63 m przy zakresie 0.10-1.00 m",
+    "otwory (osiągnięte): 0.38-0.70 panelu przy zakresie 0.15-0.70",
+    "panele o intensywności powyżej 0.5: 25 (9.3 %)",
+    "atraktory: 1, zasięg 20.0 m; wagi: słońce 0.50, atraktor 0.50",
+    "paleta: grafit",
+    "powierzchnia elewacji (przybliżona, bez głębokości): 2467 m2",
+    "heurystyka: iloczyn skalarny normalnej i kierunku słońca plus bliskość atraktora, nie analiza nasłonecznienia"
+   ]
+  },
+  "elew_wschod": {
+   "ustawienia": {
+    "azymut_slonca_deg": 90.0
+   },
+   "bryla": "zaaw_domyslny",
+   "paneli": 270,
+   "powyzej_05": 2,
+   "glebokosc_min_m": 0.10027547650933055,
+   "glebokosc_max_m": 0.5538764057075608,
+   "powierzchnia_m2": 2467.0,
+   "raport": [
+    "wzór: romby (diagrid); panel: ścięta piramida z otworem",
+    "paneli: 270 na ścianie o polu 2478 m2",
+    "głębokość paneli (osiągnięta): 0.10-0.55 m przy zakresie 0.10-1.00 m",
+    "otwory (osiągnięte): 0.42-0.70 panelu przy zakresie 0.15-0.70",
+    "panele o intensywności powyżej 0.5: 2 (0.7 %)",
+    "atraktory: 1, zasięg 20.0 m; wagi: słońce 0.50, atraktor 0.50",
+    "paleta: grafit",
+    "powierzchnia elewacji (przybliżona, bez głębokości): 2467 m2",
+    "heurystyka: iloczyn skalarny normalnej i kierunku słońca plus bliskość atraktora, nie analiza nasłonecznienia"
+   ]
+  },
+  "wzor0_panel0": {
+   "ustawienia": {
+    "typ_wzoru": 0,
+    "typ_panelu": 0
+   },
+   "bryla": "zaaw_domyslny",
+   "paneli": 270
+  },
+  "wzor0_panel1": {
+   "ustawienia": {
+    "typ_wzoru": 0,
+    "typ_panelu": 1
+   },
+   "bryla": "zaaw_domyslny",
+   "paneli": 270
+  },
+  "wzor0_panel2": {
+   "ustawienia": {
+    "typ_wzoru": 0,
+    "typ_panelu": 2
+   },
+   "bryla": "zaaw_domyslny",
+   "paneli": 270
+  },
+  "wzor1_panel0": {
+   "ustawienia": {
+    "typ_wzoru": 1,
+    "typ_panelu": 0
+   },
+   "bryla": "zaaw_domyslny",
+   "paneli": 504
+  },
+  "wzor1_panel1": {
+   "ustawienia": {
+    "typ_wzoru": 1,
+    "typ_panelu": 1
+   },
+   "bryla": "zaaw_domyslny",
+   "paneli": 504
+  },
+  "wzor1_panel2": {
+   "ustawienia": {
+    "typ_wzoru": 1,
+    "typ_panelu": 2
+   },
+   "bryla": "zaaw_domyslny",
+   "paneli": 504
+  },
+  "wzor2_panel0": {
+   "ustawienia": {
+    "typ_wzoru": 2,
+    "typ_panelu": 0
+   },
+   "bryla": "zaaw_domyslny",
+   "paneli": 1008
+  },
+  "wzor2_panel1": {
+   "ustawienia": {
+    "typ_wzoru": 2,
+    "typ_panelu": 1
+   },
+   "bryla": "zaaw_domyslny",
+   "paneli": 1008
+  },
+  "wzor2_panel2": {
+   "ustawienia": {
+    "typ_wzoru": 2,
+    "typ_panelu": 2
+   },
+   "bryla": "zaaw_domyslny",
+   "paneli": 1008
+  },
+  "wzor3_panel0": {
+   "ustawienia": {
+    "typ_wzoru": 3,
+    "typ_panelu": 0
+   },
+   "bryla": "zaaw_domyslny",
+   "paneli": 684
+  },
+  "wzor3_panel1": {
+   "ustawienia": {
+    "typ_wzoru": 3,
+    "typ_panelu": 1
+   },
+   "bryla": "zaaw_domyslny",
+   "paneli": 684
+  },
+  "wzor3_panel2": {
+   "ustawienia": {
+    "typ_wzoru": 3,
+    "typ_panelu": 2
+   },
+   "bryla": "zaaw_domyslny",
+   "paneli": 684
+  }
+ }
+}

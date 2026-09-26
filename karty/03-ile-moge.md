@@ -9,9 +9,22 @@ To jest różnica między "projekt nie przechodzi" a gotową listą zmian dla ze
 - Miej otwarty i uruchomiony moje/sprawdz_mpzp.py z karty 01 - potrzebujesz tych samych definicji i tych samych sześciu wyników jako punktu wyjścia.
 - Maksymalny rzut zabudowy liczy się z powierzchnia_zabudowy_max_pct w moje/plan.json i dzialka_m2 w dane/inwestycja.json.
 
+## Prompt krok po kroku
+Każde zdanie promptu ma jedno zadanie i zamyka jedną drogę na skróty; poniżej prompt rozłożony na części w kolejności, w jakiej czyta je agent.
+
+1. **"Write moje/ile_moge.py"** - nazwa i folder pliku wynikowego; nowy skrypt powstaje obok sprawdzacza z karty 01, a nie zamiast niego.
+2. **"Using the same data and definitions as moje/sprawdz_mpzp.py"** - te same wzory i ta sama definicja planu; policzone od nowa dałyby inne liczby niż tabela, z której wychodzisz.
+3. **"reading moje/plan.json (or rozwiazania/plan.json if it does not exist) and dane/inwestycja.json"** - prompt sam wskazuje pliki z liczbami, więc karta działa także wtedy, gdy nie masz gotowego moje/sprawdz_mpzp.py z karty 01.
+4. **"for every indicator that fails print the smallest change that would make it pass"** - zamiast powtórzonego NIE ma paść liczba: najmniejsza zmiana, która wystarczy, żeby wskaźnik przeszedł.
+5. **"the maximum footprint in m2"** - 50 % z 1850 m2, czyli 925 m2 - konkretna wartość do rysunku zamiast procentu do przeliczania w głowie.
+6. **"how many m2 of native ground or of green terrace (remember the 50% rule) are missing"** - dwie drogi i dwie różne liczby: 20 m2 gruntu rodzimego albo 40 m2 tarasu, bo z tarasu liczy się połowa (§ 4 pkt 17).
+7. **"how many underground parking spaces are missing and what to do with the surface spaces"** - brakujące 3 miejsca podziemne to tylko połowa odpowiedzi; 3 miejsca naziemne trzeba usunąć, bo plan ich nie dopuszcza (§ 20 ust. 2 pkt 10 lit. e).
+8. **"Also print how much floor area is still available under the intensity limit (above-ground storeys only, as in the plan's own definition)"** - 1119 m2 zapasu; nawias zamyka pułapkę z garażem, bo z jego 1400 m2 zapas wyszedłby ujemny.
+9. **"Run it."** - agent uruchamia skrypt od razu, więc rozbieżność z tabelą z karty 01 widać w czacie, a nie dopiero przy kliencie.
+
 ## Prompt (skopiuj do Copilot Chat, tryb Agent)
 ```text
-Write moje/ile_moge.py. Using the same data and definitions as moje/sprawdz_mpzp.py, for every indicator that fails print the smallest change that would make it pass: the maximum footprint in m2, how many m2 of native ground or of green terrace (remember the 50% rule) are missing, how many underground parking spaces are missing and what to do with the surface spaces. Also print how much floor area is still available under the intensity limit. Run it.
+Write moje/ile_moge.py. Using the same data and definitions as moje/sprawdz_mpzp.py, reading moje/plan.json (or rozwiazania/plan.json if it does not exist) and dane/inwestycja.json, for every indicator that fails print the smallest change that would make it pass: the maximum footprint in m2, how many m2 of native ground or of green terrace (remember the 50% rule) are missing, how many underground parking spaces are missing and what to do with the surface spaces. Also print how much floor area is still available under the intensity limit (above-ground storeys only, as in the plan's own definition). Run it.
 ```
 
 ## Sprawdź

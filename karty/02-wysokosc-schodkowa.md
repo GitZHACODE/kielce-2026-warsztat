@@ -10,9 +10,22 @@ Widzisz, która konkretnie kondygnacja psuje wynik, zamiast jednej zbiorczej odp
 - W dane/inwestycja.json każda kondygnacja ma pola cofniecie_od_KDP1_m i cofniecie_od_Solnej_m.
 - Jeśli masz już moje/sprawdz_mpzp.py z karty 01, miej go otwarty obok - to jest rozszerzenie tego samego pomysłu.
 
+## Prompt krok po kroku
+Każde zdanie promptu ma jedno zadanie i zamyka jedną drogę na skróty; poniżej prompt rozłożony na części w kolejności, w jakiej czyta je agent.
+
+1. **"Extend moje/sprawdz_mpzp.py, or write moje/wysokosc_schodkowa.py"** - dwie dopuszczalne drogi: dopisanie do skryptu z karty 01 albo osobny plik; obie zostają w moje/ i liczą na tych samych danych.
+2. **"with the plan's stepped height rule from moje/plan.json (or rozwiazania/plan.json if it does not exist) -> wskazniki.wysokosc"** - progi mają przyjść z pliku, nie z pamięci agenta; gałąź wskazana wprost, z planem zapasowym, gdy karta 00 się nie udała.
+3. **"count only storeys with nadziemna true (the underground garage is outside this rule and does not count toward maksymalna_kondygnacje)"** - bez tego agent liczy 7 kondygnacji zamiast 6 i wystawia fałszywe NIE całemu budynkowi; lit. e i f mówią wyłącznie o kondygnacjach nadziemnych.
+4. **"storeys 1 to podstawowa_kondygnacje must have their top at or below podstawowa_m"** - cztery dolne kondygnacje sprawdzasz samym pułapem 14.0 m z § 20 ust. 2 pkt 7 lit. e, bez wymogu cofnięcia; próg czytany z pliku, nie wpisany na sztywno.
+5. **"any storey above that height or above podstawowa_kondygnacje must be set back at least cofniecie_kondygnacji_powyzej_podstawowej_min_m"** - próg 1.5 m z lit. f; warunek jest rozłączny ("albo"), więc piąta kondygnacja podlega mu nawet poniżej 14.0 m.
+6. **"from both KDP-1 and Solna (fields cofniecie_od_KDP1_m and cofniecie_od_Solnej_m in inwestycja.json)"** - dwie granice liczone osobno; to cała pułapka karty, bo kondygnacja 5 ma 1.5 m od KDP-1 i przechodzi, ale 1.2 m od Solnej.
+7. **"the whole building must stay within maksymalna_m and maksymalna_kondygnacje"** - drugi pułap, 21.0 m i 6 kondygnacji nadziemnych, sprawdzany dodatkowo, bo każda kondygnacja z osobna może być OK.
+8. **"Print one row per storey with OK or NIE and the reason, plus one summary row for the whole building"** - wiersz na kondygnację zamiast jednego zbiorczego NIE, a na końcu wiersz budynku, w którym mieszczą się oba pułapy z punktu 7.
+9. **"Run it."** - agent sam uruchamia skrypt, więc błąd wykonania albo zły wiersz widać w czacie, zanim otworzysz plik.
+
 ## Prompt (skopiuj do Copilot Chat, tryb Agent)
 ```text
-Extend moje/sprawdz_mpzp.py, or write moje/wysokosc_schodkowa.py, with the plan's stepped height rule from moje/plan.json (or rozwiazania/plan.json if it does not exist) -> wskazniki.wysokosc: storeys 1 to 4 must have their top at or below podstawowa_m; any storey above that height or above the fourth storey must be set back at least cofniecie_kondygnacji_powyzej_podstawowej_min_m from both KDP-1 and Solna (fields cofniecie_od_KDP1_m and cofniecie_od_Solnej_m in inwestycja.json); the whole building must stay within maksymalna_m and maksymalna_kondygnacje. Print one row per storey with OK or NIE and the reason. Run it.
+Extend moje/sprawdz_mpzp.py, or write moje/wysokosc_schodkowa.py, with the plan's stepped height rule from moje/plan.json (or rozwiazania/plan.json if it does not exist) -> wskazniki.wysokosc: count only storeys with nadziemna true (the underground garage is outside this rule and does not count toward maksymalna_kondygnacje); storeys 1 to podstawowa_kondygnacje must have their top at or below podstawowa_m; any storey above that height or above podstawowa_kondygnacje must be set back at least cofniecie_kondygnacji_powyzej_podstawowej_min_m from both KDP-1 and Solna (fields cofniecie_od_KDP1_m and cofniecie_od_Solnej_m in inwestycja.json); the whole building must stay within maksymalna_m and maksymalna_kondygnacje. Print one row per storey with OK or NIE and the reason, plus one summary row for the whole building. Run it.
 ```
 
 ## Sprawdź

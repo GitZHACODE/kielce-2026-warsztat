@@ -39,4 +39,8 @@ Runtime:
 
 Plik to narzędzie prowadzącego. Sprawdza karty 05, 06 i 07 oraz oba przykłady z `przyklady/` na wszystkich kombinacjach wzoru i typu panelu. Wymaga zainstalowanego Rhino 8 oraz osobnego środowiska Python z pakietami `pythonnet` i `rhinoinside`, uruchamianego jako `conda run -n kielce-rhino`, i nie jest potrzebny żadnej karcie warsztatowej.
 
+## wzorzec_08.py
+
+Plik to narzędzie prowadzącego do karty 08. Uruchamia oba przykłady z `przyklady/` pod Rhino.Inside na pięciu zestawach suwaków bryły i czternastu zestawach elewacji, a wyniki (pola kondygnacji, obrys, objętość, liczby paneli, udział paneli intensywnych) zapisuje do `rozwiazania/08_wzorzec.json` razem z tolerancjami. Ten plik JSON czyta `node rozwiazania/08_test.js`, więc test przeglądarkowego pokazu nie potrzebuje Rhino; narzędzie uruchamia się ponownie tylko wtedy, gdy zmienił się któryś z przykładów. To samo środowisko co wyżej: `conda run -n kielce-rhino --no-capture-output python narzedzia/wzorzec_08.py`, oczekiwana ostatnia linia `WZORZEC OK`.
+
 Nic w `rozwiazania/` nie importuje niczego z tego folderu.

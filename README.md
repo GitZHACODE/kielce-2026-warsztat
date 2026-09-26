@@ -9,7 +9,7 @@ Repozytorium ma siedem folderów, każdy z jednym zadaniem.
 | Folder | Co zawiera |
 |---|---|
 | `dane/` | pełny tekst uchwały planu (34 strony) w pliku tekstowym, pusty szablon `plan-szablon.json` do wypełnienia przez agenta oraz fikcyjna inwestycja "Solna" w pliku JSON |
-| `karty/` | dziewięć kart ćwiczeniowych i karty statusu na biurko |
+| `karty/` | dziewięć kart ćwiczeniowych, karty statusu na biurko oraz karta 08, pokaz w przeglądarce dla chętnych po warsztacie |
 | `rozwiazania/` | gotowe skrypty referencyjne do porównania z własnym wynikiem |
 | `narzedzia/` | generator komponentów Grasshoppera oraz narzędzia prowadzącego |
 | `przyklady/` | dwa przykłady zaawansowane do kart 06 i 07 (bryła z atraktorem, elewacja z wyborem wzoru i otworami) z gotowymi plikami `.ghcomp.xml` |
@@ -55,11 +55,13 @@ File > Open > Run
 
    - Wklejanie czystego kodu: kliknij dwukrotnie na kanwie, wpisz "Script", wybierz Python 3 Script, kliknij dwukrotnie na komponencie i wklej kod; przybliż widok komponentu, aż pojawią się znaki plus, i dodaj nimi wejścia, ustawiając dostęp na "list" tam, gdzie karta tego wymaga.
    - Wklejanie pliku `.ghcomp.xml`: otwórz plik `.ghcomp.xml` w edytorze tekstu, zaznacz wszystko, skopiuj, i wklej klawiszami Ctrl-V na kanwie w Grasshopperze - cały komponent pojawia się od razu, ze wszystkimi wejściami i wyjściami. Każdy z trzech komponentów z `rozwiazania/` rysuje geometrię natychmiast, bez podłączania wejść, na masie Solna wbudowanej w skrypt; pierwsza linia raportu mówi wtedy, że to dane domyślne.
-   - Własny plik `.ghcomp.xml` generujesz poleceniem poniżej, a wynik wklejasz tymi samymi klawiszami Ctrl-V na kanwie; bez opcji `--clipboard` polecenie zapisuje plik `moje/moj_komponent.ghcomp.xml` obok skryptu.
+   - Własny plik `.ghcomp.xml` generujesz poleceniem poniżej, a wynik wklejasz tymi samymi klawiszami Ctrl-V na kanwie; polecenie zawsze zapisuje plik `moje/moj_komponent.ghcomp.xml` obok skryptu, a opcja `--clipboard` dodatkowo kopiuje archiwum do schowka.
 
 ```
 python narzedzia/gh_params_gen.py moje/moj_komponent.py --clipboard
 ```
+
+4. Pokaz z karty 08, `rozwiazania/08_pokaz.html`, otwierasz dwuklikiem jak kalkulator z karty 04; potrzebuje internetu, bo bibliotekę three.js pobiera z CDN przy każdym otwarciu.
 
 ## Zasady w skrócie
 
@@ -101,6 +103,7 @@ Nowe Warunki Techniczne z 2026 roku były niepublikowane na dzień 2026-09-15. D
 - Rozszerzenie GitHub Copilot, zalogowane.
 - Python 3 z python.org, zainstalowany dla bieżącego użytkownika, bez uprawnień administratora.
 - Rhino 8, potrzebne tylko do kart 05-07.
+- node, potrzebny tylko do testu karty 08 (`node rozwiazania/08_test.js`); sam pokaz otwiera się w przeglądarce bez node.
 
 ## Źródła
 

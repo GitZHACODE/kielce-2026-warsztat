@@ -16,11 +16,11 @@ Blok trwa 90 minut i dzieli się na dwie rundy pracy samodzielnej.
 | 0:03 | 10 | Pokaz 1: karta 00 na żywo (agent szuka U,M 2 w 34 stronach), porównanie z wzorcem, potem karta 01 ze scenariuszem błędu i ręcznym uruchomieniem pliku |
 | 0:13 | 2 | Test narzędzi |
 | 0:15 | 10 | Razem: karta 00, początek karty 01 |
-| 0:25 | 18 | Samodzielnie 1: karty 01 do 04 i 99 |
+| 0:25 | 18 | Samodzielnie 1: karty 01 do 04 i 99, jedna do dwóch kart na blok; czas na karcie dotyczy jednej karty, nie bloku |
 | 0:43 | 4 | Omówienie 1 |
 | 0:47 | 5 | Przerwa |
 | 0:52 | 6 | Pokaz 2: karta 05 (płyty czerwone), karta 06 (suwaki zmieniają wynik kontroli), karta 07 (elewacja) |
-| 0:58 | 18 | Samodzielnie 2: z Rhino karty 05, 06, 07; bez Rhino karty 02 do 04 i 99 |
+| 0:58 | 18 | Samodzielnie 2: z Rhino karty 05, 06, 07; bez Rhino karty 02 do 04 i 99; jedna karta na blok |
 | 1:16 | 5 | Omówienie 2 i pytania |
 | 1:21 | 4 | Plan na poniedziałek: podmień uchwałę, uruchom kartę 00, potem 01 |
 | 1:25 | 5 | Rezerwa |
@@ -46,7 +46,9 @@ Trzy komponenty na jednej kanwie, w tej kolejności:
 3. Wklej sidecar karty 06 - bryła pojawia się od razu na masie wbudowanej; podepnij `kondygnacje` z warstwy Kondygnacje, poruszaj suwakami `skret_deg` i `wybrzuszenie`.
 4. Przepnij wyjścia `kondygnacje_nowe` i `zabudowa_nowa` komponentu 06 do wejść `kondygnacje` i `zabudowa` komponentu 05, i pokaż sali, jak zmieniają się powierzchnia zabudowy i intensywność.
 5. Wklej sidecar karty 07 - panele pojawiają się od razu na prostym lofcie masy Solna; podepnij `bryla` z komponentu 06 i poruszaj wysokością słońca.
-6. Jeśli z rezerwy zostanie czas, wklej `przyklady/bryla_zaawansowana_gh.ghcomp.xml` w miejsce komponentu karty 06, przeciągnij punkt `atraktor`, potem wklej `przyklady/elewacja_zaawansowana_gh.ghcomp.xml` i przełącz `typ_wzoru` oraz `typ_panelu`.
+6. Na koniec bloku, jeśli zostanie czas, wklej `przyklady/bryla_zaawansowana_gh.ghcomp.xml` w miejsce komponentu karty 06, przeciągnij punkt `atraktor`, potem wklej `przyklady/elewacja_zaawansowana_gh.ghcomp.xml` i przełącz `typ_wzoru` oraz `typ_panelu`.
+
+Jeśli po omówieniu 2 zostanie czas, otwórz `rozwiazania/08_pokaz.html` i przełącz presety od Szkicu Solna do Wieży; to zapowiedź karty 08, której uczestnicy nie uruchamiają na sali.
 
 ## Kolejność cięć
 
@@ -77,7 +79,8 @@ conda run -n gh-tools python rozwiazania/07_elewacja_gh.py --test
 conda run -n gh-tools python przyklady/bryla_zaawansowana_gh.py --test
 conda run -n gh-tools python przyklady/elewacja_zaawansowana_gh.py --test
 node rozwiazania/04_test.js
-conda run -n kielce-rhino python narzedzia/test_geometrii_rhino_inside.py
+node rozwiazania/08_test.js
+conda run -n kielce-rhino --no-capture-output python narzedzia/test_geometrii_rhino_inside.py
 ```
 
 Sprawdź też, że pięć sidecarów (trzy kart 05-07 i dwa z `przyklady/`) jest aktualnych względem skryptów - po ostatniej poprawce pliku `.py` bez ponownej generacji wklejony komponent uruchamia stary kod. Każde z poniższych poleceń ma zakończyć się bez wyjścia i kodem 0 (`echo $LASTEXITCODE`).
@@ -96,7 +99,7 @@ Dalsze czynności przed wyjazdem:
 2. Uruchom `05_szkic_bryly_rhino.py` w nowym dokumencie Rhino.
 3. Wklej każdy z pięciu sidecarów `.ghcomp.xml` (trzy kart 05-07 i dwa z `przyklady/`) na kanwę Grasshoppera i potwierdź, że komponent pojawia się razem ze swoimi wejściami i bez żadnego kabla rysuje geometrię masy Solna.
 4. Uruchom karty 05, 06 i 07 połączone razem, jeden raz.
-5. Wydrukuj dziewięć kart oraz 30 kart statusu.
+5. Wydrukuj dziewięć kart oraz 30 kart statusu; kartę 08 pomiń, to pokaz po warsztacie.
 6. Sprawdź dziennikustaw.gov.pl pod kątem nowych Warunków Technicznych 25 i 26 września.
 7. Sprawdź jeszcze raz zapis do Copilot Free.
 8. Jeśli polskie litery w terminalu wyglądają jak krzaki (mojibake) w Windows PowerShell 5.1, uruchom raz `chcp 65001` w tym terminalu i uruchom polecenie ponownie; terminal VS Code z PowerShell 7 tego nie wymaga, a same pliki skryptów są poprawne.

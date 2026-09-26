@@ -1,0 +1,3081 @@
+<!doctype html>
+<html lang="pl" data-theme="dark" data-lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solna - pokaz parametryczny</title>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+} }
+</script>
+<style>
+/* --- Tokeny --------------------------------------------------------------- */
+:root { --tlo:#0b0c0e; --plaszczyzna:#141618; --plaszczyzna-2:#1b1e21; --linia:#2a2e33; --tekst:#edeae4; --tekst-slaby:#9aa0a6;
+        --akcent:#e9b44c; --akcent-tlo:#3a2e14; --slonce:#7fb3e6; --ok:#58c48a; --ok-tlo:#153524; --nie:#f0705a; --nie-tlo:#3b1a14;
+        --promien:6px; --scena-tlo:#101215; --bryla:#d9d4cc; }
+/* Jasny akcent #8a5a0a daje 4.8:1 na swoim tle (zaznaczony segment, wciśnięty
+   chip); bryła dostaje ciemniejszy ton, bo jasnoszara przy 35 % krycia znikała na jasnej scenie. */
+[data-theme="light"] { --tlo:#f4f2ee; --plaszczyzna:#fffdfa; --plaszczyzna-2:#ece8e1; --linia:#d9d3c8; --tekst:#1d1f22; --tekst-slaby:#5d6268;
+        --akcent:#8a5a0a; --akcent-tlo:#f6e7c4; --slonce:#2f6fae; --ok:#17643a; --ok-tlo:#dbeee2; --nie:#93291b; --nie-tlo:#f6ded9; --scena-tlo:#e9e6e0; --bryla:#6a655f; }
+
+/* --- Podstawy ------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; background: var(--tlo); }
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  font-size: 14px; line-height: 1.45;
+  background: var(--tlo); color: var(--tekst);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, p { margin: 0; }
+html:not(.gotowe) *, html:not(.gotowe) *::before, html:not(.gotowe) *::after { transition: none !important; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--akcent); outline-offset: 2px; }
+
+/* Nagłówek grupy i sekcji: mała wersalikowa "brew". */
+.brew {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--tekst-slaby);
+}
+
+/* --- Siatka strony -------------------------------------------------------- */
+#app {
+  display: grid;
+  grid-template-areas: "naglowek naglowek" "scena panel" "raport panel";
+  grid-template-columns: 1fr 460px;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* --- Nagłówek ------------------------------------------------------------- */
+.naglowek {
+  grid-area: naglowek; min-width: 0;   /* podtytuł bez zawijania nie może rozpychać siatki */
+  display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px;
+  padding: 14px 20px;
+  background: var(--plaszczyzna);
+  border-bottom: 1px solid var(--linia);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
+  position: relative; z-index: 2;
+}
+/* Tytuł ustępuje miejsca paskowi narzędzi: podtytuł skraca się wielokropkiem
+   (pełny tekst w dymku), żeby osiem przycisków nie schodziło pod tytuł na 1280 px. */
+.tytul { flex: 1 1 320px; min-width: 0; }
+.tytul h1 { font-size: 17px; font-weight: 600; letter-spacing: 0.01em; }
+.tytul p { font-size: 12px; color: var(--tekst-slaby); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.naglowek .narzedzia { display: flex; flex-wrap: wrap; gap: 6px; margin-left: auto; }
+/* Cztery pary przycisków: język i motyw, warstwy, ruch, eksport. */
+#btn-duch, #btn-obrot, #btn-link { margin-left: 10px; }
+/* Tekst tylko dla czytnika ekranu (etykiety przycisków na wąskim ekranie, wynik przy chipie). */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* --- Chipy presetów i przyciski ------------------------------------------- */
+.chip, .przycisk {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 11px;
+  background: transparent;
+  border: 1px solid var(--linia);
+  border-radius: 999px;
+  font-size: 12px; line-height: 1.3;
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+.przycisk { border-radius: var(--promien); }
+.chip:hover, .przycisk:hover { border-color: var(--akcent); color: var(--akcent); }
+.chip[aria-pressed="true"], .przycisk[aria-pressed="true"] {
+  background: var(--akcent-tlo); border-color: var(--akcent); color: var(--akcent);
+}
+/* Slonce ma wlasny kolor tokenu: przycisk przejazdu i oba suwaki slonca. */
+#btn-slonce[aria-pressed="true"] {
+  background: var(--plaszczyzna-2); border-color: var(--slonce); color: var(--slonce);
+}
+.kontrolka[data-klucz="azymut_slonca_deg"] input[type="range"],
+.kontrolka[data-klucz="wysokosc_slonca_deg"] input[type="range"] { accent-color: var(--slonce); }
+.przycisk[aria-disabled="true"] { opacity: 0.6; border-style: dashed; cursor: not-allowed; }
+.ikona { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* --- Scena ---------------------------------------------------------------- */
+.scena { grid-area: scena; position: relative; min-height: 0; background: var(--scena-tlo); }
+/* will-change wymusza osobną warstwę kompozytora dla płótna 3D; bez tego
+   przeglądarka bez akceleracji potrafi nie odmalować sceny nad tłem sekcji. */
+#widok { display: block; width: 100%; height: 100%; will-change: transform; }
+.etykiety { position: absolute; inset: 0; pointer-events: none; }
+.etykiety span {
+  position: absolute; transform: translate(-50%, -50%);
+  transition: opacity 0.12s ease;
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--tekst-slaby);
+  padding: 2px 7px; border: 1px solid var(--linia); border-radius: 999px;
+  background: var(--plaszczyzna); white-space: nowrap;
+}
+.legenda {
+  position: absolute; left: 18px; bottom: 16px;
+  display: flex; gap: 18px; font-size: 11px; color: var(--tekst-slaby);
+  pointer-events: none;
+}
+.legenda i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; vertical-align: 1px; }
+.legenda .prob-ok { background: var(--ok); }
+.legenda .prob-nie { background: var(--nie); }
+/* Tuż pod paskiem narzędzi w nagłówku, bo stamtąd padają kliknięcia Link i PNG. */
+#toast {
+  position: absolute; right: 20px; top: calc(100% + 8px); z-index: 3;
+  padding: 5px 12px; font-size: 12px;
+  color: var(--akcent); background: var(--akcent-tlo);
+  border: 1px solid var(--akcent); border-radius: 999px;
+  opacity: 0; transition: opacity 0.2s ease; pointer-events: none;
+}
+#toast.widoczny { opacity: 1; }
+#schowek { position: absolute; left: -9999px; top: 0; width: 1px; opacity: 0; }
+
+/* --- Panel sterowania ----------------------------------------------------- */
+/* Trzy warstwy w kolumnie: presety i zakładki (stałe), treść zakładki (przewija
+   się tylko ona), tabela z werdyktem (stała). Przewijanie w środku nie rusza
+   ani zakładek, ani werdyktu. */
+.panel {
+  grid-area: panel; min-height: 0;
+  display: flex; flex-direction: column;
+  background: var(--plaszczyzna);
+  border-left: 1px solid var(--linia);
+}
+.panel-gora { flex: none; padding: 10px 18px 0; border-bottom: 1px solid var(--linia); }
+.presety { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.zakladki { display: flex; margin: 0 -18px; }
+.zakladki button {
+  flex: 1 1 0; min-width: 0;
+  padding: 8px 6px;
+  background: transparent; border: 0; border-bottom: 2px solid transparent;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--tekst-slaby); cursor: pointer;
+  transition: color 0.12s ease, border-color 0.12s ease;
+}
+.zakladki button:hover { color: var(--akcent); }
+.zakladki button[aria-selected="true"] { color: var(--akcent); border-bottom-color: var(--akcent); }
+.tresc { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+
+/* Zwijane sekcje: jeden styl dla podsekcji zakładki, tabeli i raportu. */
+details.zwijane > summary {
+  list-style: none; cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 18px;
+}
+details.zwijane > summary::-webkit-details-marker { display: none; }
+details.zwijane > summary::after {
+  content: ""; flex: none; margin-left: auto;
+  width: 7px; height: 7px;
+  border-right: 1.5px solid var(--tekst-slaby); border-bottom: 1.5px solid var(--tekst-slaby);
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform 0.15s ease;
+}
+details.zwijane[open] > summary::after { transform: rotate(-135deg) translate(-2px, -2px); }
+details.zwijane > summary:hover { color: var(--akcent); }
+.sekcja { border-bottom: 1px solid var(--linia); }
+.sekcja > summary .nazwa { font-size: 12px; font-weight: 600; }
+.grupa-tresc {
+  padding: 2px 18px 16px;
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px 10px;
+}
+
+/* --- Kontrolki ------------------------------------------------------------ */
+.kontrolka { grid-column: 1 / -1; padding: 5px 0; min-width: 0; }
+.kontrolka.waska { grid-column: auto; }
+.kontrolka > label { display: block; font-size: 12px; color: var(--tekst-slaby); margin-bottom: 3px; }
+.wiersz { display: grid; grid-template-columns: 1fr 58px 22px; gap: 8px; align-items: center; }
+.wiersz.bez-suwaka { grid-template-columns: 1fr 22px; }
+.wiersz.pelny { grid-template-columns: 1fr; }
+.wiersz.kolorowy { grid-template-columns: auto 1fr; }
+input[type="range"] { width: 100%; min-width: 0; accent-color: var(--akcent); background: transparent; height: 18px; margin: 0; }
+input[type="number"] {
+  width: 100%; min-width: 0;
+  padding: 3px 5px;
+  font: inherit; font-size: 12px;
+  color: var(--tekst); background: var(--plaszczyzna-2);
+  border: 1px solid var(--linia); border-radius: var(--promien);
+}
+/* Wyliczenia jako segmentowany przełącznik: wszystkie warianty widać naraz,
+   bez klikania w listę - na ekranie sali to jedna rzecz mniej do tłumaczenia. */
+.segment {
+  display: flex; align-items: stretch;
+  border: 1px solid var(--linia); border-radius: var(--promien); overflow: hidden;
+}
+.segment button {
+  flex: 1 1 0; min-width: 0;
+  padding: 3px 6px;
+  background: var(--plaszczyzna-2); border: 0; border-left: 1px solid var(--linia);
+  font-size: 11px; line-height: 1.25; text-align: center;
+  color: var(--tekst-slaby); cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+.segment button:first-child { border-left: 0; }
+.segment button:hover { color: var(--akcent); }
+.segment button[aria-checked="true"] { background: var(--akcent-tlo); color: var(--akcent); }
+input[type="color"] {
+  width: 100%; height: 26px; padding: 2px;
+  background: var(--plaszczyzna-2); border: 1px solid var(--linia); border-radius: var(--promien);
+  cursor: pointer;
+}
+input[type="checkbox"] { accent-color: var(--akcent); width: 14px; height: 14px; }
+.jedn { font-size: 11px; color: var(--tekst-slaby); white-space: nowrap; }
+
+/* --- Tabela wskaźników ---------------------------------------------------- */
+.podsumowanie {
+  flex: none;
+  padding: 0 12px 10px;
+  background: var(--plaszczyzna);
+  border-top: 1px solid var(--linia);
+}
+.podsumowanie > details > summary { padding: 8px 6px; }
+/* Zwinięta tabela zostawia sześć chipów: nazwa wskaźnika w kolorze wyniku.
+   Nagłówek "Wskaźniki" schodzi wtedy z ekranu (zostaje dla czytnika), żeby chipy
+   zmieściły się w jednym wierszu. */
+.chipy { display: flex; flex-wrap: wrap; gap: 4px; }
+details[open] > summary .chipy { display: none; }
+.podsumowanie details:not([open]) > summary .brew { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.chipy span {
+  font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 1px 7px; border: 1px solid; border-radius: 999px;
+}
+.chipy .ok { color: var(--ok); background: var(--ok-tlo); border-color: var(--ok); }
+.chipy .nie { color: var(--nie); background: var(--nie-tlo); border-color: var(--nie); }
+/* Stale szerokosci kolumn: 460 px panelu nie miesci pieciu kolumn liczonych
+   z tresci, a "niedozwolonych" wypychalo Margines poza krawedz. Zawijamy tylko
+   na spacjach: lamanie w srodku slowa bylo nieczytelne z sali. */
+#tabela { width: 100%; margin: 0; table-layout: fixed; border-collapse: collapse; font-size: 12px; }
+#tabela th:nth-child(1), #tabela td:nth-child(1) { width: 30%; }
+#tabela th:nth-child(2), #tabela td:nth-child(2) { width: 19%; }
+#tabela th:nth-child(3), #tabela td:nth-child(3) { width: 16%; }
+#tabela th:nth-child(4), #tabela td:nth-child(4) { width: 13%; }
+#tabela th:nth-child(5), #tabela td:nth-child(5) { width: 22%; }
+#tabela th, #tabela td { overflow-wrap: normal; word-break: normal; }
+#tabela th {
+  text-align: left; padding: 2px 4px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--tekst-slaby); border-bottom: 1px solid var(--linia);
+}
+#tabela td { padding: 3px 4px; line-height: 1.3; border-bottom: 1px solid var(--linia); vertical-align: top; }
+#tabela td.wynik { text-align: center; font-weight: 600; border-radius: 3px; }
+#tabela td.ok { color: var(--ok); background: var(--ok-tlo); }
+#tabela td.nie { color: var(--nie); background: var(--nie-tlo); }
+#tabela td.margines { color: var(--tekst-slaby); }
+#werdykt {
+  margin: 7px 0 0; padding: 5px 9px;
+  border: 1px solid var(--linia); border-radius: var(--promien);
+  font-size: 12px; font-weight: 600; text-align: center;
+}
+#werdykt.ok { color: var(--ok); background: var(--ok-tlo); border-color: var(--ok); }
+#werdykt.nie { color: var(--nie); background: var(--nie-tlo); border-color: var(--nie); }
+
+/* --- Raport --------------------------------------------------------------- */
+.raport {
+  grid-area: raport; min-height: 0;
+  background: var(--plaszczyzna); border-top: 1px solid var(--linia);
+}
+.raport details.zwijane > summary { padding: 8px 20px; }
+#raport {
+  margin: 0; padding: 0 20px 12px; max-height: 161px; overflow: auto;   /* dziewięć całych wierszy */
+  font-family: ui-monospace, Consolas, monospace; font-size: 11.5px; line-height: 1.55;
+  color: var(--tekst-slaby); white-space: pre-wrap;
+}
+
+/* --- Wąsko ---------------------------------------------------------------- */
+/* Próg idzie w parze z szerokością panelu (460 px): scena zostaje z tymi samymi
+   520 px co przy panelu 380 px i progu 900 px. */
+@media (max-width: 980px) {
+  #app {
+    grid-template-areas: "naglowek" "scena" "panel" "raport";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 62vh auto auto;
+    height: auto; min-height: 100vh; overflow: visible;
+  }
+  .panel { border-left: 0; border-top: 1px solid var(--linia); }
+  /* Zapas na dole: przyklejony pasek werdyktu (zwinięty 104 px) nie zasłania ostatniego suwaka. */
+  .tresc { overflow: visible; padding-bottom: 110px; }
+  /* Na wąskim ekranie werdykt trzyma się dołu okna, dopóki panel jest w kadrze. */
+  .podsumowanie { position: sticky; bottom: 0; z-index: 1; }
+}
+@media (max-width: 560px) {
+  .narzedzia .przycisk span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .narzedzia .przycisk { padding: 7px 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+<main id="app">
+
+<header class="naglowek">
+  <div class="tytul">
+    <h1 data-t="tytul">Solna - pokaz parametryczny</h1>
+    <p data-t="podtytul" data-t-title="podtytul">Kielce, teren U,M 2, uchwała XLI/1014/2009 - sześć wskaźników MPZP na parametrycznej masie (dane fikcyjne)</p>
+  </div>
+
+  <div class="narzedzia">
+    <button type="button" class="przycisk" id="btn-jezyk" data-t-title="btn_jezyk_title">
+      <svg class="ikona" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2"/><path d="M1.8 8h12.4M8 1.8c3.4 3.6 3.4 8.8 0 12.4-3.4-3.6-3.4-8.8 0-12.4z"/></svg>
+      <span id="etykieta-jezyk">EN</span>
+    </button>
+    <button type="button" class="przycisk" id="btn-motyw" data-t-title="btn_motyw_title">
+      <svg class="ikona" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.2 9.6A5.6 5.6 0 0 1 6.4 2.8 5.6 5.6 0 1 0 13.2 9.6z"/></svg>
+      <span data-t="btn_motyw">Motyw</span>
+    </button>
+    <button type="button" class="przycisk" id="btn-duch" aria-pressed="true" data-t-title="btn_duch_title">
+      <svg class="ikona" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5h5v5h-5z" stroke-dasharray="2 1.6"/><path d="M5 3h8.5v8.5" stroke-dasharray="2 1.6"/></svg>
+      <span data-t="btn_duch">Duch</span>
+    </button>
+    <button type="button" class="przycisk" id="btn-ramy" aria-pressed="false" data-t-title="btn_ramy_title">
+      <svg class="ikona" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.4 2.4h11.2v11.2H2.4zM6.1 2.4v11.2M9.9 2.4v11.2M2.4 6.1h11.2M2.4 9.9h11.2"/></svg>
+      <span data-t="btn_ramy">Ramy</span>
+    </button>
+    <button type="button" class="przycisk" id="btn-obrot" aria-pressed="false" data-t-title="btn_obrot_title">
+      <svg class="ikona" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.6 8a5.6 5.6 0 1 1-1.9-4.2"/><path d="M13.6 1.6v3.1h-3.1"/></svg>
+      <span data-t="btn_obrot">Obrót</span>
+    </button>
+    <button type="button" class="przycisk" id="btn-slonce" aria-pressed="false" data-t-title="btn_slonce_title">
+      <svg class="ikona" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.1"/><path d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3.1 3.1l1.1 1.1M11.8 11.8l1.1 1.1M12.9 3.1l-1.1 1.1M4.2 11.8l-1.1 1.1"/></svg>
+      <span data-t="btn_slonce">Słońce</span>
+    </button>
+    <button type="button" class="przycisk" id="btn-link" data-t-title="btn_link_title">
+      <svg class="ikona" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.6 9.4a2.8 2.8 0 0 0 4 0l2.2-2.2a2.8 2.8 0 0 0-4-4l-1 1"/><path d="M9.4 6.6a2.8 2.8 0 0 0-4 0L3.2 8.8a2.8 2.8 0 0 0 4 4l1-1"/></svg>
+      <span data-t="btn_link">Link</span>
+    </button>
+    <button type="button" class="przycisk" id="btn-png" data-t-title="btn_png_title">
+      <svg class="ikona" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8v8.4M4.8 7l3.2 3.2L11.2 7M2.4 13.4h11.2"/></svg>
+      <span data-t="btn_png">PNG</span>
+    </button>
+  </div>
+  <span id="toast" role="status"></span>
+</header>
+
+<section class="scena" id="scena">
+  <canvas id="widok" tabindex="0" data-t-aria="widok_aria" aria-label="Widok 3D masy Solna; strzałki przesuwają kamerę"></canvas>
+  <div class="etykiety" aria-hidden="true">
+    <span id="et-kdp">KDP-1</span>
+    <span id="et-solna">ul. Solna</span>
+  </div>
+  <div class="legenda">
+    <span><i class="prob-ok"></i><span data-t="legenda_ok">płyty zielone: wszystkie sześć wskaźników OK</span></span>
+    <span><i class="prob-nie"></i><span data-t="legenda_nie">płyty czerwone: co najmniej jeden NIE</span></span>
+  </div>
+  <input id="schowek" type="text" tabindex="-1" data-t-aria="schowek_aria" aria-label="Adres linku do skopiowania">
+</section>
+
+<aside class="panel">
+  <div class="panel-gora">
+    <div class="presety" id="presety" role="group" data-t-aria="presety_aria" aria-label="Presety">
+      <button type="button" class="chip" aria-pressed="false" data-preset="szkic" data-t="preset_szkic">Szkic Solna</button>
+      <button type="button" class="chip" aria-pressed="false" data-preset="karta0607" data-t="preset_karta0607">Karty 06 i 07</button>
+      <button type="button" class="chip" aria-pressed="false" data-preset="zaawansowany" data-t="preset_zaawansowany">Zaawansowany</button>
+      <button type="button" class="chip" aria-pressed="false" data-preset="wieza" data-t="preset_wieza">Wieża</button>
+    </div>
+    <div class="zakladki" role="tablist" data-t-aria="zakladki_aria" aria-label="Grupy ustawień">
+      <button type="button" role="tab" id="tab-bryla" aria-controls="grupa-bryla" aria-selected="true" data-t="grupa_bryla">Bryła</button>
+      <button type="button" role="tab" id="tab-elewacja" aria-controls="grupa-elewacja" aria-selected="false" tabindex="-1" data-t="grupa_elewacja">Elewacja</button>
+      <button type="button" role="tab" id="tab-plan" aria-controls="grupa-plan" aria-selected="false" tabindex="-1" data-t="grupa_plan">Plan</button>
+    </div>
+  </div>
+  <div class="tresc">
+    <section id="grupa-bryla" role="tabpanel" aria-labelledby="tab-bryla"></section>
+    <section id="grupa-elewacja" role="tabpanel" aria-labelledby="tab-elewacja" hidden></section>
+    <section id="grupa-plan" role="tabpanel" aria-labelledby="tab-plan" hidden></section>
+  </div>
+  <div class="podsumowanie">
+    <details class="zwijane" id="szczegoly-tabeli" open>
+      <summary><span class="brew" data-t="tabela_naglowek">Wskaźniki</span><span class="chipy" id="chipy"></span></summary>
+      <table id="tabela">
+        <thead><tr>
+          <th scope="col" data-t="th_wskaznik">Wskaźnik</th>
+          <th scope="col" data-t="th_wartosc">Wartość</th>
+          <th scope="col" data-t="th_limit">Limit</th>
+          <th scope="col" data-t="th_wynik">Wynik</th>
+          <th scope="col" data-t="th_margines">Margines</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </details>
+    <p id="werdykt" aria-live="polite"></p>
+  </div>
+</aside>
+
+<footer class="raport">
+  <details class="zwijane" id="szczegoly-raportu" open>
+    <summary><h2 class="brew" data-t="raport_naglowek">Raport</h2></summary>
+    <pre id="raport"></pre>
+  </details>
+</footer>
+
+</main>
+<script>
+// --- GEOMETRIA ---
+// Czysta arytmetyka karty 08: port przykladow przyklady/bryla_zaawansowana_gh.py
+// i przyklady/elewacja_zaawansowana_gh.py oraz kontroli MPZP z
+// rozwiazania/05_sprawdz_mpzp_gh.py. Blok nie dotyka strony ani biblioteki 3D:
+// wszystko liczone na zwykłych tablicach liczb, żeby node mógł go sprawdzić.
+
+var GEOMETRIA = (function () {
+"use strict";
+
+// ---------------------------------------------------------------------------
+// Stałe (kopie z Pythona)
+// ---------------------------------------------------------------------------
+
+// Domyślna masa "Solna": kopia tabeli PROSTOKATY z rozwiazania/05_szkic_bryly_rhino.py,
+// (warstwa, x0, y0, x1, y1, z); używane są tylko wiersze Kondygnacje.
+var DOMYSLNA_MASA = [
+  ["Dzialka",      0.0,  0.0, 50.0, 37.0,  0.0],   // 1850 m2
+  ["Zabudowa",     6.0,  5.0, 43.0, 31.0,  0.0],   // 962 m2
+  ["Kondygnacje",  5.0,  1.0, 45.0, 36.0, -3.0],   // 1400 m2 - garaż podziemny
+  ["Kondygnacje",  6.0,  5.0, 43.0, 31.0,  4.2],   // 962 m2
+  ["Kondygnacje",  6.0,  5.0, 43.0, 31.0,  7.4],   // 962 m2
+  ["Kondygnacje",  6.0,  5.0, 43.0, 31.0, 10.6],   // 962 m2
+  ["Kondygnacje",  6.0,  5.0, 43.0, 31.0, 13.8],   // 962 m2
+  ["Kondygnacje",  7.2,  6.5, 41.2, 29.5, 17.2],   // 782 m2 - cofnięcie
+  ["Kondygnacje",  8.0,  7.0, 41.0, 29.0, 20.6],   // 726 m2 - cofnięcie
+  ["PBC-grunt",   30.0, 31.0, 50.0, 37.0,  0.0],   // 120 m2
+  ["PBC-tarasy",  10.0, 10.0, 20.0, 19.0, 20.6],   // 90 m2 (>= 10 m2, liczy się)
+  ["PBC-tarasy",  25.0, 10.0, 29.0, 12.0, 20.6]    // 8 m2 (< 10 m2, nie liczy się)
+];
+
+// Ustawienia bryły - DOMYSLNE z bryla_zaawansowana_gh.py.
+var DOMYSLNE_BRYLY = {
+  typ_profilu: 1,
+  wykladnik_profilu: 3.0,
+  zaokraglenie: 0.6,
+  skret_deg: 25.0,
+  profil_skretu: 1,
+  wybrzuszenie: 0.15,
+  wysokosc_wybrzuszenia: 0.5,
+  zwezenie: 0.85,
+  pochylenie_x_m: 0.0,
+  pochylenie_y_m: 0.0,
+  sila_atraktora_m: 3.0,
+  zasieg_atraktora_m: 15.0,
+  punkty_profilu: 48,
+  kontury_co_m: 0.5
+};
+var KLUCZE_CALKOWITE_BRYLY = ["typ_profilu", "profil_skretu", "punkty_profilu"];
+var DOMYSLNY_ATRAKTOR = [60.0, 18.5, 10.0];
+var NAZWY_PROFILU = { 0: "prostokąt zaokrąglony", 1: "superelipsa" };
+var NAZWY_SKRETU = { 0: "liniowy", 1: "wygładzony", 2: "przyspieszający" };
+var MIN_PUNKTY_PROFILU = 12;
+var MIN_ZWEZENIE = 0.2;
+var CIECIE_PONIZEJ_M = 0.001;   // jak w Pythonie: obrys czytany 1 mm pod stropem
+var PROBEK_NA_ODCINEK = 4;      // próbki B-splajnu na jeden odcinek wielokąta sterującego
+var KROK_PLASTRA_M = 0.5;       // gęstość plastrów loftu po wysokości
+var KROK_SKANU_M = 0.05;        // krok skanowania przy sumie obrysów
+
+// Ustawienia elewacji - DOMYSLNE z elewacja_zaawansowana_gh.py.
+var DOMYSLNE_ELEWACJI = {
+  typ_wzoru: 0,
+  typ_panelu: 2,
+  kolumny: 36,
+  rzedy: 14,
+  glebokosc_min_m: 0.10,
+  glebokosc_max_m: 1.00,
+  otwor_min: 0.15,
+  otwor_max: 0.70,
+  azymut_slonca_deg: 180.0,
+  wysokosc_slonca_deg: 45.0,
+  zasieg_atraktora_m: 20.0,
+  waga_slonca: 0.5,
+  waga_atraktora: 0.5,
+  paleta: 0
+};
+var KLUCZE_CALKOWITE_ELEWACJI = ["typ_wzoru", "typ_panelu", "kolumny", "rzedy", "paleta"];
+var DOMYSLNE_ATRAKTORY = [[25.0, -20.0, 12.0]];
+var NAZWY_WZORU = { 0: "romby (diagrid)", 1: "kwadraty", 2: "trójkąty", 3: "heksagony" };
+var NAZWY_PANELU = { 0: "płaski z otworem", 1: "piramida", 2: "ścięta piramida z otworem" };
+var PALETY = {
+  0: ["grafit", [245, 244, 240], [58, 62, 70]],
+  1: ["miedź", [250, 246, 238], [184, 115, 51]],
+  2: ["ocean", [235, 245, 250], [20, 60, 110]]
+};
+var MIN_KOLUMNY = 4;
+var MIN_RZEDY = 2;
+var MIN_OTWOR = 0.02;   // otwór nie może zniknąć do zera, bo pierścień panelu stałby się zdegenerowany
+var MAX_OTWOR = 0.95;
+
+// Kopia rozwiazania/plan.json -> wskazniki (teren U,M 2).
+var DOMYSLNE_LIMITY = {
+  powierzchnia_zabudowy_max_pct: 50,
+  intensywnosc_max: 3.5,
+  pbc_min_pct: 10,
+  wysokosc: {
+    podstawowa_m: 14.0,
+    podstawowa_kondygnacje: 4,
+    maksymalna_m: 21.0,
+    maksymalna_kondygnacje: 6,
+    cofniecie_kondygnacji_powyzej_podstawowej_min_m: 1.5,
+    cofniecie_od: ["KDP-1", "Solna (KDL-6)"]
+  },
+  dach_nachylenie_max_deg: 25,
+  parking: { miejsc_na_mieszkanie_min: 1, tylko_podziemny: true }
+};
+
+// Liczby inwestycji, których nie da się odczytać z brył - z dane/inwestycja.json
+// (dane fikcyjne, ćwiczeniowe).
+var DOMYSLNE_PLANU = {
+  mieszkania: 30,
+  miejsca_podziemne: 27,
+  miejsca_naziemne: 3,
+  pbc_grunt_m2: 120,
+  pbc_woda_m2: 0,
+  taras1_m2: 90,
+  taras2_m2: 8,
+  dach_nachylenie_deg: 5
+};
+
+// ---------------------------------------------------------------------------
+// Drobiazgi: formaty liczb jak w Pythonie i wektory
+// ---------------------------------------------------------------------------
+
+function f0(x) { return x.toFixed(0); }            // {:.0f}
+function f1(x) { return x.toFixed(1); }            // {:.1f}
+function f2(x) { return x.toFixed(2); }            // {:.2f}
+function fmtG(x) { return Number(x.toPrecision(6)).toString(); }   // {:g}
+
+function przytnij(x, dol, gora) { return Math.min(Math.max(x, dol), gora); }
+
+function zeZnakiem(wartosc, znak) { return znak < 0 ? -wartosc : wartosc; }   // math.copysign
+
+function odejmij(a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; }
+function dodaj(a, b) { return [a[0] + b[0], a[1] + b[1], a[2] + b[2]]; }
+function skaluj(a, k) { return [a[0] * k, a[1] * k, a[2] * k]; }
+function iloczynSkalarny(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+function iloczynWektorowy(a, b) {
+  return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+}
+function jednostkowy(a) {
+  var d = Math.sqrt(iloczynSkalarny(a, a));
+  return d < 1e-12 ? [0.0, 0.0, 1.0] : [a[0] / d, a[1] / d, a[2] / d];
+}
+function srodekPunktow(punkty) {
+  var sx = 0.0, sy = 0.0, sz = 0.0, i;
+  for (i = 0; i < punkty.length; i++) { sx += punkty[i][0]; sy += punkty[i][1]; sz += punkty[i][2]; }
+  return [sx / punkty.length, sy / punkty.length, sz / punkty.length];
+}
+// Przybliżone pole wieloboku z iloczynów wektorowych (wielobok nie musi być płaski).
+function poleWieloboku3(punkty) {
+  if (punkty.length < 3) return 0.0;
+  var suma = [0.0, 0.0, 0.0], k;
+  for (k = 1; k < punkty.length - 1; k++) {
+    suma = dodaj(suma, iloczynWektorowy(odejmij(punkty[k], punkty[0]), odejmij(punkty[k + 1], punkty[0])));
+  }
+  return 0.5 * Math.sqrt(iloczynSkalarny(suma, suma));
+}
+
+// ---------------------------------------------------------------------------
+// Profil i przekroje (bryla_zaawansowana_gh.py)
+// ---------------------------------------------------------------------------
+
+// n punktów superelipsy |x/a|^w + |y/b|^w = 1 wokół (cx, cy), od kierunku +X,
+// przeciwnie do zegara; a i b to półosie.
+function superelipsaPunkty(cx, cy, a, b, wykladnik, n) {
+  var w = Math.max(wykladnik, 1.0), e = 2.0 / w, punkty = [], i, t, c, s;
+  for (i = 0; i < n; i++) {
+    t = 2.0 * Math.PI * i / n;
+    c = Math.cos(t);
+    s = Math.sin(t);
+    punkty.push([cx + a * zeZnakiem(Math.pow(Math.abs(c), e), c),
+                 cy + b * zeZnakiem(Math.pow(Math.abs(s), e), s)]);
+  }
+  return punkty;
+}
+
+// Promień zaokrąglenia naroży: zaokraglenie * 0.49 * krótszy bok, czyli przy
+// zaokraglenie 1 niemal połowa krótszego boku, tak by dwa zaokrąglenia nie zeszły
+// się na krótszej krawędzi.
+function promienZaokraglenia(szerokosc, glebokosc, zaokraglenie) {
+  if (zaokraglenie <= 0.0) return 0.0;
+  return przytnij(zaokraglenie, 0.0, 1.0) * 0.49 * Math.min(szerokosc, glebokosc);
+}
+
+// Prostokąt bez zaokrągleń: punkty rozdzielone na pięć odcinków obwodu, licząc
+// od środka prawego boku przeciwnie do zegara (b, 2a, 2b, 2a, b). Każdy odcinek
+// dostaje liczbę punktów proporcjonalną do długości (w dół), reszta idzie do
+// najdłuższych; punkty odcinka zaczynają się w jego wierzchołku początkowym, więc
+// każde naroże jest punktem próbki i wielokąt jest dokładny.
+function prostokatDokladnyPunkty(cx, cy, a, b, n) {
+  var odcinki = [
+    [b,       [a, 0.0],  [0.0, 1.0]],
+    [2.0 * a, [a, b],    [-1.0, 0.0]],
+    [2.0 * b, [-a, b],   [0.0, -1.0]],
+    [2.0 * a, [-a, -b],  [1.0, 0.0]],
+    [b,       [a, -b],   [0.0, 1.0]]
+  ];
+  var obwod = 4.0 * a + 4.0 * b, ile = [], suma = 0, i, j, s;
+  for (i = 0; i < odcinki.length; i++) {
+    ile.push(Math.floor(n * odcinki[i][0] / obwod));
+    suma += ile[i];
+  }
+  var kolejnosc = [0, 1, 2, 3, 4].sort(function (p, q) {
+    return odcinki[q][0] - odcinki[p][0] || p - q;
+  });
+  for (i = 0; suma < n; i++, suma++) ile[kolejnosc[i % kolejnosc.length]] += 1;
+
+  var punkty = [];
+  for (i = 0; i < odcinki.length; i++) {
+    for (j = 0; j < ile[i]; j++) {
+      s = odcinki[i][0] * j / ile[i];
+      punkty.push([cx + odcinki[i][1][0] + odcinki[i][2][0] * s,
+                   cy + odcinki[i][1][1] + odcinki[i][2][1] * s]);
+    }
+  }
+  return punkty;
+}
+
+// n punktów prostokąta o półbokach a, b wokół (cx, cy), naroża zaokrąglone
+// promieniem, równo po obwodzie, od środka prawego boku przeciwnie do zegara.
+function prostokatZaokraglonyPunkty(cx, cy, a, b, promien, n) {
+  var r = przytnij(promien, 0.0, Math.min(a, b) * 0.999);
+  if (r <= 0.0) return prostokatDokladnyPunkty(cx, cy, a, b, n);
+  var polLuku = Math.PI * r / 2.0;
+
+  function luk(sx, sy, kat0) {
+    return function (s) { return [sx + r * Math.cos(kat0 + s / r), sy + r * Math.sin(kat0 + s / r)]; };
+  }
+
+  var odcinki = [
+    [b - r,           function (s) { return [a, s]; }],
+    [polLuku,         luk(a - r, b - r, 0.0)],
+    [2.0 * (a - r),   function (s) { return [a - r - s, b]; }],
+    [polLuku,         luk(-(a - r), b - r, Math.PI / 2.0)],
+    [2.0 * (b - r),   function (s) { return [-a, b - r - s]; }],
+    [polLuku,         luk(-(a - r), -(b - r), Math.PI)],
+    [2.0 * (a - r),   function (s) { return [-(a - r) + s, -b]; }],
+    [polLuku,         luk(a - r, -(b - r), 1.5 * Math.PI)],
+    [b - r,           function (s) { return [a, -(b - r) + s]; }]
+  ];
+  var obwod = 0, i, j, s, xy, znaleziono, punkty = [];
+  for (i = 0; i < odcinki.length; i++) obwod += odcinki[i][0];
+  for (i = 0; i < n; i++) {
+    s = obwod * i / n;
+    znaleziono = null;
+    for (j = 0; j < odcinki.length; j++) {
+      if (odcinki[j][0] <= 0.0) continue;
+      if (s <= odcinki[j][0]) { znaleziono = odcinki[j][1](s); break; }
+      s -= odcinki[j][0];
+    }
+    // Reszta z arytmetyki zmiennoprzecinkowej za końcem obwodu: obwód jest
+    // zamknięty, więc to punkt startowy; dzięki temu zawsze wychodzi n punktów.
+    xy = znaleziono === null ? odcinki[0][1](0.0) : znaleziono;
+    punkty.push([cx + xy[0], cy + xy[1]]);
+  }
+  return punkty;
+}
+
+// Udział skrętu na wysokości względnej t: 0 liniowy, 1 wygładzony, 2 przyspieszający.
+function latwienieSkretu(t, profil) {
+  t = przytnij(t, 0.0, 1.0);
+  if (profil === 1) return t * t * (3.0 - 2.0 * t);
+  if (profil === 2) return t * t;
+  return t;
+}
+
+// Współczynnik skali wybrzuszenia: 1 na terenie i dachu, 1 + wybrzuszenie na
+// wysokości względnej wysokosc_wybrzuszenia (sinus o przesuniętym szczycie).
+function wybrzuszenieW(t, wybrzuszenie, wysokoscWybrzuszenia) {
+  t = przytnij(t, 0.0, 1.0);
+  var t0 = przytnij(wysokoscWybrzuszenia, 0.05, 0.95);
+  var k = Math.log(0.5) / Math.log(t0);
+  return 1.0 + wybrzuszenie * Math.sin(Math.PI * Math.pow(t, k));
+}
+
+// Skala przekroju od 1 na terenie do zwezenie na dachu, liniowo.
+function skalaZwezenia(t, zwezenie) {
+  return 1.0 + (Math.max(zwezenie, MIN_ZWEZENIE) - 1.0) * przytnij(t, 0.0, 1.0);
+}
+
+// Radialne przesunięcie (dx, dy) punktu przekroju (px, py) o środku (cx, cy) na
+// wysokości z w stronę atraktora (ax, ay, az): sila * gauss(z) * cos^2 kąta między
+// kierunkiem punktu a kierunkiem atraktora; strona odwrócona nie rusza się.
+function przesuniecieAtraktora(px, py, cx, cy, z, atraktor, sila, zasieg) {
+  if (!atraktor || sila === 0.0 || zasieg <= 0.0) return [0.0, 0.0];
+  var rx = px - cx, ry = py - cy, r = Math.sqrt(rx * rx + ry * ry);
+  var dx = atraktor[0] - cx, dy = atraktor[1] - cy, d = Math.sqrt(dx * dx + dy * dy);
+  if (r < 1e-9 || d < 1e-9) return [0.0, 0.0];
+  var cosKata = (rx * dx + ry * dy) / (r * d);
+  if (cosKata <= 0.0) return [0.0, 0.0];
+  var waga = Math.exp(-Math.pow((z - atraktor[2]) / zasieg, 2)) * cosKata * cosKata;
+  return [rx / r * sila * waga, ry / r * sila * waga];
+}
+
+// Punkty (x, y) przekroju na wysokości z (t = z / z_max): profil w prostokącie
+// opisanym (x0, y0, x1, y1), skala z wybrzuszenia i zwężenia wokół środka, skręt
+// wokół osi (osX, osY), pochylenie, na końcu przesunięcie ku atraktorowi.
+function punktyPrzekroju(x0, y0, x1, y1, z, t, osX, osY, ust) {
+  var cx = (x0 + x1) / 2.0, cy = (y0 + y1) / 2.0;
+  var a = (x1 - x0) / 2.0, b = (y1 - y0) / 2.0;
+  var n = Math.max(Math.trunc(ust.punkty_profilu), MIN_PUNKTY_PROFILU);
+  var punkty = ust.typ_profilu === 1
+    ? superelipsaPunkty(cx, cy, a, b, ust.wykladnik_profilu, n)
+    : prostokatZaokraglonyPunkty(cx, cy, a, b, promienZaokraglenia(2.0 * a, 2.0 * b, ust.zaokraglenie), n);
+
+  var skala = wybrzuszenieW(t, ust.wybrzuszenie, ust.wysokosc_wybrzuszenia) * skalaZwezenia(t, ust.zwezenie);
+  var kat = ust.skret_deg * Math.PI / 180.0 * latwienieSkretu(t, ust.profil_skretu);
+  var cosK = Math.cos(kat), sinK = Math.sin(kat);
+  var dxL = ust.pochylenie_x_m * t, dyL = ust.pochylenie_y_m * t;
+
+  var wynik = [], i, x, y, rx, ry;
+  for (i = 0; i < punkty.length; i++) {
+    x = cx + (punkty[i][0] - cx) * skala;
+    y = cy + (punkty[i][1] - cy) * skala;
+    rx = x - osX;
+    ry = y - osY;
+    wynik.push([osX + rx * cosK - ry * sinK + dxL, osY + rx * sinK + ry * cosK + dyL]);
+  }
+
+  if (ust.atraktor && ust.sila_atraktora_m !== 0.0) {
+    var scx = 0.0, scy = 0.0, d;
+    for (i = 0; i < wynik.length; i++) { scx += wynik[i][0]; scy += wynik[i][1]; }
+    scx /= wynik.length;
+    scy /= wynik.length;
+    for (i = 0; i < wynik.length; i++) {
+      d = przesuniecieAtraktora(wynik[i][0], wynik[i][1], scx, scy, z, ust.atraktor,
+                                ust.sila_atraktora_m, ust.zasieg_atraktora_m);
+      wynik[i] = [wynik[i][0] + d[0], wynik[i][1] + d[1]];
+    }
+  }
+  return wynik;
+}
+
+// ---------------------------------------------------------------------------
+// Krzywe i pola
+// ---------------------------------------------------------------------------
+
+// Jednolity okresowy B-spline stopnia 3 przez punkty sterujące; to samo, co
+// NurbsCurve.Create(True, 3, punkty) w Rhino. Zwraca naOdcinek próbek na każdy odcinek.
+function bsplineZamkniety(st, naOdcinek) {
+  var n = st.length, out = [];
+  for (var i = 0; i < n; i++) {
+    var p0 = st[(i - 1 + n) % n], p1 = st[i], p2 = st[(i + 1) % n], p3 = st[(i + 2) % n];
+    for (var k = 0; k < naOdcinek; k++) {
+      var s = k / naOdcinek, s2 = s * s, s3 = s2 * s;
+      var b0 = (1 - 3 * s + 3 * s2 - s3) / 6, b1 = (4 - 6 * s2 + 3 * s3) / 6,
+          b2 = (1 + 3 * s + 3 * s2 - 3 * s3) / 6, b3 = s3 / 6;
+      out.push([b0 * p0[0] + b1 * p1[0] + b2 * p2[0] + b3 * p3[0],
+                b0 * p0[1] + b1 * p1[1] + b2 * p2[1] + b3 * p3[1]]);
+    }
+  }
+  return out;
+}
+
+// Pole wielokąta metodą sznurowadła (wartość bezwzględna).
+function poleWielokata(punkty) {
+  var suma = 0.0, n = punkty.length, i, j;
+  for (i = 0; i < n; i++) {
+    j = (i + 1) % n;
+    suma += punkty[i][0] * punkty[j][1] - punkty[j][0] * punkty[i][1];
+  }
+  return Math.abs(suma) / 2.0;
+}
+
+// Pole sumy wielokątów metodą skanowania: co krok metrów jeden wiersz, w wierszu
+// suma przedziałów X pokrytych przez dowolny wielokąt (reguła parzystości).
+function uniaObrysowM2(wielokaty, krok) {
+  var ymin = Infinity, ymax = -Infinity;
+  wielokaty.forEach(function (w) { w.forEach(function (p) { ymin = Math.min(ymin, p[1]); ymax = Math.max(ymax, p[1]); }); });
+  var pole = 0;
+  for (var y = ymin + krok / 2; y < ymax; y += krok) {
+    var przedzialy = [];
+    wielokaty.forEach(function (w) {
+      var x = [];
+      for (var i = 0, n = w.length; i < n; i++) {
+        var a = w[i], b = w[(i + 1) % n];
+        if ((a[1] <= y) !== (b[1] <= y)) x.push(a[0] + (y - a[1]) * (b[0] - a[0]) / (b[1] - a[1]));
+      }
+      x.sort(function (p, q) { return p - q; });
+      for (var j = 0; j + 1 < x.length; j += 2) przedzialy.push([x[j], x[j + 1]]);
+    });
+    przedzialy.sort(function (p, q) { return p[0] - q[0]; });
+    var dl = 0, od = null, dokad = null;
+    przedzialy.forEach(function (pr) {
+      if (od === null || pr[0] > dokad) { if (od !== null) dl += dokad - od; od = pr[0]; dokad = pr[1]; }
+      else dokad = Math.max(dokad, pr[1]);
+    });
+    if (od !== null) dl += dokad - od;
+    pole += dl * krok;
+  }
+  return pole;
+}
+
+// Jednolity Catmull-Rom po każdej współrzędnej; odpowiednik gładkiego loftu
+// przez przekroje, liczony osobno dla punktów o tym samym indeksie.
+function catmullRom(p0, p1, p2, p3, s) {
+  var s2 = s * s, s3 = s2 * s, out = [];
+  for (var d = 0; d < p0.length; d++) {
+    out.push(0.5 * (2 * p1[d] + (-p0[d] + p2[d]) * s + (2 * p0[d] - 5 * p1[d] + 4 * p2[d] - p3[d]) * s2
+             + (-p0[d] + 3 * p1[d] - 3 * p2[d] + p3[d]) * s3));
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+// Ustawienia
+// ---------------------------------------------------------------------------
+
+function zbierzUstawienia(czesciowe, domyslne, calkowite) {
+  var ust = {}, wartosc;
+  czesciowe = czesciowe || {};
+  Object.keys(domyslne).forEach(function (nazwa) {
+    wartosc = czesciowe[nazwa] === undefined || czesciowe[nazwa] === null ? domyslne[nazwa] : czesciowe[nazwa];
+    ust[nazwa] = calkowite.indexOf(nazwa) !== -1 ? Math.trunc(Number(wartosc)) : Number(wartosc);
+  });
+  return ust;
+}
+
+// Ustawienia bryły: wartości spoza zakresu wracają do domyślnych z ostrzeżeniem.
+function ustawieniaBryly(czesciowe) {
+  var bledy = [];
+  var ust = zbierzUstawienia(czesciowe, DOMYSLNE_BRYLY, KLUCZE_CALKOWITE_BRYLY);
+  if (!NAZWY_PROFILU.hasOwnProperty(ust.typ_profilu)) {
+    bledy.push("typ_profilu " + ust.typ_profilu + " nieznany - użyto " + DOMYSLNE_BRYLY.typ_profilu
+      + " (" + NAZWY_PROFILU[DOMYSLNE_BRYLY.typ_profilu] + ")");
+    ust.typ_profilu = DOMYSLNE_BRYLY.typ_profilu;
+  }
+  if (!NAZWY_SKRETU.hasOwnProperty(ust.profil_skretu)) {
+    bledy.push("profil_skretu " + ust.profil_skretu + " nieznany - użyto " + DOMYSLNE_BRYLY.profil_skretu
+      + " (" + NAZWY_SKRETU[DOMYSLNE_BRYLY.profil_skretu] + ")");
+    ust.profil_skretu = DOMYSLNE_BRYLY.profil_skretu;
+  }
+  if (ust.wykladnik_profilu < 1.0) {
+    bledy.push("wykladnik_profilu poniżej 1 - użyto 1");
+    ust.wykladnik_profilu = 1.0;
+  }
+  if (ust.zwezenie < MIN_ZWEZENIE) {
+    bledy.push("zwezenie poniżej " + MIN_ZWEZENIE + " - użyto " + MIN_ZWEZENIE);
+    ust.zwezenie = MIN_ZWEZENIE;
+  }
+  if (ust.punkty_profilu < MIN_PUNKTY_PROFILU) {
+    bledy.push("punkty_profilu poniżej " + MIN_PUNKTY_PROFILU + " - użyto " + MIN_PUNKTY_PROFILU);
+    ust.punkty_profilu = MIN_PUNKTY_PROFILU;
+  }
+  // Atraktor nie należy do tabeli liczb, więc dopisujemy go osobno; brak = punkt domyślny.
+  var a = czesciowe && czesciowe.atraktor;
+  ust.atraktor = a && a.length === 3 ? [Number(a[0]), Number(a[1]), Number(a[2])] : DOMYSLNY_ATRAKTOR.slice();
+  return { ust: ust, bledy: bledy };
+}
+
+// Szachownica rombów domyka się na szwie tylko przy parzystej liczbie kolumn.
+function kolumnyParzyste(kolumny) {
+  var k = Math.max(Math.trunc(kolumny), MIN_KOLUMNY);
+  return k + (k % 2);
+}
+
+// Ustawienia elewacji: wartości spoza zakresu wracają do domyślnych z ostrzeżeniem.
+function ustawieniaElewacji(czesciowe) {
+  var bledy = [];
+  var ust = zbierzUstawienia(czesciowe, DOMYSLNE_ELEWACJI, KLUCZE_CALKOWITE_ELEWACJI);
+  var nazwyPalet = {};
+  Object.keys(PALETY).forEach(function (k) { nazwyPalet[k] = PALETY[k][0]; });
+  [["typ_wzoru", NAZWY_WZORU], ["typ_panelu", NAZWY_PANELU], ["paleta", nazwyPalet]].forEach(function (para) {
+    var klucz = para[0], nazwy = para[1];
+    if (!nazwy.hasOwnProperty(ust[klucz])) {
+      bledy.push(klucz + " " + ust[klucz] + " nieznany - użyto " + DOMYSLNE_ELEWACJI[klucz]
+        + " (" + nazwy[DOMYSLNE_ELEWACJI[klucz]] + ")");
+      ust[klucz] = DOMYSLNE_ELEWACJI[klucz];
+    }
+  });
+  if (ust.kolumny < MIN_KOLUMNY) bledy.push("kolumny poniżej " + MIN_KOLUMNY + " - użyto " + MIN_KOLUMNY);
+  ust.kolumny = kolumnyParzyste(ust.kolumny);
+  if (ust.rzedy < MIN_RZEDY) {
+    bledy.push("rzedy poniżej " + MIN_RZEDY + " - użyto " + MIN_RZEDY);
+    ust.rzedy = MIN_RZEDY;
+  }
+  if (ust.glebokosc_max_m < ust.glebokosc_min_m) {
+    var g = ust.glebokosc_min_m;
+    ust.glebokosc_min_m = ust.glebokosc_max_m;
+    ust.glebokosc_max_m = g;
+    bledy.push("glebokosc_max_m mniejsza od glebokosc_min_m - zamieniono");
+  }
+  if (ust.otwor_max < ust.otwor_min) {
+    var o = ust.otwor_min;
+    ust.otwor_min = ust.otwor_max;
+    ust.otwor_max = o;
+    bledy.push("otwor_max mniejszy od otwor_min - zamieniono");
+  }
+  return { ust: ust, bledy: bledy };
+}
+
+// ---------------------------------------------------------------------------
+// Bryła
+// ---------------------------------------------------------------------------
+
+// Wiersze Kondygnacje domyślnej masy jako prostokąty [x0, y0, x1, y1, z].
+function masaDomyslna() {
+  var wynik = [];
+  DOMYSLNA_MASA.forEach(function (w) {
+    if (w[0] === "Kondygnacje") wynik.push([w[1], w[2], w[3], w[4], w[5]]);
+  });
+  return wynik;
+}
+
+function prostokatNaKrzywa(r) {
+  return [[r[0], r[1]], [r[2], r[1]], [r[2], r[3]], [r[0], r[3]]];
+}
+
+// Raport z pól nowych kondygnacji, wysokości, obrysu i objętości.
+function linieRaportuBryly(polaNowe, polaSzkicu, wysokoscM, objetoscM3, obrysM2) {
+  var linie = [], sumaNowe = 0.0, sumaSzkic = 0.0, i;
+  for (i = 0; i < polaNowe.length; i++) {
+    linie.push("kondygnacja " + (i + 1) + ": " + f1(polaNowe[i]) + " m2 (szkic " + f1(polaSzkicu[i]) + " m2)");
+    sumaNowe += polaNowe[i];
+    sumaSzkic += polaSzkicu[i];
+  }
+  linie.push("suma Po (nadziemne): " + f1(sumaNowe) + " m2 (szkic " + f1(sumaSzkic) + " m2)");
+  linie.push("wysokość: " + f1(wysokoscM) + " m / " + polaNowe.length + " kond.");
+  linie.push("obrys zabudowy: " + f1(obrysM2) + " m2");
+  linie.push("objętość: " + f0(objetoscM3) + " m3");
+  return linie;
+}
+
+// Jedna linia raportu o profilu, skręcie i atraktorze.
+function liniaUstawien(ust) {
+  var profil = ust.typ_profilu === 1
+    ? "superelipsa (wykładnik " + f1(ust.wykladnik_profilu) + ")"
+    : "prostokąt zaokrąglony (zaokrąglenie " + f2(ust.zaokraglenie) + ")";
+  var skret = "skręt " + f0(ust.skret_deg) + "° (" + (NAZWY_SKRETU[ust.profil_skretu] || "liniowy") + ")";
+  var atraktor = "atraktor: brak";
+  if (ust.atraktor && ust.sila_atraktora_m !== 0.0 && ust.zasieg_atraktora_m > 0.0) {
+    atraktor = "atraktor (" + f1(ust.atraktor[0]) + ", " + f1(ust.atraktor[1]) + ", " + f1(ust.atraktor[2])
+      + "), siła " + f1(ust.sila_atraktora_m) + " m, zasięg " + f1(ust.zasieg_atraktora_m) + " m";
+  }
+  return "profil: " + profil + "; " + skret + "; " + atraktor;
+}
+
+// Buduje bryłę z listy prostokątów kondygnacji [x0, y0, x1, y1, z] (puste = domyślna
+// masa Solna) i słownika ustawień z ustawieniaBryly.
+function zbudujBryle(ust, kondygnacje) {
+  var bledy = [];
+  var wiersze = (kondygnacje && kondygnacje.length ? kondygnacje : masaDomyslna()).slice();
+  wiersze.sort(function (p, q) { return p[4] - q[4]; });
+  var podziemne = [], nadziemne = [], nrNadziemnej = 0;
+  wiersze.forEach(function (r) {
+    if (r[4] <= 0.0) { podziemne.push(r); return; }
+    nrNadziemnej += 1;
+    // Prostokąt bez dodatniego pola nie ma profilu (odpowiednik ostrzeżenia
+    // _prostokat_opisany w Pythonie): pomijamy go zamiast liczyć pusty przekrój.
+    if (!(r[2] > r[0] && r[3] > r[1])) {
+      bledy.push("kondygnacja " + nrNadziemnej + ": obrys o zerowym polu - pominięto");
+      return;
+    }
+    nadziemne.push(r);
+  });
+  var wynikPodziemne = podziemne.map(function (r) {
+    return { z: r[4], poleM2: Math.abs((r[2] - r[0]) * (r[3] - r[1])), krzywa: prostokatNaKrzywa(r) };
+  });
+  var pusty = { przekroje: [], kondygnacje: [], podziemne: wynikPodziemne, plastry: [],
+                siatka: { pozycje: [], normalne: [], indeksy: [] }, kontury: [],
+                obrysM2: 0.0, objetoscM3: 0.0, wysokoscM: 0.0, raport: [], dane: {}, bledy: bledy };
+  if (nadziemne.length < 2) {
+    bledy.push("potrzebne są co najmniej dwie kondygnacje nadziemne (Z > 0), jest " + nadziemne.length);
+    return pusty;
+  }
+
+  var zStropow = nadziemne.map(function (r) { return r[4]; });
+  var zMax = zStropow[zStropow.length - 1];
+  var polaSzkicu = nadziemne.map(function (r) { return Math.abs((r[2] - r[0]) * (r[3] - r[1])); });
+  var osX = (nadziemne[0][0] + nadziemne[0][2]) / 2.0;
+  var osY = (nadziemne[0][1] + nadziemne[0][3]) / 2.0;
+  // Profil bez zaokrąglenia jest dokładnym wielokątem: krzywą jest sam wielokąt
+  // sterujący, bez B-splajnu (naroża są punktami próbki).
+  var dokladny = ust.typ_profilu === 0 && ust.zaokraglenie <= 0.0;
+
+  // 1) Przekroje: parter na terenie (t = 0), potem każdy strop.
+  var zrodla = [[nadziemne[0], 0.0]];
+  nadziemne.forEach(function (r, i) { zrodla.push([r, zStropow[i]]); });
+  var przekroje = zrodla.map(function (para) {
+    var r = para[0], z = para[1];
+    var t = zMax > 0.0 ? z / zMax : 0.0;
+    var sterujace = punktyPrzekroju(r[0], r[1], r[2], r[3], z, t, osX, osY, ust);
+    return { z: z, sterujace: sterujace, punkty: dokladny ? sterujace : bsplineZamkniety(sterujace, PROBEK_NA_ODCINEK) };
+  });
+
+  var wynikKondygnacje = przekroje.slice(1).map(function (p) {
+    return { z: p.z, poleM2: poleWielokata(p.punkty), krzywa: p.punkty };
+  });
+  var obrysM2 = uniaObrysowM2(wynikKondygnacje.map(function (k) { return k.krzywa; }), KROK_SKANU_M);
+
+  // 2) Plastry loftu: jednolity Catmull-Rom między przekrojami, co najwyżej
+  //    KROK_PLASTRA_M metrów, ale nie mniej niż dwa plastry na kondygnację.
+  var M = przekroje[0].punkty.length;
+
+  function punkt3(sekcja, k) { return [sekcja.punkty[k][0], sekcja.punkty[k][1], sekcja.z]; }
+
+  var plastry = [], j, i, k, s, nSub, A, B, C, D, punkty;
+  for (j = 0; j + 1 < przekroje.length; j++) {
+    nSub = Math.max(2, Math.round((przekroje[j + 1].z - przekroje[j].z) / KROK_PLASTRA_M));
+    A = przekroje[Math.max(j - 1, 0)];
+    B = przekroje[j];
+    C = przekroje[j + 1];
+    D = przekroje[Math.min(j + 2, przekroje.length - 1)];
+    for (i = 0; i < nSub; i++) {
+      s = i / nSub;
+      punkty = [];
+      for (k = 0; k < M; k++) punkty.push(catmullRom(punkt3(A, k), punkt3(B, k), punkt3(C, k), punkt3(D, k), s));
+      plastry.push({ z: punkty[0][2], punkty: punkty });
+    }
+  }
+  var ostatni = przekroje[przekroje.length - 1];
+  punkty = [];
+  for (k = 0; k < M; k++) punkty.push(punkt3(ostatni, k));
+  plastry.push({ z: ostatni.z, punkty: punkty });
+
+  // 3) Siatka: boki z czworokątów plastrów, pokrywy jako wachlarze ze środków.
+  var NS = plastry.length;
+  var pozycje = [], normalne = [], indeksy = [];
+  for (j = 0; j < NS; j++) {
+    for (k = 0; k < M; k++) {
+      var p = plastry[j].punkty[k];
+      pozycje.push(p[0], p[1], p[2]);
+      var tu = odejmij(plastry[j].punkty[(k + 1) % M], plastry[j].punkty[(k - 1 + M) % M]);
+      var tv = odejmij(plastry[Math.min(j + 1, NS - 1)].punkty[k], plastry[Math.max(j - 1, 0)].punkty[k]);
+      var n = jednostkowy(iloczynWektorowy(tu, tv));
+      normalne.push(n[0], n[1], n[2]);
+    }
+  }
+  for (j = 0; j + 1 < NS; j++) {
+    for (k = 0; k < M; k++) {
+      var i00 = j * M + k, i01 = j * M + (k + 1) % M, i10 = (j + 1) * M + k, i11 = (j + 1) * M + (k + 1) % M;
+      indeksy.push(i00, i01, i10, i01, i11, i10);
+    }
+  }
+  var srodekDol = srodekPunktow(plastry[0].punkty), srodekGora = srodekPunktow(plastry[NS - 1].punkty);
+  var idxDol = NS * M, idxGora = NS * M + 1;
+  pozycje.push(srodekDol[0], srodekDol[1], srodekDol[2]);
+  normalne.push(0.0, 0.0, -1.0);
+  pozycje.push(srodekGora[0], srodekGora[1], srodekGora[2]);
+  normalne.push(0.0, 0.0, 1.0);
+  for (k = 0; k < M; k++) {
+    indeksy.push(idxDol, (k + 1) % M, k);                                 // pokrywa dolna (odwrócona)
+    indeksy.push(idxGora, (NS - 1) * M + k, (NS - 1) * M + (k + 1) % M);  // pokrywa górna
+  }
+
+  // 4) Objętość z twierdzenia o dywergencji po zamkniętej siatce.
+  var objetosc = 0.0;
+  for (i = 0; i < indeksy.length; i += 3) {
+    var a3 = [pozycje[indeksy[i] * 3], pozycje[indeksy[i] * 3 + 1], pozycje[indeksy[i] * 3 + 2]];
+    var b3 = [pozycje[indeksy[i + 1] * 3], pozycje[indeksy[i + 1] * 3 + 1], pozycje[indeksy[i + 1] * 3 + 2]];
+    var c3 = [pozycje[indeksy[i + 2] * 3], pozycje[indeksy[i + 2] * 3 + 1], pozycje[indeksy[i + 2] * 3 + 2]];
+    objetosc += iloczynSkalarny(a3, iloczynWektorowy(b3, c3)) / 6.0;
+  }
+  objetosc = Math.abs(objetosc);
+
+  // 5) Kontury do podglądu: plaster najbliższy każdemu poziomowi.
+  var kontury = [], poprzedniPlaster = -1;
+  if (ust.kontury_co_m > 0.0) {
+    for (var poziom = ust.kontury_co_m; poziom <= zMax; poziom += ust.kontury_co_m) {
+      var najlepszy = 0;
+      for (j = 1; j < NS; j++) {
+        if (Math.abs(plastry[j].z - poziom) < Math.abs(plastry[najlepszy].z - poziom)) najlepszy = j;
+      }
+      // Dwa sąsiednie poziomy potrafią trafić w ten sam plaster; rysowalibyśmy
+      // wtedy ten sam kontur dwa razy. Kopia, żeby podgląd nie trzymał tablicy loftu.
+      if (najlepszy === poprzedniPlaster) continue;
+      poprzedniPlaster = najlepszy;
+      kontury.push(plastry[najlepszy].punkty.slice());
+    }
+  }
+
+  // Wysokość jak w Pythonie: obrys czytany 1 mm pod najwyższym stropem.
+  var wysokoscM = zMax - CIECIE_PONIZEJ_M;
+  var pola = wynikKondygnacje.map(function (k2) { return k2.poleM2; });
+  var suma = function (t2) { return t2.reduce(function (p, q) { return p + q; }, 0.0); };
+
+  return {
+    przekroje: przekroje,
+    kondygnacje: wynikKondygnacje,
+    podziemne: wynikPodziemne,
+    plastry: plastry,
+    siatka: { pozycje: pozycje, normalne: normalne, indeksy: indeksy },
+    kontury: kontury,
+    obrysM2: obrysM2,
+    objetoscM3: objetosc,
+    wysokoscM: wysokoscM,
+    raport: [liniaUstawien(ust)].concat(linieRaportuBryly(pola, polaSzkicu, wysokoscM, objetosc, obrysM2)),
+    dane: {
+      pola: pola,
+      polaSzkicu: polaSzkicu,
+      sumaPo: suma(pola),
+      sumaSzkicu: suma(polaSzkicu),
+      kondygnacji: pola.length,
+      wysokoscM: wysokoscM,
+      objetoscM3: objetosc,
+      obrysM2: obrysM2,
+      profil: { typ: ust.typ_profilu, nazwa: NAZWY_PROFILU[ust.typ_profilu],
+                wykladnik: ust.wykladnik_profilu, zaokraglenie: ust.zaokraglenie },
+      skret: { deg: ust.skret_deg, typ: ust.profil_skretu, nazwa: NAZWY_SKRETU[ust.profil_skretu] },
+      atraktor: (ust.atraktor && ust.sila_atraktora_m !== 0.0 && ust.zasieg_atraktora_m > 0.0)
+        ? { punkt: ust.atraktor, sila: ust.sila_atraktora_m, zasieg: ust.zasieg_atraktora_m } : null
+    },
+    bledy: bledy
+  };
+}
+
+// Punkt plastra dla ułamkowego indeksu k (zawija się po obwodzie).
+function punktNaPlastrze(plaster, k) {
+  var M = plaster.punkty.length;
+  var kk = ((k % M) + M) % M;
+  var k0 = Math.floor(kk), f = kk - k0, k1 = (k0 + 1) % M;
+  var a = plaster.punkty[k0 % M], b = plaster.punkty[k1];
+  return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f];
+}
+
+// Punkt i normalna na powierzchni bryły: u w [0, 1) wokół budynku (zawija się),
+// v w [0, 1] liniowo po Z od terenu do dachu. Normalna z iloczynu wektorowego
+// stycznych liczonych różnicą skończoną.
+function punktNaPowierzchni(bryla, u, v) {
+  var plastry = bryla.plastry, NS = plastry.length, M = plastry[0].punkty.length;
+  var zMax = plastry[NS - 1].z;
+  var z = przytnij(v, 0.0, 1.0) * zMax;
+  var i = 0;
+  while (i + 2 < NS && plastry[i + 1].z < z) i++;
+  var dolny = plastry[i], gorny = plastry[i + 1];
+  var fz = gorny.z > dolny.z ? przytnij((z - dolny.z) / (gorny.z - dolny.z), 0.0, 1.0) : 0.0;
+  var k = (((u % 1) + 1) % 1) * M;
+
+  function miedzy(kk) {
+    var a = punktNaPlastrze(dolny, kk), b = punktNaPlastrze(gorny, kk);
+    return [a[0] + (b[0] - a[0]) * fz, a[1] + (b[1] - a[1]) * fz, a[2] + (b[2] - a[2]) * fz];
+  }
+
+  var tu = odejmij(miedzy(k + 1), miedzy(k - 1));
+  var tv = odejmij(punktNaPlastrze(gorny, k), punktNaPlastrze(dolny, k));
+  return { p: miedzy(k), n: jednostkowy(iloczynWektorowy(tu, tv)) };
+}
+
+// ---------------------------------------------------------------------------
+// Elewacja (elewacja_zaawansowana_gh.py)
+// ---------------------------------------------------------------------------
+
+// Kwadraty: po jednym polu na węzeł siatki; współrzędne (u, v) w jednostkach siatki.
+function wzorKwadraty(kol, rz) {
+  var wynik = [], i, j;
+  for (j = 0; j < rz; j++) {
+    for (i = 0; i < kol; i++) wynik.push([[i, j], [i + 1, j], [i + 1, j + 1], [i, j + 1]]);
+  }
+  return wynik;
+}
+
+// Trójkąty: każdy kwadrat dzielony po przekątnej, kierunek przekątnej na przemian.
+function wzorTrojkaty(kol, rz) {
+  var wynik = [], i, j, a, b, c, d;
+  for (j = 0; j < rz; j++) {
+    for (i = 0; i < kol; i++) {
+      a = [i, j]; b = [i + 1, j]; c = [i + 1, j + 1]; d = [i, j + 1];
+      if ((i + j) % 2 === 0) { wynik.push([a, b, c]); wynik.push([a, c, d]); }
+      else { wynik.push([a, b, d]); wynik.push([b, c, d]); }
+    }
+  }
+  return wynik;
+}
+
+// Romby (diagrid) jak w karcie 07: szachownica rombów o narożach na sąsiednich
+// węzłach plus trójkąty domykające rząd dolny i górny. Powierzchnia jest zamknięta,
+// więc u >= kol zawija się przy odczycie.
+function wzorRomby(kol, rz) {
+  kol = kolumnyParzyste(kol);
+  var wynik = [], i, j, k;
+  for (j = 1; j < rz; j++) {
+    for (i = 0; i < kol; i++) {
+      if ((i + j) % 2 !== 0) continue;
+      wynik.push([[i, j], [i + 1, j - 1], [i + 2, j], [i + 1, j + 1]]);
+    }
+  }
+  for (k = 0; k < kol; k++) {
+    if (k % 2 === 0) wynik.push([[k, 0], [k + 2, 0], [k + 1, 1]]);
+    if ((k + rz) % 2 === 0) wynik.push([[k, rz], [k + 1, rz - 1], [k + 2, rz]]);
+  }
+  return wynik;
+}
+
+// Sześciokąty w układzie plastra: szerokość 1 kolumny, wysokość 1 rzędu, rzędy
+// co 0.75 rzędu, nieparzyste przesunięte o pół kolumny; brzeg dolny i górny
+// przycięty do 0..rz.
+function wzorHeksagony(kol, rz) {
+  var wynik = [], j = 0, i, vc, przesuniecie, uc;
+  while (0.75 * j <= rz - 0.25) {
+    vc = 0.75 * j + 0.5;
+    przesuniecie = j % 2 ? 0.5 : 0.0;
+    for (i = 0; i < kol; i++) {
+      uc = i + 0.5 + przesuniecie;
+      wynik.push([[uc, vc + 0.5], [uc + 0.5, vc + 0.25], [uc + 0.5, vc - 0.25],
+                  [uc, vc - 0.5], [uc - 0.5, vc - 0.25], [uc - 0.5, vc + 0.25]]
+        .map(function (p) { return [p[0], przytnij(p[1], 0.0, rz)]; }));
+    }
+    j += 1;
+  }
+  return wynik;
+}
+
+var WZORY = { 0: wzorRomby, 1: wzorKwadraty, 2: wzorTrojkaty, 3: wzorHeksagony };
+
+// Jednostkowy wektor w stronę słońca: azymut od północy (+Y) zgodnie z zegarem.
+function wektorSlonca(azymutDeg, wysokoscDeg) {
+  var az = azymutDeg * Math.PI / 180.0, alt = wysokoscDeg * Math.PI / 180.0;
+  return [Math.sin(az) * Math.cos(alt), Math.cos(az) * Math.cos(alt), Math.sin(alt)];
+}
+
+// Ekspozycja od 0 do 1: dodatnia część iloczynu skalarnego normalnej i kierunku słońca.
+function ekspozycjaPanelu(normalna, slonce) {
+  return przytnij(iloczynSkalarny(normalna, slonce), 0.0, 1.0);
+}
+
+// Wpływ atraktora od 1 (w punkcie) do 0 (daleko): funkcja Gaussa o odchyleniu zasiegM.
+function wplywAtraktora(odlegloscM, zasiegM) {
+  if (zasiegM <= 0.0) return 0.0;
+  return Math.exp(-Math.pow(odlegloscM / zasiegM, 2));
+}
+
+// Największy wpływ spośród atraktorów dla środka panelu (x, y, z).
+function najblizszyWplyw(srodek, atraktory, zasiegM) {
+  var najlepszy = 0.0, i, d;
+  for (i = 0; i < atraktory.length; i++) {
+    d = Math.sqrt(Math.pow(srodek[0] - atraktory[i][0], 2) + Math.pow(srodek[1] - atraktory[i][1], 2)
+      + Math.pow(srodek[2] - atraktory[i][2], 2));
+    najlepszy = Math.max(najlepszy, wplywAtraktora(d, zasiegM));
+  }
+  return najlepszy;
+}
+
+// Intensywność od 0 do 1: ważona suma ekspozycji i wpływu atraktora, przycięta.
+function intensywnoscPanelu(ekspozycja, wplyw, wagaSlonca, wagaAtraktora) {
+  return przytnij(wagaSlonca * ekspozycja + wagaAtraktora * wplyw, 0.0, 1.0);
+}
+
+function glebokoscPanelu(intensywnosc, glebokoscMinM, glebokoscMaxM) {
+  return glebokoscMinM + (glebokoscMaxM - glebokoscMinM) * intensywnosc;
+}
+
+// Ułamek otworu: otworMax przy intensywności 0, otworMin przy 1 (panel intensywny
+// domyka się); zawsze w granicach MIN_OTWOR..MAX_OTWOR.
+function otworPanelu(intensywnosc, otworMin, otworMax) {
+  return przytnij(otworMax - (otworMax - otworMin) * intensywnosc, MIN_OTWOR, MAX_OTWOR);
+}
+
+// Kolor (r, g, b) między jasnym (intensywność 0) a ciemnym (intensywność 1).
+function kolorPanelu(intensywnosc, jasny, ciemny) {
+  var e = przytnij(intensywnosc, 0.0, 1.0);
+  return [Math.round(jasny[0] + (ciemny[0] - jasny[0]) * e),
+          Math.round(jasny[1] + (ciemny[1] - jasny[1]) * e),
+          Math.round(jasny[2] + (ciemny[2] - jasny[2]) * e)];
+}
+
+// Liczby pochodne intensywności paneli: udział mocnych paneli oraz osiągnięte
+// zakresy głębokości i otworów. Liczone raz, używane i przez raport, i przez dane.
+function agregatyPaneli(ust, intensywnosci) {
+  var mocne = intensywnosci.filter(function (e) { return e > 0.5; }).length;
+  var glebokosci = intensywnosci.map(function (e) { return glebokoscPanelu(e, ust.glebokosc_min_m, ust.glebokosc_max_m); });
+  var otwory = intensywnosci.map(function (e) { return otworPanelu(e, ust.otwor_min, ust.otwor_max); });
+  if (!glebokosci.length) glebokosci = [0.0];
+  if (!otwory.length) otwory = [0.0];
+  return {
+    paneli: intensywnosci.length,
+    mocne: mocne,
+    udzialPct: intensywnosci.length ? 100.0 * mocne / intensywnosci.length : 0.0,
+    glebokoscMinM: Math.min.apply(null, glebokosci),
+    glebokoscMaxM: Math.max.apply(null, glebokosci),
+    otworMin: Math.min.apply(null, otwory),
+    otworMax: Math.max.apply(null, otwory)
+  };
+}
+
+// Raport z ustawień i wyników; linia głębokości tylko dla paneli wypychanych
+// (typ 1 i 2), linia otworów tylko dla paneli z otworem (typ 0 i 2).
+function linieRaportuElewacji(ust, liczbaPaneli, agregaty, liczbaAtraktorow, nazwaPalety,
+                              powierzchniaM2, poleScianyM2) {
+  var linie = [
+    "wzór: " + NAZWY_WZORU[ust.typ_wzoru] + "; panel: " + NAZWY_PANELU[ust.typ_panelu],
+    "paneli: " + liczbaPaneli + " na ścianie o polu " + f0(poleScianyM2) + " m2"
+  ];
+  if (ust.typ_panelu === 1 || ust.typ_panelu === 2) {
+    linie.push("głębokość paneli (osiągnięta): " + f2(agregaty.glebokoscMinM) + "-"
+      + f2(agregaty.glebokoscMaxM) + " m przy zakresie " + f2(ust.glebokosc_min_m) + "-"
+      + f2(ust.glebokosc_max_m) + " m");
+  }
+  if (ust.typ_panelu === 0 || ust.typ_panelu === 2) {
+    linie.push("otwory (osiągnięte): " + f2(agregaty.otworMin) + "-"
+      + f2(agregaty.otworMax) + " panelu przy zakresie " + f2(ust.otwor_min) + "-"
+      + f2(ust.otwor_max));
+  }
+  linie.push("panele o intensywności powyżej 0.5: " + agregaty.mocne + " (" + f1(agregaty.udzialPct) + " %)");
+  linie.push(ust.zasieg_atraktora_m > 0.0
+    ? "atraktory: " + liczbaAtraktorow + ", zasięg " + f1(ust.zasieg_atraktora_m) + " m; wagi: słońce "
+      + f2(ust.waga_slonca) + ", atraktor " + f2(ust.waga_atraktora)
+    : "atraktory: " + liczbaAtraktorow + " bez wpływu (zasięg " + f1(ust.zasieg_atraktora_m)
+      + " m nie jest dodatni); wagi: słońce " + f2(ust.waga_slonca) + ", atraktor " + f2(ust.waga_atraktora));
+  linie.push("paleta: " + nazwaPalety);
+  linie.push("powierzchnia elewacji (przybliżona, bez głębokości): " + f0(powierzchniaM2) + " m2");
+  linie.push("heurystyka: iloczyn skalarny normalnej i kierunku słońca plus bliskość atraktora, nie analiza nasłonecznienia");
+  return linie;
+}
+
+// Naroża otworu: obrys zewnętrzny przeskalowany do środka o ulamek i wypchnięty
+// wzdłuż normalnej o glebokosc (0 dla panelu płaskiego).
+function obrysWewnetrzny(naroza, srodek, ulamek, normalna, glebokosc) {
+  return naroza.map(function (p) {
+    return dodaj(dodaj(srodek, skaluj(odejmij(p, srodek), ulamek)), skaluj(normalna, glebokosc));
+  });
+}
+
+function polilinia(punkty) {
+  return punkty.concat([punkty[0]]);
+}
+
+// Trójkąt o trzech nowych wierzchołkach, nawinięty zgodnie z normalną.
+function dodajTrojkat(siatka, a, b, c, normalna, kolor) {
+  if (iloczynSkalarny(iloczynWektorowy(odejmij(b, a), odejmij(c, a)), normalna) < 0.0) {
+    var t = b; b = c; c = t;
+  }
+  var baza = siatka.pozycje.length / 3, i;
+  var n = jednostkowy(iloczynWektorowy(odejmij(b, a), odejmij(c, a)));
+  [a, b, c].forEach(function (p) {
+    siatka.pozycje.push(p[0], p[1], p[2]);
+    siatka.normalne.push(n[0], n[1], n[2]);
+    siatka.kolory.push(kolor[0] / 255, kolor[1] / 255, kolor[2] / 255);
+  });
+  for (i = 0; i < 3; i++) siatka.indeksy.push(baza + i);
+}
+
+// Pas czworokątów między obrysem zewnętrznym a wewnętrznym (ten sam licznik naroży).
+function dodajPierscien(siatka, zewn, wewn, normalna, kolor) {
+  var n = zewn.length, k;
+  for (k = 0; k < n; k++) {
+    dodajTrojkat(siatka, zewn[k], zewn[(k + 1) % n], wewn[(k + 1) % n], normalna, kolor);
+    dodajTrojkat(siatka, zewn[k], wewn[(k + 1) % n], wewn[k], normalna, kolor);
+  }
+}
+
+// Pole boku bryły: suma czworokątów siatki plastrów; to ta "ściana", na której
+// siedzą panele (odpowiednik pola ściany Brepa w Rhino).
+function poleBokuBryly(bryla) {
+  var plastry = bryla.plastry, NS = plastry.length, M = plastry[0].punkty.length;
+  var pole = 0.0, j, k;
+  for (j = 0; j + 1 < NS; j++) {
+    for (k = 0; k < M; k++) {
+      pole += poleWieloboku3([plastry[j].punkty[k], plastry[j].punkty[(k + 1) % M],
+                              plastry[j + 1].punkty[(k + 1) % M], plastry[j + 1].punkty[k]]);
+    }
+  }
+  return pole;
+}
+
+// Buduje panele na powierzchni bryły z zbudujBryle. jasny i ciemny (opcjonalne
+// trójki RGB 0-255) zastępują paletę z ustawień.
+function zbudujElewacje(bryla, ust, atraktory, jasny, ciemny) {
+  var bledy = [];
+  var brakAtraktorow = !(atraktory && atraktory.length);
+  var punktyAtraktorow = brakAtraktorow ? DOMYSLNE_ATRAKTORY : atraktory;
+  if (brakAtraktorow) {
+    bledy.push("wejście atraktory puste - użyto punktu domyślnego (" + f1(DOMYSLNE_ATRAKTORY[0][0])
+      + ", " + f1(DOMYSLNE_ATRAKTORY[0][1]) + ", " + f1(DOMYSLNE_ATRAKTORY[0][2]) + ")");
+  }
+  var paleta = PALETY[ust.paleta] || PALETY[0];
+  var nazwaPalety = paleta[0], kolJasny = paleta[1], kolCiemny = paleta[2];
+  if (jasny && ciemny) {
+    kolJasny = jasny;
+    kolCiemny = ciemny;
+    nazwaPalety = "kolory własne";
+  } else if (jasny || ciemny) {
+    bledy.push("podano tylko jeden z kolorów kolor_jasny/kolor_ciemny - zostaje paleta " + nazwaPalety);
+  }
+  var siatka = { pozycje: [], normalne: [], kolory: [], indeksy: [] };
+  var wynik = { panele: siatka, ramy: [], otwory: [], intensywnosci: [], srodki: [],
+                powierzchniaM2: 0.0, poleScianyM2: 0.0, raport: [], dane: {}, bledy: bledy };
+  if (!bryla || !bryla.plastry || bryla.plastry.length < 2) {
+    bledy.push("brak bryły - najpierw zbuduj bryłę");
+    wynik.raport = bledy.map(function (b) { return "uwaga: " + b; });
+    return wynik;
+  }
+  var poleSciany = poleBokuBryly(bryla);
+  wynik.poleScianyM2 = poleSciany;
+
+  var kol = ust.kolumny, rz = ust.rzedy;
+
+  function wezel(u, v) {
+    return punktNaPowierzchni(bryla, u / kol, przytnij(v / rz, 0.0, 1.0));
+  }
+
+  // Normalne odwracamy, gdy próbka wskazuje do środka bryły.
+  var minP = [Infinity, Infinity, Infinity], maxP = [-Infinity, -Infinity, -Infinity];
+  bryla.plastry.forEach(function (pl) {
+    pl.punkty.forEach(function (p) {
+      for (var d = 0; d < 3; d++) {
+        minP[d] = Math.min(minP[d], p[d]);
+        maxP[d] = Math.max(maxP[d], p[d]);
+      }
+    });
+  });
+  var srodekBryly = [(minP[0] + maxP[0]) / 2, (minP[1] + maxP[1]) / 2, (minP[2] + maxP[2]) / 2];
+  var probka = wezel(0.0, rz / 2.0);
+  var odwroc = iloczynSkalarny(odejmij(probka.p, srodekBryly), probka.n) < 0.0;
+
+  var wieloboki = (WZORY[ust.typ_wzoru] || wzorRomby)(kol, rz);
+  var slonce = wektorSlonca(ust.azymut_slonca_deg, ust.wysokosc_slonca_deg);
+  var powierzchnia = 0.0;
+
+  wieloboki.forEach(function (wielobok) {
+    var naroza = [], sumaN = [0.0, 0.0, 0.0];
+    wielobok.forEach(function (uv) {
+      var w = wezel(uv[0], uv[1]);
+      naroza.push(w.p);
+      sumaN = dodaj(sumaN, odwroc ? skaluj(w.n, -1) : w.n);
+    });
+    var polePanelu = poleWieloboku3(naroza);
+    if (polePanelu < 1e-6) return;   // przycięty sześciokąt zdegenerowany do odcinka
+    var normalna = jednostkowy(sumaN);
+    var srodek = srodekPunktow(naroza);
+
+    var eks = ekspozycjaPanelu(normalna, slonce);
+    var wplyw = najblizszyWplyw(srodek, punktyAtraktorow, ust.zasieg_atraktora_m);
+    var inten = intensywnoscPanelu(eks, wplyw, ust.waga_slonca, ust.waga_atraktora);
+    var glebokosc = glebokoscPanelu(inten, ust.glebokosc_min_m, ust.glebokosc_max_m);
+    var kolor = kolorPanelu(inten, kolJasny, kolCiemny);
+
+    if (ust.typ_panelu === 1) {
+      var wierzcholek = dodaj(srodek, skaluj(normalna, glebokosc));
+      for (var k = 0; k < naroza.length; k++) {
+        dodajTrojkat(siatka, wierzcholek, naroza[k], naroza[(k + 1) % naroza.length], normalna, kolor);
+      }
+    } else {
+      var ulamek = otworPanelu(inten, ust.otwor_min, ust.otwor_max);
+      var wysuniecie = ust.typ_panelu === 2 ? glebokosc : 0.0;
+      var wewn = obrysWewnetrzny(naroza, srodek, ulamek, normalna, wysuniecie);
+      dodajPierscien(siatka, naroza, wewn, normalna, kolor);
+      wynik.otwory.push(polilinia(wewn));
+    }
+
+    wynik.ramy.push(polilinia(naroza));
+    wynik.intensywnosci.push(inten);
+    wynik.srodki.push(srodek);
+    powierzchnia += polePanelu;
+  });
+
+  wynik.powierzchniaM2 = powierzchnia;
+  var agregaty = agregatyPaneli(ust, wynik.intensywnosci);
+  wynik.raport = bledy.map(function (b) { return "uwaga: " + b; }).concat(
+    linieRaportuElewacji(ust, wynik.ramy.length, agregaty, punktyAtraktorow.length,
+                         nazwaPalety, powierzchnia, poleSciany));
+  wynik.dane = {
+    paneli: wynik.ramy.length,
+    poleScianyM2: poleSciany,
+    powierzchniaM2: powierzchnia,
+    mocne: agregaty.mocne,
+    udzialPct: agregaty.udzialPct,
+    glebokoscMinM: agregaty.glebokoscMinM,
+    glebokoscMaxM: agregaty.glebokoscMaxM,
+    otworMin: agregaty.otworMin,
+    otworMax: agregaty.otworMax,
+    atraktorow: punktyAtraktorow.length,
+    zasiegM: ust.zasieg_atraktora_m,
+    wagaSlonca: ust.waga_slonca,
+    wagaAtraktora: ust.waga_atraktora,
+    paleta: nazwaPalety,
+    wzor: NAZWY_WZORU[ust.typ_wzoru],
+    panel: NAZWY_PANELU[ust.typ_panelu]
+  };
+  return wynik;
+}
+
+// ---------------------------------------------------------------------------
+// Kontrola MPZP (05_sprawdz_mpzp_gh.py)
+// ---------------------------------------------------------------------------
+
+// Sześć wskaźników MPZP dla terenu U,M 2. kondygnacje to lista par
+// [powierzchnia_m2, gorna_krawedz_m]; kondygnacja jest podziemna, gdy
+// gorna_krawedz_m <= 0, i wtedy nie wchodzi do intensywności zabudowy.
+// Zwraca listę sześciu wierszy {wskaznik, wartosc, limit, ok, margines}
+// w kolejności: zabudowa, intensywność, PBC, wysokość, dach, parking.
+function oblicz(dzialkaM2, zabudowaM2, kondygnacje, pbcGruntM2, pbcWodaM2, tarasyM2,
+                mieszkania, podziemne, naziemne, dachDeg, limity) {
+  var rows = [];
+
+  // 1) Powierzchnia zabudowy (limit maksymalny)
+  var limitZab = limity.powierzchnia_zabudowy_max_pct;
+  var wartoscZab = (zabudowaM2 / dzialkaM2) * 100.0;
+  var okZab = wartoscZab <= limitZab;
+  rows.push({
+    wskaznik: "powierzchnia zabudowy",
+    wartosc: f1(wartoscZab) + " %",
+    limit: f1(limitZab) + " %",
+    ok: okZab,
+    margines: okZab ? "zapas " + f1(limitZab - wartoscZab) + " pp"
+                    : "przekroczenie " + f1(wartoscZab - limitZab) + " pp"
+  });
+
+  // 2) Intensywność zabudowy (limit maksymalny) - tylko kondygnacje nadziemne
+  var limitInt = limity.intensywnosc_max;
+  var nadziemne = kondygnacje.filter(function (k) { return k[1] > 0; });
+  var poNadziemne = nadziemne.reduce(function (s, k) { return s + k[0]; }, 0.0);
+  var wartoscInt = poNadziemne / dzialkaM2;
+  var okInt = wartoscInt <= limitInt;
+  rows.push({
+    wskaznik: "intensywność",
+    wartosc: f2(wartoscInt),
+    limit: f2(limitInt),
+    ok: okInt,
+    margines: okInt ? "zapas " + f2(limitInt - wartoscInt) : "przekroczenie " + f2(wartoscInt - limitInt)
+  });
+
+  // 3) Powierzchnia biologicznie czynna (limit minimalny) - grunt + woda +
+  //    50% tarasów/stropodachów o powierzchni >= 10 m2 (mniejsze liczą 0)
+  var limitPbc = limity.pbc_min_pct;
+  var tarasyLiczone = tarasyM2.reduce(function (s, t) { return s + (t >= 10.0 ? t * 0.5 : 0.0); }, 0.0);
+  var wartoscPbc = ((pbcGruntM2 + pbcWodaM2 + tarasyLiczone) / dzialkaM2) * 100.0;
+  var okPbc = wartoscPbc >= limitPbc;
+  rows.push({
+    wskaznik: "pow. biologicznie czynna",
+    wartosc: f1(wartoscPbc) + " %",
+    limit: f1(limitPbc) + " %",
+    ok: okPbc,
+    margines: okPbc ? "zapas " + f1(wartoscPbc - limitPbc) + " pp" : "brakuje " + f1(limitPbc - wartoscPbc) + " pp"
+  });
+
+  // 4) Wysokość budynku i liczba kondygnacji nadziemnych (limity maksymalne)
+  var wys = limity.wysokosc;
+  var limitH = wys.maksymalna_m, limitK = wys.maksymalna_kondygnacje;
+  var wysokoscTop = nadziemne.length ? Math.max.apply(null, nadziemne.map(function (k) { return k[1]; })) : 0.0;
+  var liczbaKond = nadziemne.length;
+  var okH = wysokoscTop <= limitH && liczbaKond <= limitK;
+  var marginesH;
+  if (okH) {
+    marginesH = "zapas " + f1(limitH - wysokoscTop) + " m i " + Math.trunc(limitK - liczbaKond) + " kond.";
+  } else {
+    var czesciH = [];
+    if (wysokoscTop > limitH) czesciH.push("przekroczenie " + f1(wysokoscTop - limitH) + " m");
+    if (liczbaKond > limitK) czesciH.push(Math.trunc(liczbaKond - limitK) + " kond. za dużo");
+    marginesH = czesciH.join("; ");
+  }
+  rows.push({
+    wskaznik: "wysokość",
+    wartosc: f1(wysokoscTop) + " m / " + liczbaKond + " kond.",
+    limit: f1(limitH) + " m / " + fmtG(limitK) + " kond.",
+    ok: okH,
+    margines: marginesH
+  });
+
+  // 5) Nachylenie dachu - w pokazie znane wprost, nie odczytywane z krzywych
+  var dachOk = dachDeg <= limity.dach_nachylenie_max_deg;
+  rows.push({
+    wskaznik: "dach",
+    wartosc: fmtG(dachDeg) + "°",
+    limit: fmtG(limity.dach_nachylenie_max_deg) + "°",
+    ok: dachOk,
+    margines: dachOk ? fmtG(limity.dach_nachylenie_max_deg - dachDeg) + "° zapasu"
+                     : fmtG(dachDeg - limity.dach_nachylenie_max_deg) + "° za dużo"
+  });
+
+  // 6) Miejsca postojowe
+  var parking = limity.parking;
+  var wymagane = mieszkania * parking.miejsc_na_mieszkanie_min;
+  var tylkoPodziemny = parking.tylko_podziemny;
+  var dostepne = tylkoPodziemny ? podziemne : podziemne + naziemne;
+  // Gdy plan dopuszcza tylko parking podziemny, każde miejsce naziemne jest
+  // naruszeniem planu, nie tylko brakiem (tak samo liczy 01_sprawdz_mpzp.py).
+  var okPark = dostepne >= wymagane && (!tylkoPodziemny || naziemne === 0);
+  // O słowie "zapas"/"brakuje" decyduje sam bilans miejsc, nie wynik wiersza: przy
+  // nadmiarze miejsc podziemnych i jednym naziemnym wiersz wypada NIE, ale zapasu
+  // nie ma jak nazwać brakiem (karta 05 drukowała tu "brakuje -10 miejsc").
+  var marginesPark = dostepne >= wymagane ? "zapas " + (dostepne - wymagane) + " miejsc"
+                                          : "brakuje " + (wymagane - dostepne) + " miejsc";
+  if (tylkoPodziemny && naziemne > 0) marginesPark += "; " + naziemne + " miejsc naziemnych niedozwolonych";
+  rows.push({
+    wskaznik: "parking",
+    wartosc: podziemne + " podziemnych + " + naziemne + " naziemnych",
+    limit: fmtG(wymagane) + " miejsc" + (tylkoPodziemny ? " (tylko podziemne)" : ""),
+    ok: okPark,
+    margines: marginesPark
+  });
+
+  return rows;
+}
+
+return {
+  DOMYSLNA_MASA: DOMYSLNA_MASA,
+  DOMYSLNE_BRYLY: DOMYSLNE_BRYLY,
+  DOMYSLNY_ATRAKTOR: DOMYSLNY_ATRAKTOR,
+  DOMYSLNE_ELEWACJI: DOMYSLNE_ELEWACJI,
+  DOMYSLNE_ATRAKTORY: DOMYSLNE_ATRAKTORY,
+  PALETY: PALETY,
+  NAZWY_PROFILU: NAZWY_PROFILU,
+  NAZWY_SKRETU: NAZWY_SKRETU,
+  NAZWY_WZORU: NAZWY_WZORU,
+  NAZWY_PANELU: NAZWY_PANELU,
+  DOMYSLNE_LIMITY: DOMYSLNE_LIMITY,
+  DOMYSLNE_PLANU: DOMYSLNE_PLANU,
+  ustawieniaBryly: ustawieniaBryly,
+  ustawieniaElewacji: ustawieniaElewacji,
+  punktyPrzekroju: punktyPrzekroju,
+  bsplineZamkniety: bsplineZamkniety,
+  poleWielokata: poleWielokata,
+  uniaObrysowM2: uniaObrysowM2,
+  zbudujBryle: zbudujBryle,
+  punktNaPowierzchni: punktNaPowierzchni,
+  wzorRomby: wzorRomby,
+  wzorKwadraty: wzorKwadraty,
+  wzorTrojkaty: wzorTrojkaty,
+  wzorHeksagony: wzorHeksagony,
+  wektorSlonca: wektorSlonca,
+  zbudujElewacje: zbudujElewacje,
+  oblicz: oblicz
+};
+})();
+
+if (typeof module !== "undefined") module.exports = GEOMETRIA;
+else window.GEOMETRIA = GEOMETRIA;
+// --- KONIEC GEOMETRII ---
+</script>
+<script type="module">
+// --- INTERFEJS I SCENA ------------------------------------------------------
+// Warstwa prezentacji: buduje panel sterowania z jednej tabeli KONTROLKI,
+// utrzymuje stan w adresie strony i rysuje wynik bloku GEOMETRIA w three.js.
+// Cała arytmetyka jest w bloku GEOMETRIA, tutaj tylko DOM, scena i teksty.
+
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+var G = window.GEOMETRIA;
+
+function f0(x) { return x.toFixed(0); }
+function f1(x) { return x.toFixed(1); }
+function f2(x) { return x.toFixed(2); }
+
+// ---------------------------------------------------------------------------
+// Tabela kontrolek: grupa, klucz, typ, min, maks, krok (albo nazwa listy opcji)
+// ---------------------------------------------------------------------------
+
+var KONTROLKI = [
+  ["bryla", "typ_profilu", "wybor", "profil"],
+  ["bryla", "wykladnik_profilu", "zakres", 1.5, 8, 0.1],
+  ["bryla", "zaokraglenie", "zakres", 0, 1, 0.01],
+  ["bryla", "skret_deg", "zakres", 0, 60, 1],
+  ["bryla", "profil_skretu", "wybor", "skret"],
+  ["bryla", "wybrzuszenie", "zakres", -0.3, 0.3, 0.01],
+  ["bryla", "wysokosc_wybrzuszenia", "zakres", 0.05, 0.95, 0.01],
+  ["bryla", "zwezenie", "zakres", 0.5, 1.3, 0.01],
+  ["bryla", "pochylenie_x_m", "zakres", -4, 4, 0.1],
+  ["bryla", "pochylenie_y_m", "zakres", -4, 4, 0.1],
+  ["bryla", "atraktor_x", "liczba"], ["bryla", "atraktor_y", "liczba"], ["bryla", "atraktor_z", "liczba"],
+  ["bryla", "sila_atraktora_m", "zakres", -5, 5, 0.1],
+  ["bryla", "zasieg_atraktora_m", "zakres", 3, 40, 0.5],
+  ["bryla", "punkty_profilu", "zakres", 16, 64, 1],
+  ["bryla", "kontury_co_m", "zakres", 0, 2, 0.1],
+  ["elewacja", "typ_wzoru", "wybor", "wzor"],
+  ["elewacja", "typ_panelu", "wybor", "panel"],
+  ["elewacja", "kolumny", "zakres", 12, 72, 2],
+  ["elewacja", "rzedy", "zakres", 4, 30, 1],
+  ["elewacja", "glebokosc_min_m", "zakres", 0, 0.5, 0.01],
+  ["elewacja", "glebokosc_max_m", "zakres", 0.2, 2, 0.01],
+  ["elewacja", "otwor_min", "zakres", 0.05, 0.9, 0.01],
+  ["elewacja", "otwor_max", "zakres", 0.05, 0.9, 0.01],
+  ["elewacja", "azymut_slonca_deg", "zakres", 0, 360, 1],
+  ["elewacja", "wysokosc_slonca_deg", "zakres", 5, 80, 1],
+  ["elewacja", "atraktor_e_x", "liczba"], ["elewacja", "atraktor_e_y", "liczba"], ["elewacja", "atraktor_e_z", "liczba"],
+  ["elewacja", "zasieg_atraktora_e_m", "zakres", 3, 40, 0.5],
+  ["elewacja", "waga_slonca", "zakres", 0, 1, 0.05],
+  ["elewacja", "waga_atraktora", "zakres", 0, 1, 0.05],
+  ["elewacja", "paleta", "wybor", "paleta"],
+  ["elewacja", "kolor_jasny", "kolor"], ["elewacja", "kolor_ciemny", "kolor"],
+  ["plan", "mieszkania", "zakres", 0, 80, 1],
+  ["plan", "miejsca_podziemne", "zakres", 0, 80, 1],
+  ["plan", "miejsca_naziemne", "zakres", 0, 20, 1],
+  ["plan", "pbc_grunt_m2", "zakres", 0, 600, 5],
+  ["plan", "pbc_woda_m2", "zakres", 0, 200, 5],
+  ["plan", "taras1_m2", "zakres", 0, 300, 1],
+  ["plan", "taras2_m2", "zakres", 0, 300, 1],
+  ["plan", "dach_nachylenie_deg", "zakres", 0, 45, 1]
+];
+
+// Sekcje panelu: zakładka, id, otwarta na starcie, klucze kontrolek po kolei.
+// Otwarte zostają suwaki, które niosą pokaz (skręt, wybrzuszenie, wzór, kolory);
+// atraktory, głębokości i podgląd czekają zwinięte. Test 08_test.js sprawdza,
+// że każda kontrolka z KONTROLKI ma tu dokładnie jedno miejsce.
+var ZAKLADKI = ["bryla", "elewacja", "plan"];
+var SEKCJE = [
+  ["bryla", "przekroj", true, ["typ_profilu", "wykladnik_profilu", "zaokraglenie"]],
+  ["bryla", "skret", true, ["skret_deg", "profil_skretu", "wybrzuszenie", "wysokosc_wybrzuszenia", "zwezenie"]],
+  ["bryla", "pochylenie", false, ["pochylenie_x_m", "pochylenie_y_m", "atraktor_x", "atraktor_y", "atraktor_z", "sila_atraktora_m", "zasieg_atraktora_m"]],
+  ["bryla", "podglad", false, ["punkty_profilu", "kontury_co_m"]],
+  ["elewacja", "siatka", true, ["typ_wzoru", "typ_panelu", "kolumny", "rzedy"]],
+  ["elewacja", "kolory", true, ["paleta", "kolor_jasny", "kolor_ciemny"]],
+  ["elewacja", "slonce", true, ["azymut_slonca_deg", "wysokosc_slonca_deg"]],
+  ["elewacja", "glebokosc", false, ["glebokosc_min_m", "glebokosc_max_m", "otwor_min", "otwor_max"]],
+  ["elewacja", "atraktor_e", false, ["atraktor_e_x", "atraktor_e_y", "atraktor_e_z", "zasieg_atraktora_e_m", "waga_slonca", "waga_atraktora"]],
+  ["plan", "parking", true, ["mieszkania", "miejsca_podziemne", "miejsca_naziemne"]],
+  ["plan", "pbc", true, ["pbc_grunt_m2", "pbc_woda_m2", "taras1_m2", "taras2_m2"]],
+  ["plan", "dach", true, ["dach_nachylenie_deg"]]
+];
+
+// Presety: wartości nadpisywane na czystych domyślnych obu komponentów.
+var PRESETY = {
+  szkic: { typ_profilu: 0, zaokraglenie: 0, skret_deg: 0, profil_skretu: 0, wybrzuszenie: 0, wysokosc_wybrzuszenia: 0.5, zwezenie: 1,
+           pochylenie_x_m: 0, pochylenie_y_m: 0, sila_atraktora_m: 0, typ_wzoru: 0, typ_panelu: 1, kolumny: 36, rzedy: 12,
+           glebokosc_min_m: 0.15, glebokosc_max_m: 0.90, azymut_slonca_deg: 180, wysokosc_slonca_deg: 45, waga_slonca: 1, waga_atraktora: 0, paleta: 0 },
+  karta0607: { typ_profilu: 0, zaokraglenie: 0.6, skret_deg: 12, profil_skretu: 0, wybrzuszenie: 0.10, wysokosc_wybrzuszenia: 0.5, zwezenie: 1,
+           pochylenie_x_m: 0, pochylenie_y_m: 0, sila_atraktora_m: 0, typ_wzoru: 0, typ_panelu: 1, kolumny: 36, rzedy: 12,
+           glebokosc_min_m: 0.15, glebokosc_max_m: 0.90, azymut_slonca_deg: 180, wysokosc_slonca_deg: 45, waga_slonca: 1, waga_atraktora: 0, paleta: 0 },
+  zaawansowany: {},
+  wieza: { typ_profilu: 1, wykladnik_profilu: 2.5, skret_deg: 45, profil_skretu: 1, wybrzuszenie: 0.2, wysokosc_wybrzuszenia: 0.35, zwezenie: 0.6,
+           pochylenie_x_m: 2, pochylenie_y_m: 1, sila_atraktora_m: 0, typ_wzoru: 3, typ_panelu: 2, kolumny: 48, rzedy: 18, paleta: 1 }
+};
+
+// ---------------------------------------------------------------------------
+// Teksty: polski i angielski, kluczowane tak samo
+// ---------------------------------------------------------------------------
+
+var TEKSTY = {
+  pl: {
+    tytul: "Solna - pokaz parametryczny",
+    podtytul: "Kielce, teren U,M 2, uchwała XLI/1014/2009 - sześć wskaźników MPZP na parametrycznej masie (dane fikcyjne)",
+    presety_aria: "Presety",
+    preset_szkic: "Szkic Solna", preset_karta0607: "Karty 06 i 07", preset_zaawansowany: "Zaawansowany", preset_wieza: "Wieża",
+    btn_jezyk: "EN", btn_jezyk_title: "Przełącz na angielski",
+    btn_motyw: "Motyw", btn_motyw_title: "Przełącz motyw ciemny i jasny",
+    btn_duch: "Duch", btn_duch_title: "Pokaż lub ukryj ducha pierwotnej masy Solna",
+    btn_ramy: "Ramy", btn_ramy_title: "Pokaż lub ukryj krawędzie paneli elewacji",
+    btn_obrot: "Obrót", btn_obrot_title: "Włącz powolny obrót kamery",
+    btn_obrot_title_off: "Obrót wyłączony: system prosi o ograniczenie ruchu",
+    btn_slonce: "Słońce", btn_slonce_title: "Przejedź azymutem słońca o pełne 360° (kliknięcie w scenę przerywa)",
+    btn_slonce_title_off: "Przejazd słońca wyłączony: system prosi o ograniczenie ruchu",
+    btn_link: "Link", btn_link_title: "Skopiuj adres z bieżącymi nastawami",
+    btn_png: "PNG", btn_png_title: "Zapisz widok jako plik PNG",
+    grupa_bryla: "Bryła", grupa_elewacja: "Elewacja", grupa_plan: "Plan",
+    zakladki_aria: "Grupy ustawień",
+    sekcja_przekroj: "Przekrój", sekcja_skret: "Skręt i wybrzuszenie", sekcja_pochylenie: "Pochylenie i atraktor",
+    sekcja_podglad: "Podgląd", sekcja_siatka: "Siatka paneli", sekcja_kolory: "Kolory", sekcja_slonce: "Słońce",
+    sekcja_glebokosc: "Głębokość i otwory", sekcja_atraktor_e: "Atraktor i wagi",
+    sekcja_parking: "Mieszkania i parking", sekcja_pbc: "Teren biologicznie czynny", sekcja_dach: "Dach",
+    tabela_naglowek: "Wskaźniki",
+    skroty: ["zabudowa", "intensywność", "PBC", "wysokość", "dach", "parking"],
+    th_wskaznik: "Wskaźnik", th_wartosc: "Wartość", th_limit: "Limit", th_wynik: "Wynik", th_margines: "Margines",
+    raport_naglowek: "Raport",
+    legenda_ok: "płyty zielone: wszystkie sześć wskaźników OK",
+    legenda_nie: "płyty czerwone: co najmniej jeden NIE",
+    werdykt_ok: "ZGODNE",
+    werdykt_nie: "NIEZGODNE ({n} {rzecz})",
+    link_skopiowany: "Link skopiowany",
+    link_blad: "Nie udało się skopiować - adres jest w pasku przeglądarki",
+    wlasne_kolory: "własny",
+    schowek_aria: "Adres linku do skopiowania",
+    widok_aria: "Widok 3D masy Solna; strzałki przesuwają kamerę",
+    png_zapisany: "PNG zapisany: solna-pokaz.png",
+    uzyj_jasny_aria: "Użyj koloru jasnego",
+    uzyj_ciemny_aria: "Użyj koloru ciemnego",
+    poza_zakresem: "{klucz}={dane} poprawiono na {uzyte}",
+    uwaga_pierwsza: "uwaga: masa Solna wbudowana w plik (dane fikcyjne); nachylenie dachu i PBC z pól formularza, nie z modelu",
+    // Polskie linie raportu przychodzą gotowe z bloku GEOMETRIA (bryla.raport,
+    // elewacja.raport), więc po tej stronie szablonów nie potrzeba; pusty obiekt
+    // stoi tu dla symetrii z TEKSTY.en.raport.
+    raport: {},
+    frazy: [],
+    nazwy: {
+      profil: ["prostokąt zaokrąglony", "superelipsa"],
+      skret: ["liniowy", "wygładzony", "przyspieszający"],
+      wzor: ["romby (diagrid)", "kwadraty", "trójkąty", "heksagony"],
+      panel: ["płaski z otworem", "piramida", "ścięta piramida z otworem"],
+      paleta: ["grafit", "miedź", "ocean"]
+    },
+    kontrolki: {
+      typ_profilu: ["Profil przekroju", "Kształt obrysu kondygnacji: prostokąt z zaokrąglonymi narożami albo superelipsa."],
+      wykladnik_profilu: ["Wykładnik superelipsy", "Im wyżej, tym bliżej prostokąta; 2 daje elipsę."],
+      zaokraglenie: ["Zaokrąglenie naroży", "Promień naroża jako ułamek połowy krótszego boku."],
+      skret_deg: ["Skręt", "Obrót najwyższego przekroju względem parteru."],
+      profil_skretu: ["Profil skrętu", "Rozkład skrętu po wysokości."],
+      wybrzuszenie: ["Wybrzuszenie", "Dodatkowe rozszerzenie (minus: zwężenie) w połowie wysokości."],
+      wysokosc_wybrzuszenia: ["Poziom wybrzuszenia", "Gdzie leży najszersze miejsce: 0 przy terenie, 1 przy dachu."],
+      zwezenie: ["Zwężenie przy dachu", "Mnożnik wymiarów najwyższego przekroju."],
+      pochylenie_x_m: ["Pochylenie X", "Przesunięcie dachu wzdłuż osi X (wzdłuż ul. Solnej)."],
+      pochylenie_y_m: ["Pochylenie Y", "Przesunięcie dachu wzdłuż osi Y (ku KDP-1)."],
+      atraktor_x: ["Atraktor X", "Współrzędna X punktu przyciągającego obrys."],
+      atraktor_y: ["Atraktor Y", "Współrzędna Y punktu przyciągającego obrys."],
+      atraktor_z: ["Atraktor Z", "Współrzędna Z punktu przyciągającego obrys."],
+      sila_atraktora_m: ["Siła atraktora", "Największe wychylenie krawędzi ku atraktorowi; 0 wyłącza."],
+      zasieg_atraktora_m: ["Zasięg atraktora", "Odchylenie funkcji Gaussa; dalej wpływ zanika."],
+      punkty_profilu: ["Punkty przekroju", "Liczba punktów sterujących obrysu; więcej to gładszy obrys."],
+      kontury_co_m: ["Kontury co", "Odstęp warstwic podglądu; 0 wyłącza."],
+      typ_wzoru: ["Wzór siatki", "Podział powierzchni na pola pod panele."],
+      typ_panelu: ["Typ panelu", "Geometria pojedynczego panelu."],
+      kolumny: ["Kolumny", "Podziały wokół budynku; zawsze parzyste, żeby szew się domknął."],
+      rzedy: ["Rzędy", "Podziały po wysokości."],
+      glebokosc_min_m: ["Głębokość min.", "Głębokość panelu o intensywności 0."],
+      glebokosc_max_m: ["Głębokość maks.", "Głębokość panelu o intensywności 1."],
+      otwor_min: ["Otwór min.", "Najmniejszy ułamek pola zajęty przez otwór (panel najbardziej intensywny)."],
+      otwor_max: ["Otwór maks.", "Największy ułamek pola zajęty przez otwór (panel najmniej intensywny)."],
+      azymut_slonca_deg: ["Azymut słońca", "Liczony od północy (+Y, strona KDP-1), zgodnie z ruchem wskazówek."],
+      wysokosc_slonca_deg: ["Wysokość słońca", "Kąt słońca nad horyzontem."],
+      atraktor_e_x: ["Atraktor elewacji X", "Współrzędna X punktu zagęszczającego panele."],
+      atraktor_e_y: ["Atraktor elewacji Y", "Współrzędna Y punktu zagęszczającego panele."],
+      atraktor_e_z: ["Atraktor elewacji Z", "Współrzędna Z punktu zagęszczającego panele."],
+      zasieg_atraktora_e_m: ["Zasięg atraktora", "Odchylenie funkcji Gaussa wokół atraktora elewacji."],
+      waga_slonca: ["Waga słońca", "Udział ekspozycji słonecznej w intensywności panelu."],
+      waga_atraktora: ["Waga atraktora", "Udział bliskości atraktora w intensywności panelu."],
+      paleta: ["Paleta", "Para kolorów: jasny przy intensywności 0, ciemny przy 1."],
+      kolor_jasny: ["Kolor jasny (własny)", "Zaznacz, żeby zastąpić paletę; działa tylko razem z kolorem ciemnym."],
+      kolor_ciemny: ["Kolor ciemny (własny)", "Zaznacz, żeby zastąpić paletę; działa tylko razem z kolorem jasnym."],
+      mieszkania: ["Mieszkania", "Liczba mieszkań; wymaga jednego miejsca postojowego na mieszkanie."],
+      miejsca_podziemne: ["Miejsca podziemne", "Jedyne miejsca dopuszczone przez plan na terenie U,M 2."],
+      miejsca_naziemne: ["Miejsca naziemne", "Każde takie miejsce jest naruszeniem planu, nie tylko brakiem."],
+      pbc_grunt_m2: ["PBC - grunt rodzimy", "Powierzchnia gruntu rodzimego na działce."],
+      pbc_woda_m2: ["PBC - woda powierzchniowa", "Powierzchnia wody na działce."],
+      taras1_m2: ["Taras zielony 1", "Liczy się w połowie i tylko przy polu co najmniej 10 m²."],
+      taras2_m2: ["Taras zielony 2", "Liczy się w połowie i tylko przy polu co najmniej 10 m²."],
+      dach_nachylenie_deg: ["Nachylenie dachu", "Podawane wprost: z krzywych kondygnacji nie da się go odczytać."]
+    },
+    wskazniki: {
+      "powierzchnia zabudowy": "powierzchnia zabudowy",
+      "intensywność": "intensywność",
+      "pow. biologicznie czynna": "pow. biologicznie czynna",
+      "wysokość": "wysokość",
+      "dach": "dach",
+      "parking": "parking"
+    }
+  },
+  en: {
+    tytul: "Solna - parametric showcase",
+    podtytul: "Kielce, U,M 2 zone, resolution XLI/1014/2009 - six zoning-plan indicators on a parametric massing (fictional data)",
+    presety_aria: "Presets",
+    preset_szkic: "Solna sketch", preset_karta0607: "Cards 06 and 07", preset_zaawansowany: "Advanced", preset_wieza: "Tower",
+    btn_jezyk: "PL", btn_jezyk_title: "Switch to Polish",
+    btn_motyw: "Theme", btn_motyw_title: "Switch between the dark and light theme",
+    btn_duch: "Ghost", btn_duch_title: "Show or hide the ghost of the original Solna massing",
+    btn_ramy: "Frames", btn_ramy_title: "Show or hide the facade panel edges",
+    btn_obrot: "Turntable", btn_obrot_title: "Turn on the slow camera rotation",
+    btn_obrot_title_off: "Turntable off: the system asks for reduced motion",
+    btn_slonce: "Sun", btn_slonce_title: "Sweep the sun azimuth through a full 360° (a click on the stage stops it)",
+    btn_slonce_title_off: "Sun sweep off: the system asks for reduced motion",
+    btn_link: "Link", btn_link_title: "Copy the address carrying the current settings",
+    btn_png: "PNG", btn_png_title: "Save the view as a PNG file",
+    grupa_bryla: "Envelope", grupa_elewacja: "Facade", grupa_plan: "Plan",
+    zakladki_aria: "Setting groups",
+    sekcja_przekroj: "Section", sekcja_skret: "Twist and bulge", sekcja_pochylenie: "Lean and attractor",
+    sekcja_podglad: "Preview", sekcja_siatka: "Panel grid", sekcja_kolory: "Colours", sekcja_slonce: "Sun",
+    sekcja_glebokosc: "Depth and openings", sekcja_atraktor_e: "Attractor and weights",
+    sekcja_parking: "Flats and parking", sekcja_pbc: "Biologically active area", sekcja_dach: "Roof",
+    tabela_naglowek: "Indicators",
+    skroty: ["coverage", "FAR", "BAA", "height", "roof", "parking"],
+    th_wskaznik: "Indicator", th_wartosc: "Value", th_limit: "Limit", th_wynik: "Result", th_margines: "Margin",
+    raport_naglowek: "Report",
+    legenda_ok: "green plates: all six indicators pass",
+    legenda_nie: "red plates: at least one fails",
+    werdykt_ok: "COMPLIANT",
+    werdykt_nie: "NON-COMPLIANT ({n} {rzecz})",
+    link_skopiowany: "Link copied",
+    link_blad: "Could not copy - the address is in the browser bar",
+    wlasne_kolory: "custom",
+    schowek_aria: "Link address to copy",
+    widok_aria: "3D view of the Solna massing; arrow keys move the camera",
+    png_zapisany: "PNG saved: solna-pokaz.png",
+    uzyj_jasny_aria: "Use the light colour",
+    uzyj_ciemny_aria: "Use the dark colour",
+    poza_zakresem: "{klucz}={dane} adjusted to {uzyte}",
+    uwaga_pierwsza: "note: the Solna massing is built into this file (fictional data); roof slope and biologically active area come from the form fields, not from the model",
+    // Szablony linii raportu; {klucz} podstawia wypelnij().
+    raport: {
+      profil: "profile: {profil}; twist {skret}° ({skretTyp}); {atraktor}",
+      profil_superelipsa: "{nazwa} (exponent {w})",
+      profil_prostokat: "{nazwa} (rounding {zaokraglenie})",
+      atraktor: "attractor ({x}, {y}, {z}), pull {sila} m, range {zasieg} m",
+      atraktor_brak: "attractor: none",
+      kondygnacja: "storey {i}: {pole} m2 (sketch {szkic} m2)",
+      suma: "total above-ground floor area: {suma} m2 (sketch {szkic} m2)",
+      wysokosc: "height: {h} m / {n} storeys",
+      obrys: "footprint: {a} m2",
+      objetosc: "volume: {v} m3",
+      wzor: "pattern: {wzor}; panel: {panel}",
+      paneli: "panels: {n} on a wall surface of {pole} m2",
+      glebokosc: "panel depth (achieved): {min}-{max} m within the range {zmin}-{zmax} m",
+      otwory: "openings (achieved): {min}-{max} of the cell within the range {zmin}-{zmax}",
+      mocne: "panels above intensity 0.5: {n} ({pct} %)",
+      atraktory: "attractors: {n}, range {zasieg} m; weights: sun {ws}, attractor {wa}",
+      atraktory_bez: "attractors: {n} with no effect (range {zasieg} m is not positive); weights: sun {ws}, attractor {wa}",
+      paleta: "palette: {nazwa}",
+      paleta_wlasna: "custom colours",
+      powierzchnia: "facade area (approximate, depth ignored): {a} m2",
+      heurystyka: "heuristic: dot product of the panel normal and the sun direction plus attractor proximity, not a daylight analysis"
+    },
+    // Zwroty z bloku GEOMETRIA w kolumnach Wartość, Limit i Margines; kolejność
+    // ma znaczenie, dłuższe frazy idą pierwsze.
+    frazy: [
+      ["miejsc naziemnych niedozwolonych", "surface spaces not allowed"],
+      ["(tylko podziemne)", "(underground only)"],
+      ["przekroczenie", "over by"],
+      ["brakuje", "short by"],
+      ["za dużo", "too much"],
+      ["zapasu", "spare"],
+      ["zapas", "spare"],
+      ["kond.", "storeys"],
+      ["miejsc", "spaces"],
+      ["podziemnych", "underground"],
+      ["naziemnych", "surface"],
+      [" i ", " and "]
+    ],
+    nazwy: {
+      profil: ["rounded rectangle", "superellipse"],
+      skret: ["linear", "eased", "accelerating"],
+      wzor: ["diamonds (diagrid)", "squares", "triangles", "hexagons"],
+      panel: ["flat with an opening", "pyramid", "truncated pyramid with an opening"],
+      paleta: ["graphite", "copper", "ocean"]
+    },
+    kontrolki: {
+      typ_profilu: ["Section profile", "Shape of the storey outline: a rounded rectangle or a superellipse."],
+      wykladnik_profilu: ["Superellipse exponent", "Higher values approach a rectangle; 2 gives an ellipse."],
+      zaokraglenie: ["Corner rounding", "Corner radius as a fraction of half the shorter side."],
+      skret_deg: ["Twist", "Rotation of the topmost section relative to the ground floor."],
+      profil_skretu: ["Twist profile", "How the twist is distributed over the height."],
+      wybrzuszenie: ["Bulge", "Extra widening (negative: narrowing) at mid height."],
+      wysokosc_wybrzuszenia: ["Bulge level", "Where the widest point sits: 0 at grade, 1 at the roof."],
+      zwezenie: ["Taper at the roof", "Multiplier on the topmost section dimensions."],
+      pochylenie_x_m: ["Lean X", "Roof offset along the X axis (along ul. Solna)."],
+      pochylenie_y_m: ["Lean Y", "Roof offset along the Y axis (towards KDP-1)."],
+      atraktor_x: ["Attractor X", "X coordinate of the point that pulls the outline."],
+      atraktor_y: ["Attractor Y", "Y coordinate of the point that pulls the outline."],
+      atraktor_z: ["Attractor Z", "Z coordinate of the point that pulls the outline."],
+      sila_atraktora_m: ["Attractor pull", "Largest edge displacement towards the attractor; 0 turns it off."],
+      zasieg_atraktora_m: ["Attractor range", "Standard deviation of the Gaussian falloff."],
+      punkty_profilu: ["Section points", "Number of control points per outline; more means a smoother outline."],
+      kontury_co_m: ["Contours every", "Spacing of the preview contour lines; 0 turns them off."],
+      typ_wzoru: ["Grid pattern", "How the surface is divided into panel cells."],
+      typ_panelu: ["Panel type", "Geometry of a single panel."],
+      kolumny: ["Columns", "Divisions around the building; always even so the seam closes."],
+      rzedy: ["Rows", "Divisions up the height."],
+      glebokosc_min_m: ["Depth min.", "Panel depth at intensity 0."],
+      glebokosc_max_m: ["Depth max.", "Panel depth at intensity 1."],
+      otwor_min: ["Opening min.", "Smallest fraction of the cell taken by the opening (most intense panel)."],
+      otwor_max: ["Opening max.", "Largest fraction of the cell taken by the opening (least intense panel)."],
+      azymut_slonca_deg: ["Sun azimuth", "Measured from north (+Y, the KDP-1 side), clockwise."],
+      wysokosc_slonca_deg: ["Sun altitude", "Angle of the sun above the horizon."],
+      atraktor_e_x: ["Facade attractor X", "X coordinate of the point that densifies the panels."],
+      atraktor_e_y: ["Facade attractor Y", "Y coordinate of the point that densifies the panels."],
+      atraktor_e_z: ["Facade attractor Z", "Z coordinate of the point that densifies the panels."],
+      zasieg_atraktora_e_m: ["Attractor range", "Standard deviation of the Gaussian around the facade attractor."],
+      waga_slonca: ["Sun weight", "Share of the solar exposure in the panel intensity."],
+      waga_atraktora: ["Attractor weight", "Share of the attractor proximity in the panel intensity."],
+      paleta: ["Palette", "Colour pair: light at intensity 0, dark at 1."],
+      kolor_jasny: ["Light colour (custom)", "Tick to override the palette; it only applies together with the dark colour."],
+      kolor_ciemny: ["Dark colour (custom)", "Tick to override the palette; it only applies together with the light colour."],
+      mieszkania: ["Flats", "Number of flats; one parking space per flat is required."],
+      miejsca_podziemne: ["Underground spaces", "The only spaces the plan allows on the U,M 2 zone."],
+      miejsca_naziemne: ["Surface spaces", "Each such space breaches the plan, it is not merely a shortfall."],
+      pbc_grunt_m2: ["BAA - native ground", "Area of native ground on the plot."],
+      pbc_woda_m2: ["BAA - surface water", "Area of surface water on the plot."],
+      taras1_m2: ["Green terrace 1", "Counted at half, and only when it is at least 10 m²."],
+      taras2_m2: ["Green terrace 2", "Counted at half, and only when it is at least 10 m²."],
+      dach_nachylenie_deg: ["Roof slope", "Entered directly: it cannot be read off the storey curves."]
+    },
+    wskazniki: {
+      "powierzchnia zabudowy": "Site coverage (powierzchnia zabudowy)",
+      "intensywność": "Floor area ratio (intensywność)",
+      "pow. biologicznie czynna": "Biologically active area (pow. biologicznie czynna)",
+      "wysokość": "Height (wysokość)",
+      "dach": "Roof (dach)",
+      "parking": "Parking (parking)"
+    }
+  }
+};
+
+// Podmiana zwrotów tabeli na angielskie; lista siedzi w TEKSTY.en.frazy.
+function naAngielski(tekst) {
+  var frazy = TEKSTY.en.frazy, wynik = tekst, i;
+  for (i = 0; i < frazy.length; i++) wynik = wynik.split(frazy[i][0]).join(frazy[i][1]);
+  return wynik;
+}
+
+// Podstawia {klucz} w szablonie z TEKSTY.
+function wypelnij(szablon, wartosci) {
+  return szablon.replace(/{([A-Za-z0-9_]+)}/g, function (calosc, klucz) {
+    return wartosci.hasOwnProperty(klucz) ? String(wartosci[klucz]) : calosc;
+  });
+}
+
+function T() { return TEKSTY[stan.jezyk]; }
+
+// Rzeczownik przy liczbie w werdykcie: polski ma trzy formy (1, 2-4, reszta),
+// angielski dwie. Liczba nigdy nie wychodzi poza 0-6, więc wyjątek 12-14 odpada.
+function rzeczownikWskaznik(n) {
+  if (stan.jezyk === "en") return n === 1 ? "indicator" : "indicators";
+  if (n === 1) return "wskaźnik";
+  return (n >= 2 && n <= 4) ? "wskaźniki" : "wskaźników";
+}
+
+// Jednostka pokazywana obok pola; ułamki zostają bez jednostki.
+function jednostka(klucz) {
+  if (/_deg$/.test(klucz)) return "°";
+  if (/_m2$/.test(klucz)) return "m²";
+  if (/_m$/.test(klucz) || /^atraktor/.test(klucz)) return "m";
+  // Po angielsku liczniki zostają bez jednostki: "Flats 30 pcs" czytało się źle.
+  if (/^(kolumny|rzedy|punkty_profilu|mieszkania)$|^miejsca_/.test(klucz)) return stan.jezyk === "en" ? "" : "szt.";
+  return "";
+}
+
+// ---------------------------------------------------------------------------
+// Stan
+// ---------------------------------------------------------------------------
+
+var DOMYSLNE = {};
+Object.keys(G.DOMYSLNE_BRYLY).forEach(function (k) { DOMYSLNE[k] = G.DOMYSLNE_BRYLY[k]; });
+Object.keys(G.DOMYSLNE_ELEWACJI).forEach(function (k) {
+  if (k !== "zasieg_atraktora_m") DOMYSLNE[k] = G.DOMYSLNE_ELEWACJI[k];
+});
+DOMYSLNE.zasieg_atraktora_e_m = G.DOMYSLNE_ELEWACJI.zasieg_atraktora_m;
+DOMYSLNE.atraktor_x = G.DOMYSLNY_ATRAKTOR[0];
+DOMYSLNE.atraktor_y = G.DOMYSLNY_ATRAKTOR[1];
+DOMYSLNE.atraktor_z = G.DOMYSLNY_ATRAKTOR[2];
+DOMYSLNE.atraktor_e_x = G.DOMYSLNE_ATRAKTORY[0][0];
+DOMYSLNE.atraktor_e_y = G.DOMYSLNE_ATRAKTORY[0][1];
+DOMYSLNE.atraktor_e_z = G.DOMYSLNE_ATRAKTORY[0][2];
+DOMYSLNE.kolor_jasny = "";
+DOMYSLNE.kolor_ciemny = "";
+Object.keys(G.DOMYSLNE_PLANU).forEach(function (k) { DOMYSLNE[k] = G.DOMYSLNE_PLANU[k]; });
+
+// Motyw startowy bierzemy z systemu; ciemny zostaje domyślny, bo tak wygląda pokaz.
+// Klucz motyw z adresu nadpisuje to ustawienie w czytajHash().
+var MOTYW_DOMYSLNY = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+var PRZELACZNIKI_DOMYSLNE = { motyw: MOTYW_DOMYSLNY, jezyk: "pl", pokazDucha: true, pokazRamy: false, zakladka: "bryla" };
+
+var stan = { motyw: MOTYW_DOMYSLNY, jezyk: "pl", pokazDucha: true, pokazRamy: false, zakladka: "bryla", obrot: false };
+KONTROLKI.forEach(function (k) { stan[k[1]] = DOMYSLNE[k[1]]; });
+
+var DEF = {};
+KONTROLKI.forEach(function (k) { DEF[k[1]] = k; });
+
+var ZAKRES_LICZBY_M = 500;   // atraktory: poza tym i tak nie ma czego ogladac
+
+// Poprawki, które ograniczWartosc zrobiła na wartościach z adresu strony; raport
+// wypisuje je jako linie uwaga:. Czyszczone przy każdym czytaniu adresu.
+var zmianyZHasha = [];
+
+// Jedyna bramka na wartość kontrolki: adres strony, suwak i pole liczbowe
+// przechodzą przez nią, żeby wklejony link nie wrzucił do przebudowy
+// kolumny=3600 ani punkty_profilu=6400 i nie zawiesil karty. Wartosc z suwaka
+// i pola liczbowego nie jest zglaszana (pole samo wskakuje na dozwolona),
+// wartość z adresu tak - inaczej link po cichu pokazywałby co innego.
+function ograniczWartosc(def, wartosc, zHasha) {
+  var uzyte = ograniczSurowo(def, wartosc);
+  if (zHasha && uzyte !== Number(wartosc)) {
+    zmianyZHasha.push({ klucz: def[1], dane: String(wartosc), uzyte: uzyte });
+  }
+  return uzyte;
+}
+
+function ograniczSurowo(def, wartosc) {
+  var x = Number(wartosc), typ = def[2];
+  if (!isFinite(x)) return DOMYSLNE[def[1]];
+  if (typ === "wybor") {
+    var ile = TEKSTY.pl.nazwy[def[3]].length, i = Math.trunc(x);
+    return (i >= 0 && i < ile) ? i : DOMYSLNE[def[1]];
+  }
+  if (typ === "zakres") {
+    // Dociagniecie do kroku wiersza: liczniki zostaja calkowite, a kolumny
+    // parzyste, zamiast isc do geometrii jako 2.5 mieszkania albo 13 kolumn.
+    var min = def[3], krok = def[5], miejsca = (String(krok).split(".")[1] || "").length;
+    var v = min + Math.round((Math.min(Math.max(x, min), def[4]) - min) / krok) * krok;
+    return Math.min(Math.max(Number(v.toFixed(miejsca)), min), def[4]);
+  }
+  return Math.min(Math.max(x, -ZAKRES_LICZBY_M), ZAKRES_LICZBY_M);
+}
+
+var DZIALKA_M2 = 1850;               // 50 m x 37 m, wiersz Dzialka domyślnej masy
+var CEL = new THREE.Vector3(25, 18.5, 10);
+var mniejRuchu = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Ostatni wynik przeliczenia; potrzebny przy zmianie języka i motywu.
+var ostatnie = { bryla: null, elewacja: null, ustB: null, ustE: null, wiersze: [], wlasne: false, wszystkoOk: false };
+var brudne = { bryla: true, elewacja: true, tabela: true, raport: true };
+
+// ---------------------------------------------------------------------------
+// Adres strony: klucze inne niż domyślne plus cztery przełączniki
+// ---------------------------------------------------------------------------
+
+// Stan kontrolek i przełączników wraca do domyślnych, żeby wklejony link
+// przestawił stronę w całości, a nie tylko w kluczach, które w nim są.
+function zerujStan() {
+  KONTROLKI.forEach(function (k) { stan[k[1]] = DOMYSLNE[k[1]]; });
+  stan.motyw = PRZELACZNIKI_DOMYSLNE.motyw;
+  stan.jezyk = PRZELACZNIKI_DOMYSLNE.jezyk;
+  stan.pokazDucha = PRZELACZNIKI_DOMYSLNE.pokazDucha;
+  stan.pokazRamy = PRZELACZNIKI_DOMYSLNE.pokazRamy;
+  stan.zakladka = PRZELACZNIKI_DOMYSLNE.zakladka;
+}
+
+// Zepsuty znak procentu w adresie (np. "%E0") rzuca URIError; wtedy bierzemy
+// surowy tekst, żeby jeden zły klucz nie zatrzymał całej strony.
+function odkoduj(s) {
+  try { return decodeURIComponent(s); } catch (e) { return s; }
+}
+
+function czytajHash() {
+  var h = location.hash.replace(/^#/, "");
+  zmianyZHasha = [];
+  if (!h) return;
+  h.split("&").forEach(function (para) {
+    var i = para.indexOf("=");
+    if (i < 1) return;
+    var k = odkoduj(para.slice(0, i)), v = odkoduj(para.slice(i + 1));
+    if (k === "motyw") { stan.motyw = v === "light" ? "light" : "dark"; return; }
+    if (k === "jezyk") { stan.jezyk = v === "en" ? "en" : "pl"; return; }
+    if (k === "duch") { stan.pokazDucha = v !== "0"; return; }
+    if (k === "ramy") { stan.pokazRamy = v === "1"; return; }
+    if (k === "zakladka") { stan.zakladka = ZAKLADKI.indexOf(v) >= 0 ? v : "bryla"; return; }
+    if (k === "kolor_jasny" || k === "kolor_ciemny") {
+      stan[k] = /^[0-9a-fA-F]{6}$/.test(v) ? "#" + v.toLowerCase() : "";
+      return;
+    }
+    if (DEF.hasOwnProperty(k) && v !== "") stan[k] = ograniczWartosc(DEF[k], v, true);
+  });
+}
+
+// Który preset odpowiada bieżącym suwakom (grupa Plan nie należy do presetów);
+// udostępniony link podświetla wtedy swój chip tak samo jak kliknięcie, a suwak
+// przestawiony z powrotem na wartość presetu zapala go na nowo. Czyste domyślne
+// obu komponentów to preset Zaawansowany (pusty).
+function presetZeStanu() {
+  var nazwy = Object.keys(PRESETY), i, j, pasuje;
+  for (i = 0; i < nazwy.length; i++) {
+    var p = PRESETY[nazwy[i]];
+    pasuje = true;
+    for (j = 0; j < KONTROLKI.length && pasuje; j++) {
+      var k = KONTROLKI[j][1];
+      if (KONTROLKI[j][0] === "plan") continue;
+      if (stan[k] !== (p.hasOwnProperty(k) ? p[k] : DOMYSLNE[k])) pasuje = false;
+    }
+    if (pasuje) return nazwy[i];
+  }
+  return null;
+}
+
+function zapiszHash() {
+  var czesci = [];
+  KONTROLKI.forEach(function (k) {
+    var klucz = k[1], v = stan[klucz];
+    if (v === DOMYSLNE[klucz]) return;
+    czesci.push(klucz + "=" + (k[2] === "kolor" ? String(v).replace("#", "") : v));
+  });
+  // Zapisujemy motyw tylko wtedy, gdy różni się od systemowego, więc link
+  // przenosi także wybór ciemnego motywu z komputera, który woli jasny.
+  if (stan.motyw !== MOTYW_DOMYSLNY) czesci.push("motyw=" + stan.motyw);
+  if (stan.jezyk === "en") czesci.push("jezyk=en");
+  if (!stan.pokazDucha) czesci.push("duch=0");
+  if (stan.pokazRamy) czesci.push("ramy=1");
+  if (stan.zakladka !== "bryla") czesci.push("zakladka=" + stan.zakladka);
+  if (!czesci.length) {
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { /* file:// bywa uparte */ }
+    return;
+  }
+  var frag = "#" + czesci.join("&");
+  // Sam fragment jest zawsze tego samego pochodzenia, więc replaceState działa
+  // także dla pliku otwartego dwuklikiem; awaryjnie zostaje zwykły skok kotwicy.
+  try { history.replaceState(null, "", frag); }
+  catch (e) { if (location.hash !== frag) location.hash = frag; }
+}
+
+// ---------------------------------------------------------------------------
+// Panel sterowania z tabeli KONTROLKI
+// ---------------------------------------------------------------------------
+
+var widgety = {};   // klucz -> { suwak, liczba, wybor, kolor, uzyj, etykieta, jedn, def }
+
+function opcje(tag) {
+  return T().nazwy[tag];
+}
+
+// Zakładki Bryła / Elewacja / Plan: jedna widoczna, strzałki przełączają jak w
+// grupie radiowej, wybór zapisuje się w adresie (klucz zakladka).
+function wybierzZakladke(nazwa, skup) {
+  stan.zakladka = nazwa;
+  ZAKLADKI.forEach(function (z) {
+    var tab = document.getElementById("tab-" + z), wybrana = z === nazwa;
+    tab.setAttribute("aria-selected", wybrana ? "true" : "false");
+    tab.tabIndex = wybrana ? 0 : -1;
+    document.getElementById("grupa-" + z).hidden = !wybrana;
+    if (wybrana && skup) tab.focus();
+  });
+}
+
+function podepnijZakladki() {
+  ZAKLADKI.forEach(function (z, i) {
+    var tab = document.getElementById("tab-" + z);
+    tab.addEventListener("click", function () { wybierzZakladke(z, false); zapiszHash(); });
+    tab.addEventListener("keydown", function (e) {
+      var n = ZAKLADKI.length, cel;
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") cel = (i + 1) % n;
+      else if (e.key === "ArrowLeft" || e.key === "ArrowUp") cel = (i + n - 1) % n;
+      else if (e.key === "Home") cel = 0;
+      else if (e.key === "End") cel = n - 1;
+      else return;
+      e.preventDefault();
+      wybierzZakladke(ZAKLADKI[cel], true);
+      zapiszHash();
+    });
+  });
+}
+
+function zbudujKontrolki() {
+  // Najpierw zwijane sekcje w zakładkach, potem kontrolki do swoich sekcji.
+  var pojemniki = {};
+  SEKCJE.forEach(function (s) {
+    var sekcja = document.createElement("details");
+    sekcja.className = "zwijane sekcja";
+    sekcja.open = s[2];
+    var naglowek = document.createElement("summary");
+    var nazwa = document.createElement("span");
+    nazwa.className = "nazwa";
+    nazwa.setAttribute("data-t", "sekcja_" + s[1]);
+    naglowek.appendChild(nazwa);
+    sekcja.appendChild(naglowek);
+    var tresc = document.createElement("div");
+    tresc.className = "grupa-tresc";
+    sekcja.appendChild(tresc);
+    document.getElementById("grupa-" + s[0]).appendChild(sekcja);
+    s[3].forEach(function (klucz) { pojemniki[klucz] = tresc; });
+  });
+  KONTROLKI.forEach(function (def) {
+    var grupa = def[0], klucz = def[1], typ = def[2];
+    var poz = document.createElement("div");
+    poz.className = "kontrolka" + (typ === "liczba" ? " waska" : "");
+    poz.setAttribute("data-klucz", klucz);
+    var etykieta = document.createElement("label");
+    etykieta.id = "l-" + klucz;
+    poz.appendChild(etykieta);
+    var wiersz = document.createElement("div");
+    wiersz.className = "wiersz";
+    poz.appendChild(wiersz);
+    var w = { etykieta: etykieta, def: def };
+
+    if (typ === "wybor") {
+      // Grupa radiowa zamiast listy: przyciski powstają w odswiezWidgety(),
+      // bo ich napisy zmieniają się razem z językiem.
+      wiersz.className = "wiersz pelny";
+      w.segment = document.createElement("div");
+      w.segment.className = "segment";
+      w.segment.id = "k-" + klucz;
+      w.segment.setAttribute("role", "radiogroup");
+      w.segment.setAttribute("aria-labelledby", etykieta.id);
+      w.przyciski = [];
+      wiersz.appendChild(w.segment);
+    } else if (typ === "kolor") {
+      etykieta.setAttribute("for", "k-" + klucz);
+      wiersz.className = "wiersz kolorowy";
+      w.uzyj = document.createElement("input");
+      w.uzyj.type = "checkbox";
+      w.uzyj.id = "u-" + klucz;
+      w.kolor = document.createElement("input");
+      w.kolor.type = "color";
+      w.kolor.id = "k-" + klucz;
+      w.kolor.value = klucz === "kolor_jasny" ? "#f5f4f0" : "#3a3e46";
+      wiersz.appendChild(w.uzyj);
+      wiersz.appendChild(w.kolor);
+      var zKoloru = function () {
+        zmien(klucz, w.uzyj.checked ? w.kolor.value : "", grupa);
+        zapiszHash();
+      };
+      w.uzyj.addEventListener("change", zKoloru);
+      w.kolor.addEventListener("input", function () { w.uzyj.checked = true; zKoloru(); });
+    } else {
+      etykieta.setAttribute("for", "k-" + klucz);
+      if (typ === "liczba") wiersz.className = "wiersz bez-suwaka";
+      if (typ === "zakres") {
+        w.suwak = document.createElement("input");
+        w.suwak.type = "range";
+        w.suwak.min = def[3]; w.suwak.max = def[4]; w.suwak.step = def[5];
+        w.suwak.id = "k-" + klucz;
+        wiersz.appendChild(w.suwak);
+      }
+      w.liczba = document.createElement("input");
+      w.liczba.type = "number";
+      if (typ === "zakres") { w.liczba.min = def[3]; w.liczba.max = def[4]; w.liczba.step = def[5]; }
+      else { w.liczba.step = 0.5; w.liczba.id = "k-" + klucz; }
+      wiersz.appendChild(w.liczba);
+      w.jedn = document.createElement("span");
+      w.jedn.className = "jedn";
+      wiersz.appendChild(w.jedn);
+      if (w.suwak) {
+        w.suwak.addEventListener("input", function () {
+          zmien(klucz, ograniczWartosc(def, w.suwak.value), grupa);
+          w.liczba.value = stan[klucz];
+        });
+        w.suwak.addEventListener("change", zapiszHash);
+      }
+      w.liczba.addEventListener("input", function () {
+        if (w.liczba.value === "" || !isFinite(Number(w.liczba.value))) return;
+        zmien(klucz, ograniczWartosc(def, w.liczba.value), grupa);
+        if (w.suwak) w.suwak.value = stan[klucz];
+      });
+      // Po opuszczeniu pola pokazujemy wartość już ograniczoną, żeby było widać,
+      // ze 3600 zostalo przyciete do gornej granicy suwaka.
+      w.liczba.addEventListener("change", function () {
+        w.liczba.value = stan[klucz];
+        zapiszHash();
+      });
+    }
+    widgety[klucz] = w;
+    if (!pojemniki[klucz]) throw new Error("kontrolka bez sekcji panelu: " + klucz);
+    pojemniki[klucz].appendChild(poz);
+  });
+}
+
+// Segmentowany przełącznik wyliczenia: po jednym przycisku na wariant, obsługa
+// klawiaturą jak w grupie radiowej (strzałki przesuwają i wybierają, Enter i
+// spacja wybierają), ognisko wędruje razem z zaznaczeniem.
+function zbudujSegment(def) {
+  var klucz = def[1], w = widgety[klucz], lista = opcje(def[3]);
+  var opis = (T().kontrolki[klucz] || [klucz, ""])[1];
+  w.segment.textContent = "";
+  w.przyciski = lista.map(function (nazwa, i) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.setAttribute("role", "radio");
+    b.textContent = nazwa;
+    b.title = opis;
+    b.addEventListener("click", function () { wybierz(def, i, false); });
+    b.addEventListener("keydown", function (e) {
+      var krok = (e.key === "ArrowRight" || e.key === "ArrowDown") ? 1
+               : (e.key === "ArrowLeft" || e.key === "ArrowUp") ? -1 : 0;
+      if (krok) { e.preventDefault(); wybierz(def, (i + krok + lista.length) % lista.length, true); }
+      else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); wybierz(def, i, false); }
+    });
+    w.segment.appendChild(b);
+    return b;
+  });
+  odswiezSegment(klucz);
+}
+
+function odswiezSegment(klucz) {
+  var w = widgety[klucz];
+  w.przyciski.forEach(function (b, i) {
+    var wybrany = i === stan[klucz];
+    b.setAttribute("aria-checked", wybrany ? "true" : "false");
+    b.tabIndex = wybrany ? 0 : -1;
+  });
+}
+
+function wybierz(def, i, skup) {
+  zmien(def[1], i, def[0]);
+  odswiezSegment(def[1]);
+  if (skup) widgety[def[1]].przyciski[i].focus();
+  zapiszHash();
+}
+
+// Jedna zmiana wartości: stan, brudne flagi i zgaszenie podświetlenia presetu.
+function zmien(klucz, wartosc, grupa) {
+  if (stan[klucz] === wartosc) return;
+  stan[klucz] = wartosc;
+  if (grupa === "bryla") brudne.bryla = true;
+  else if (grupa === "elewacja") brudne.elewacja = true;
+  brudne.tabela = true;
+  brudne.raport = true;
+  zaznaczPreset(presetZeStanu());
+}
+
+// Przepisuje stan do wszystkich pól (po presecie, po wczytaniu adresu, po zmianie języka).
+function odswiezWidgety() {
+  KONTROLKI.forEach(function (def) {
+    var klucz = def[1], typ = def[2], w = widgety[klucz], teksty = T().kontrolki[klucz] || [klucz, ""];
+    w.etykieta.textContent = teksty[0];
+    w.etykieta.title = teksty[1];
+    if (typ === "wybor") {
+      zbudujSegment(def);
+    } else if (typ === "kolor") {
+      w.uzyj.checked = !!stan[klucz];
+      if (stan[klucz]) w.kolor.value = stan[klucz];
+      w.kolor.title = teksty[1];
+      w.uzyj.title = teksty[1];
+      w.uzyj.setAttribute("aria-label", T()[klucz === "kolor_jasny" ? "uzyj_jasny_aria" : "uzyj_ciemny_aria"]);
+    } else {
+      if (w.suwak) { w.suwak.value = stan[klucz]; w.suwak.title = teksty[1]; }
+      w.liczba.value = stan[klucz];
+      w.liczba.title = teksty[1];
+      w.liczba.setAttribute("aria-label", teksty[0]);
+      w.jedn.textContent = jednostka(klucz);
+    }
+  });
+}
+
+function zastosujPreset(nazwa) {
+  var p = PRESETY[nazwa] || {};
+  KONTROLKI.forEach(function (def) {
+    if (def[0] !== "plan") stan[def[1]] = DOMYSLNE[def[1]];
+  });
+  Object.keys(p).forEach(function (k) { stan[k] = p[k]; });
+  odswiezWidgety();
+  brudne.bryla = true; brudne.elewacja = true; brudne.tabela = true; brudne.raport = true;
+  zaznaczPreset(nazwa);
+  zapiszHash();
+}
+
+function zaznaczPreset(nazwa) {
+  document.querySelectorAll("#presety .chip").forEach(function (chip) {
+    chip.setAttribute("aria-pressed", chip.getAttribute("data-preset") === nazwa ? "true" : "false");
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Język
+// ---------------------------------------------------------------------------
+
+function ustawJezyk(lang) {
+  stan.jezyk = lang;
+  document.documentElement.setAttribute("data-lang", lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-t]").forEach(function (el) {
+    var v = T()[el.getAttribute("data-t")];
+    if (v !== undefined) el.textContent = v;
+  });
+  document.querySelectorAll("[data-t-title]").forEach(function (el) {
+    var v = T()[el.getAttribute("data-t-title")];
+    if (v !== undefined) el.title = v;
+  });
+  document.querySelectorAll("[data-t-aria]").forEach(function (el) {
+    var v = T()[el.getAttribute("data-t-aria")];
+    if (v !== undefined) el.setAttribute("aria-label", v);
+  });
+  document.getElementById("etykieta-jezyk").textContent = T().btn_jezyk;
+  if (mniejRuchu) {
+    document.getElementById("btn-obrot").title = T().btn_obrot_title_off;
+    document.getElementById("btn-slonce").title = T().btn_slonce_title_off;
+  }
+  odswiezWidgety();
+  odswiezTabele(ostatnie.wiersze);
+  odswiezRaport();
+}
+
+// ---------------------------------------------------------------------------
+// Scena
+// ---------------------------------------------------------------------------
+
+var plotno = document.getElementById("widok");
+var scenaEl = document.getElementById("scena");
+var renderer = new THREE.WebGLRenderer({ canvas: plotno, antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+var scena = new THREE.Scene();
+var kamera = new THREE.PerspectiveCamera(45, 1, 0.5, 2000);
+kamera.up.set(0, 0, 1);
+kamera.position.set(95, -70, 55);
+kamera.lookAt(CEL);
+var sterowanie = new OrbitControls(kamera, plotno);
+sterowanie.target.copy(CEL);
+sterowanie.enableDamping = true;
+sterowanie.dampingFactor = 0.08;
+sterowanie.autoRotateSpeed = 0.9;
+sterowanie.maxPolarAngle = Math.PI * 0.495;
+sterowanie.listenToKeyEvents(plotno);   // strzałki przesuwają kamerę, gdy płótno ma ognisko
+
+var swiatloNieba = new THREE.HemisphereLight(0xffffff, 0x2a2e33, 0.9);
+scena.add(swiatloNieba);
+var swiatloSlonca = new THREE.DirectionalLight(0xffffff, 1.4);
+scena.add(swiatloSlonca);
+
+// Kolor z tokenu CSS. three r152+ sam przelicza sRGB z setStyle na przestrzeń
+// roboczą renderera, więc drugiej konwersji już nie wołamy - przyciemniłaby barwy.
+function kolorCss(nazwa) {
+  var css = getComputedStyle(document.documentElement).getPropertyValue(nazwa).trim();
+  return new THREE.Color(css || "#808080");
+}
+
+var MAT = {
+  dzialka: new THREE.LineBasicMaterial({ color: 0xffffff }),
+  siatkaTerenu: new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18 }),
+  duch: new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 }),
+  plyty: new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.55, side: THREE.DoubleSide, depthWrite: false }),
+  // Obrys kazdej kondygnacji rysowany bez testu glebokosci: kolor werdyktu ma
+  // byc czytelny takze przez gesta elewacje, ktora zaslania plyty.
+  pierscienie: new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1, depthTest: false, transparent: true, opacity: 0.9 }),
+  bryla: new THREE.MeshStandardMaterial({ color: 0xd9d4cc, roughness: 0.65, metalness: 0.05, transparent: true, opacity: 0.35, depthWrite: false }),
+  kontury: new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.35 }),
+  elewacja: new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 0.8, side: THREE.DoubleSide }),
+  ramy: new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 })
+};
+
+var grupa = new THREE.Group();
+scena.add(grupa);
+var obiekty = {};
+
+function podmien(nazwa, obiekt) {
+  var stary = obiekty[nazwa];
+  if (stary) {
+    grupa.remove(stary);
+    stary.traverse(function (o) { if (o.geometry) o.geometry.dispose(); });
+  }
+  obiekty[nazwa] = obiekt || null;
+  if (obiekt) grupa.add(obiekt);
+}
+
+function geoZPunktow(punkty) {
+  var poz = [], i;
+  for (i = 0; i < punkty.length; i++) poz.push(punkty[i][0], punkty[i][1], punkty[i][2]);
+  var g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(poz, 3));
+  return g;
+}
+
+// Odcinki zamkniętej łamanej (ostatni punkt wraca do pierwszego).
+function odcinkiPetli(punkty, wyjscie) {
+  var i, n = punkty.length;
+  for (i = 0; i < n; i++) {
+    var a = punkty[i], b = punkty[(i + 1) % n];
+    wyjscie.push(a, b);
+  }
+}
+
+function odswiezKolory() {
+  trzebaRysowac = true;
+  renderer.setClearColor(kolorCss("--scena-tlo"), 1);
+  var linia = kolorCss("--linia"), slaby = kolorCss("--tekst-slaby");
+  MAT.dzialka.color.copy(linia);
+  MAT.siatkaTerenu.color.copy(slaby);
+  MAT.duch.color.copy(slaby);
+  MAT.kontury.color.copy(slaby);
+  MAT.ramy.color.copy(slaby);
+  MAT.bryla.color.copy(kolorCss("--bryla"));
+  MAT.plyty.color.copy(kolorCss(ostatnie.wszystkoOk ? "--ok" : "--nie"));
+  MAT.pierscienie.color.copy(MAT.plyty.color);
+  swiatloNieba.groundColor.copy(linia);
+}
+
+// Działka 50 x 37 m i siatka terenu co 5 m - rysowane raz.
+function zbudujTeren() {
+  var naroza = [[0, 0, 0], [50, 0, 0], [50, 37, 0], [0, 37, 0]];
+  podmien("dzialka", new THREE.LineLoop(geoZPunktow(naroza), MAT.dzialka));
+  var punkty = [], x, y;
+  for (x = 5; x < 50; x += 5) punkty.push([x, 0, 0], [x, 37, 0]);
+  for (y = 5; y < 37; y += 5) punkty.push([0, y, 0], [50, y, 0]);
+  podmien("siatkaTerenu", new THREE.LineSegments(geoZPunktow(punkty), MAT.siatkaTerenu));
+}
+
+// Duch pierwotnej masy: pudełko między kolejnymi stropami każdej z siedmiu kondygnacji.
+function zbudujDucha() {
+  var wiersze = G.DOMYSLNA_MASA.filter(function (r) { return r[0] === "Kondygnacje"; });
+  var punkty = [], poprzedni = 0;
+  wiersze.forEach(function (r) {
+    var x0 = r[1], y0 = r[2], x1 = r[3], y1 = r[4], z = r[5];
+    var zDol = z <= 0 ? z : poprzedni, zGora = z <= 0 ? 0 : z;
+    if (z > 0) poprzedni = z;
+    var dol = [[x0, y0, zDol], [x1, y0, zDol], [x1, y1, zDol], [x0, y1, zDol]];
+    var gora = [[x0, y0, zGora], [x1, y0, zGora], [x1, y1, zGora], [x0, y1, zGora]];
+    odcinkiPetli(dol, punkty);
+    odcinkiPetli(gora, punkty);
+    for (var i = 0; i < 4; i++) punkty.push(dol[i], gora[i]);
+  });
+  var duch = new THREE.LineSegments(geoZPunktow(punkty), MAT.duch);
+  duch.visible = stan.pokazDucha;
+  podmien("duch", duch);
+}
+
+// Płyty kondygnacji: wachlarz trójkątów ze środka krzywej, 2 cm nad stropem.
+function geoPlyty(kondygnacje) {
+  var poz = [];
+  kondygnacje.forEach(function (k) {
+    var n = k.krzywa.length, cx = 0, cy = 0, i;
+    if (n < 3) return;
+    for (i = 0; i < n; i++) { cx += k.krzywa[i][0]; cy += k.krzywa[i][1]; }
+    cx /= n; cy /= n;
+    var z = k.z + 0.02;
+    for (i = 0; i < n; i++) {
+      var a = k.krzywa[i], b = k.krzywa[(i + 1) % n];
+      poz.push(cx, cy, z, a[0], a[1], z, b[0], b[1], z);
+    }
+  });
+  var g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(poz, 3));
+  return g;
+}
+
+function przebudujBryle() {
+  var czesciowe = { atraktor: [stan.atraktor_x, stan.atraktor_y, stan.atraktor_z] };
+  Object.keys(G.DOMYSLNE_BRYLY).forEach(function (k) { czesciowe[k] = stan[k]; });
+  var wynik = G.ustawieniaBryly(czesciowe);
+  var bryla = G.zbudujBryle(wynik.ust);
+  ostatnie.ustB = wynik;
+  ostatnie.bryla = bryla;
+
+  if (bryla.siatka.indeksy.length) {
+    var g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.Float32BufferAttribute(bryla.siatka.pozycje, 3));
+    g.setAttribute("normal", new THREE.Float32BufferAttribute(bryla.siatka.normalne, 3));
+    g.setIndex(bryla.siatka.indeksy);
+    podmien("bryla", new THREE.Mesh(g, MAT.bryla));
+  } else podmien("bryla", null);
+
+  var plyty = new THREE.Mesh(geoPlyty(bryla.kondygnacje), MAT.plyty);
+  plyty.renderOrder = 5;
+  podmien("plyty", plyty);
+
+  var pierscienie = new THREE.Group();
+  bryla.kondygnacje.forEach(function (k) {
+    if (k.krzywa.length < 3) return;
+    var pkt = k.krzywa.map(function (q) { return [q[0], q[1], k.z]; });
+    var petla = new THREE.LineLoop(geoZPunktow(pkt), MAT.pierscienie);
+    petla.renderOrder = 6;
+    pierscienie.add(petla);
+  });
+  podmien("pierscienie", pierscienie.children.length ? pierscienie : null);
+
+  var odcinki = [];
+  bryla.kontury.forEach(function (k) { odcinkiPetli(k, odcinki); });
+  podmien("kontury", odcinki.length ? new THREE.LineSegments(geoZPunktow(odcinki), MAT.kontury) : null);
+}
+
+function przebudujElewacje() {
+  var bryla = ostatnie.bryla;
+  var czesciowe = {};
+  Object.keys(G.DOMYSLNE_ELEWACJI).forEach(function (k) { czesciowe[k] = stan[k]; });
+  czesciowe.zasieg_atraktora_m = stan.zasieg_atraktora_e_m;
+  var wynik = G.ustawieniaElewacji(czesciowe);
+  // Pojedynczy zaznaczony kolor idzie dalej sam: blok GEOMETRIA zostawia wtedy
+  // paletę i dopisuje o tym uwagę, a odcięcie go tutaj gasiło tę uwagę.
+  var jasny = stan.kolor_jasny ? naRgb(stan.kolor_jasny) : null;
+  var ciemny = stan.kolor_ciemny ? naRgb(stan.kolor_ciemny) : null;
+  var wlasne = !!(jasny && ciemny);
+  var elewacja = G.zbudujElewacje(bryla, wynik.ust, [[stan.atraktor_e_x, stan.atraktor_e_y, stan.atraktor_e_z]], jasny, ciemny);
+  ostatnie.ustE = wynik;
+  ostatnie.elewacja = elewacja;
+  ostatnie.wlasne = wlasne;
+
+  var p = elewacja.panele;
+  if (p.indeksy.length) {
+    var g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.Float32BufferAttribute(p.pozycje, 3));
+    g.setAttribute("normal", new THREE.Float32BufferAttribute(p.normalne, 3));
+    g.setAttribute("color", new THREE.Float32BufferAttribute(p.kolory, 3));
+    g.setIndex(p.indeksy);
+    podmien("elewacja", new THREE.Mesh(g, MAT.elewacja));
+  } else podmien("elewacja", null);
+  var pelnaPowloka = !p.indeksy.length;
+  MAT.bryla.opacity = pelnaPowloka ? 1.0 : 0.35;
+  MAT.bryla.depthWrite = pelnaPowloka;
+  // Panele z otworami przepuszczają kolor płyt na całą elewację (miedź czytała
+  // się jako łosoś), więc przy nich płyty gasną; werdykt i tak niosą pierścienie.
+  MAT.plyty.opacity = (wynik.ust.typ_panelu === 0 || wynik.ust.typ_panelu === 2) ? 0.25 : 0.55;
+
+  if (stan.pokazRamy && elewacja.ramy.length) {
+    var odcinki = [];
+    elewacja.ramy.forEach(function (rama) {
+      for (var i = 0; i + 1 < rama.length; i++) odcinki.push(rama[i], rama[i + 1]);
+    });
+    podmien("ramy", new THREE.LineSegments(geoZPunktow(odcinki), MAT.ramy));
+  } else podmien("ramy", null);
+
+  var s = G.wektorSlonca(wynik.ust.azymut_slonca_deg, wynik.ust.wysokosc_slonca_deg);
+  swiatloSlonca.position.set(CEL.x + s[0] * 120, CEL.y + s[1] * 120, CEL.z + s[2] * 120);
+}
+
+function naRgb(hex) {
+  return [parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16)];
+}
+
+// ---------------------------------------------------------------------------
+// Tabela, werdykt, raport
+// ---------------------------------------------------------------------------
+
+function przelicz() {
+  var bryla = ostatnie.bryla;
+  var kond = bryla.podziemne.map(function (k) { return [k.poleM2, k.z]; })
+    .concat(bryla.kondygnacje.map(function (k) { return [k.poleM2, k.z]; }));
+  return G.oblicz(DZIALKA_M2, bryla.obrysM2, kond, stan.pbc_grunt_m2, stan.pbc_woda_m2,
+    [stan.taras1_m2, stan.taras2_m2], stan.mieszkania, stan.miejsca_podziemne, stan.miejsca_naziemne,
+    stan.dach_nachylenie_deg, G.DOMYSLNE_LIMITY);
+}
+
+function odswiezTabele(wiersze) {
+  var tbody = document.querySelector("#tabela tbody");
+  tbody.textContent = "";
+  var en = stan.jezyk === "en";
+  wiersze.forEach(function (w) {
+    var tr = document.createElement("tr");
+    [[en ? T().wskazniki[w.wskaznik] || w.wskaznik : w.wskaznik, ""],
+     [en ? naAngielski(w.wartosc) : w.wartosc, ""],
+     [en ? naAngielski(w.limit) : w.limit, ""],
+     [w.ok ? "OK" : "NIE", "wynik " + (w.ok ? "ok" : "nie")],
+     [en ? naAngielski(w.margines) : w.margines, "margines"]].forEach(function (para, nr) {
+      var td = document.createElement("td");
+      td.textContent = para[0];
+      if (para[1]) td.className = para[1];
+      // Wynik zostaje OK/NIE także po angielsku (format raportu z AGENTS.md); dymek tłumaczy.
+      if (nr === 3 && en) td.title = w.ok ? "pass" : "fail";
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  // Chipy widać, gdy tabela jest zwinięta: krótka nazwa w kolorze wyniku, pełna
+  // nazwa w podpowiedzi, wynik dopisany dla czytnika ekranu.
+  var chipy = document.getElementById("chipy");
+  chipy.textContent = "";
+  wiersze.forEach(function (w, i) {
+    var c = document.createElement("span");
+    c.className = w.ok ? "ok" : "nie";
+    c.textContent = T().skroty[i];
+    c.title = en ? T().wskazniki[w.wskaznik] || w.wskaznik : w.wskaznik;
+    var wynik = document.createElement("span");
+    wynik.className = "sr";
+    wynik.textContent = " " + (w.ok ? "OK" : "NIE");
+    c.appendChild(wynik);
+    chipy.appendChild(c);
+  });
+  var zle = wiersze.filter(function (w) { return !w.ok; }).length;
+  var werdykt = document.getElementById("werdykt");
+  werdykt.textContent = wiersze.length === 0 ? ""
+    : (zle === 0 ? T().werdykt_ok : wypelnij(T().werdykt_nie, { n: zle, rzecz: rzeczownikWskaznik(zle) }));
+  werdykt.className = wiersze.length === 0 ? "" : (zle === 0 ? "ok" : "nie");
+}
+
+// Linie raportu bryły i elewacji po angielsku: same podstawienia w szablonach
+// z TEKSTY.en.raport, liczby prosto z obiektów dane bloku GEOMETRIA.
+function linieEn(bryla, elewacja, ustB, ustE, wlasne) {
+  var linie = [], N = TEKSTY.en.nazwy, S = TEKSTY.en.raport;
+  var d = bryla.dane, e = elewacja.dane, i;
+  if (d && d.pola) {
+    var profil = d.profil.typ === 1
+      ? wypelnij(S.profil_superelipsa, { nazwa: N.profil[1], w: f1(d.profil.wykladnik) })
+      : wypelnij(S.profil_prostokat, { nazwa: N.profil[0], zaokraglenie: f2(d.profil.zaokraglenie) });
+    var atraktor = d.atraktor
+      ? wypelnij(S.atraktor, { x: f1(d.atraktor.punkt[0]), y: f1(d.atraktor.punkt[1]), z: f1(d.atraktor.punkt[2]),
+                               sila: f1(d.atraktor.sila), zasieg: f1(d.atraktor.zasieg) })
+      : S.atraktor_brak;
+    linie.push(wypelnij(S.profil, { profil: profil, skret: f0(d.skret.deg),
+                                    skretTyp: N.skret[d.skret.typ], atraktor: atraktor }));
+    for (i = 0; i < d.pola.length; i++) {
+      linie.push(wypelnij(S.kondygnacja, { i: i + 1, pole: f1(d.pola[i]), szkic: f1(d.polaSzkicu[i]) }));
+    }
+    linie.push(wypelnij(S.suma, { suma: f1(d.sumaPo), szkic: f1(d.sumaSzkicu) }));
+    linie.push(wypelnij(S.wysokosc, { h: f1(d.wysokoscM), n: d.kondygnacji }));
+    linie.push(wypelnij(S.obrys, { a: f1(d.obrysM2) }));
+    linie.push(wypelnij(S.objetosc, { v: f0(d.objetoscM3) }));
+  }
+  if (e && e.wzor !== undefined) {
+    var u = ustE.ust;
+    linie.push(wypelnij(S.wzor, { wzor: N.wzor[u.typ_wzoru], panel: N.panel[u.typ_panelu] }));
+    linie.push(wypelnij(S.paneli, { n: e.paneli, pole: f0(e.poleScianyM2) }));
+    if (u.typ_panelu === 1 || u.typ_panelu === 2) {
+      linie.push(wypelnij(S.glebokosc, { min: f2(e.glebokoscMinM), max: f2(e.glebokoscMaxM),
+                                         zmin: f2(u.glebokosc_min_m), zmax: f2(u.glebokosc_max_m) }));
+    }
+    if (u.typ_panelu === 0 || u.typ_panelu === 2) {
+      linie.push(wypelnij(S.otwory, { min: f2(e.otworMin), max: f2(e.otworMax),
+                                      zmin: f2(u.otwor_min), zmax: f2(u.otwor_max) }));
+    }
+    linie.push(wypelnij(S.mocne, { n: e.mocne, pct: f1(e.udzialPct) }));
+    linie.push(wypelnij(u.zasieg_atraktora_m > 0 ? S.atraktory : S.atraktory_bez,
+      { n: e.atraktorow, zasieg: f1(e.zasiegM), ws: f2(e.wagaSlonca), wa: f2(e.wagaAtraktora) }));
+    linie.push(wypelnij(S.paleta, { nazwa: wlasne ? S.paleta_wlasna : N.paleta[u.paleta] }));
+    linie.push(wypelnij(S.powierzchnia, { a: f0(e.powierzchniaM2) }));
+    linie.push(S.heurystyka);
+  }
+  return linie;
+}
+
+function odswiezRaport() {
+  var bryla = ostatnie.bryla, elewacja = ostatnie.elewacja;
+  if (!bryla || !elewacja) return;
+  var bezUwag = function (linia) { return linia.indexOf("uwaga: ") !== 0; };
+  // Uwagi idą zaraz po linii stałej, przed liczbami: pudełko raportu mieści
+  // osiem wierszy, a ostrzeżenie dopisane na końcu nikt nie doczyta ze sceny.
+  var uwaga = stan.jezyk === "en" ? "note: " : "uwaga: ";
+  var linie = [T().uwaga_pierwsza];
+  zmianyZHasha.forEach(function (z) {
+    linie.push(uwaga + wypelnij(T().poza_zakresem, z));
+  });
+  [].concat(ostatnie.ustB.bledy, bryla.bledy, ostatnie.ustE.bledy, elewacja.bledy).forEach(function (b) {
+    linie.push(uwaga + b);
+  });
+  if (stan.jezyk === "en") {
+    linie = linie.concat(linieEn(bryla, elewacja, ostatnie.ustB, ostatnie.ustE, ostatnie.wlasne));
+  } else {
+    linie = linie.concat(bryla.raport.filter(bezUwag)).concat(elewacja.raport.filter(bezUwag));
+  }
+  document.getElementById("raport").textContent = linie.join("\n");
+}
+
+// ---------------------------------------------------------------------------
+// Przyciski
+// ---------------------------------------------------------------------------
+
+function przelacznik(id, czytaj, pisz) {
+  var btn = document.getElementById(id);
+  btn.addEventListener("click", function () {
+    pisz(!czytaj());
+    btn.setAttribute("aria-pressed", czytaj() ? "true" : "false");
+    zapiszHash();
+  });
+  btn.setAttribute("aria-pressed", czytaj() ? "true" : "false");
+  return btn;
+}
+
+function pokazToast(tekst) {
+  var t = document.getElementById("toast");
+  t.textContent = tekst;
+  t.classList.add("widoczny");
+  clearTimeout(pokazToast.licznik);
+  pokazToast.licznik = setTimeout(function () { t.classList.remove("widoczny"); }, 2200);
+}
+
+var zamiatanieKlatek = 0;
+
+function zatrzymajZamiatanie() {
+  if (zamiatanieKlatek <= 0) return false;
+  zamiatanieKlatek = 0;
+  document.getElementById("btn-slonce").setAttribute("aria-pressed", "false");
+  // Przerwany przejazd zostawia azymut w połowie drogi: chip presetu ma to odzwierciedlić.
+  zaznaczPreset(presetZeStanu());
+  return true;
+}
+
+// Chwyt za scene przerywa każdy ruch automatyczny: przejazd słońca i obrót.
+function zatrzymajRuch() {
+  var zmiana = zatrzymajZamiatanie();
+  if (stan.obrot) {
+    stan.obrot = false;
+    sterowanie.autoRotate = false;
+    document.getElementById("btn-obrot").setAttribute("aria-pressed", "false");
+    zmiana = true;
+  }
+  if (zmiana) zapiszHash();
+}
+
+function podepnijPrzyciski() {
+  document.querySelectorAll("#presety .chip").forEach(function (chip) {
+    chip.addEventListener("click", function () { zastosujPreset(chip.getAttribute("data-preset")); });
+  });
+
+  document.getElementById("btn-jezyk").addEventListener("click", function () {
+    ustawJezyk(stan.jezyk === "pl" ? "en" : "pl");
+    zapiszHash();
+  });
+
+  document.getElementById("btn-motyw").addEventListener("click", function () {
+    stan.motyw = stan.motyw === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", stan.motyw);
+    odswiezKolory();
+    zapiszHash();
+  });
+
+  przelacznik("btn-duch", function () { return stan.pokazDucha; }, function (v) {
+    stan.pokazDucha = v;
+    if (obiekty.duch) obiekty.duch.visible = v;
+    trzebaRysowac = true;
+  });
+
+  przelacznik("btn-ramy", function () { return stan.pokazRamy; }, function (v) {
+    stan.pokazRamy = v;
+    brudne.elewacja = true;
+  });
+
+  // Przy ograniczeniu ruchu przycisk zostaje klikalny i tłumaczy się dymkiem:
+  // disabled gasiłoby podpowiedź i nikt nie wiedziałby, czemu nic nie rusza.
+  var wylacz = function (btn, kluczTekstu) {
+    btn.setAttribute("aria-disabled", "true");
+    btn.title = T()[kluczTekstu];
+    btn.addEventListener("click", function () { pokazToast(T()[kluczTekstu]); });
+  };
+  var btnObrot = document.getElementById("btn-obrot");
+  if (mniejRuchu) {
+    wylacz(btnObrot, "btn_obrot_title_off");
+  } else {
+    przelacznik("btn-obrot", function () { return stan.obrot; }, function (v) {
+      stan.obrot = v;
+      sterowanie.autoRotate = v;
+    });
+  }
+
+  // Przejazd słońca to taki sam ruch jak obrót kamery, więc gaśnie razem z nim.
+  var btnSlonce = document.getElementById("btn-slonce");
+  if (mniejRuchu) {
+    wylacz(btnSlonce, "btn_slonce_title_off");
+  } else {
+    btnSlonce.addEventListener("click", function () {
+      if (zamiatanieKlatek > 0) { zatrzymajZamiatanie(); zapiszHash(); return; }
+      zamiatanieKlatek = 360;
+      btnSlonce.setAttribute("aria-pressed", "true");
+    });
+  }
+  plotno.addEventListener("pointerdown", zatrzymajRuch);
+
+  document.getElementById("btn-link").addEventListener("click", function () {
+    zapiszHash();
+    var url = location.href;
+    var awaryjnie = function () {
+      var pole = document.getElementById("schowek"), udalo = false;
+      pole.value = url;
+      pole.select();
+      try { udalo = document.execCommand("copy") === true; } catch (e) { udalo = false; }
+      pokazToast(udalo ? T().link_skopiowany : T().link_blad);
+      document.getElementById("btn-link").focus();
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function () { pokazToast(T().link_skopiowany); }, awaryjnie);
+    } else awaryjnie();
+  });
+
+  document.getElementById("btn-png").addEventListener("click", function () {
+    renderer.render(scena, kamera);
+    renderer.domElement.toBlob(function (blob) {
+      if (!blob) return;
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "solna-pokaz.png";
+      a.click();
+      pokazToast(T().png_zapisany);
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+    });
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Etykiety ulic, rozmiar, pętla
+// ---------------------------------------------------------------------------
+
+var etKdp = document.getElementById("et-kdp");
+var etSolna = document.getElementById("et-solna");
+var punktEtykiety = new THREE.Vector3();
+var kierunekEtykiety = new THREE.Vector3();
+var promien = new THREE.Raycaster();
+
+// Etykieta ulicy rzutowana na ekran; gdy bryła stoi między kamerą a zaczepem,
+// napis przygasa, żeby było widać, że leży za budynkiem.
+function ustawEtykiete(el, x, y, z, szer, wys) {
+  punktEtykiety.set(x, y, z);
+  var doZaczepu = punktEtykiety.distanceTo(kamera.position);
+  kierunekEtykiety.copy(punktEtykiety).sub(kamera.position).normalize();
+  var zaslonieta = false;
+  if (obiekty.bryla) {
+    promien.set(kamera.position, kierunekEtykiety);
+    var trafienia = promien.intersectObject(obiekty.bryla, false);
+    zaslonieta = trafienia.length > 0 && trafienia[0].distance < doZaczepu;
+  }
+  punktEtykiety.project(kamera);
+  var poza = punktEtykiety.z > 1 || punktEtykiety.z < -1;
+  el.style.display = poza ? "none" : "";
+  if (poza) return;
+  el.style.left = ((punktEtykiety.x * 0.5 + 0.5) * szer).toFixed(1) + "px";
+  el.style.top = ((-punktEtykiety.y * 0.5 + 0.5) * wys).toFixed(1) + "px";
+  el.style.opacity = zaslonieta ? "0.35" : "1";
+}
+
+var szer = 1, wys = 1, trzebaRysowac = true, klatka = 0;
+
+// Jedno przerysowanie: etykiety ulic rzutowane na ekran i klatka sceny.
+function rysuj() {
+  trzebaRysowac = false;
+  ustawEtykiete(etKdp, 25, 41, 0, szer, wys);
+  ustawEtykiete(etSolna, -5, 18.5, 0, szer, wys);
+  renderer.render(scena, kamera);
+  klatka += 1;
+  if (klatka === 3) document.documentElement.classList.add("gotowe");
+}
+
+// Kamera na starcie: odległość z kuli opisanej na masie (promień 34 m: pół
+// przekątnej pudełka 50 x 37 x 24 m z zapasem) i węższego z dwóch kątów widzenia,
+// więc masa wypełnia kadr tak samo na projektorze i na telefonie. Tylko raz:
+// późniejsze zmiany rozmiaru nie ruszają kamery, którą ktoś już ustawił.
+var kameraUstawiona = false;
+var KIERUNEK_KAMERY = new THREE.Vector3(70, -88.5, 45).normalize();
+
+function ustawKamere() {
+  var pion = THREE.MathUtils.degToRad(kamera.fov) / 2;
+  var poziom = Math.atan(Math.tan(pion) * kamera.aspect);
+  kamera.position.copy(CEL).addScaledVector(KIERUNEK_KAMERY, 34 / Math.sin(Math.min(pion, poziom)));
+  kamera.lookAt(CEL);
+}
+
+function dopasujRozmiar() {
+  szer = Math.max(scenaEl.clientWidth, 1);
+  wys = Math.max(scenaEl.clientHeight, 1);
+  renderer.setSize(szer, wys, false);
+  kamera.aspect = szer / wys;
+  kamera.updateProjectionMatrix();
+  if (!kameraUstawiona) { ustawKamere(); kameraUstawiona = true; }
+  // Rysujemy od razu, w tym samym zadaniu: zmiana rozmiaru czyści bufor płótna,
+  // a czekanie na kolejną ramkę zostawia pustą scenę (widać to przy zmianie
+  // okna i łapią to zrzuty ekranu robione zaraz po przeliczeniu układu).
+  rysuj();
+}
+
+new ResizeObserver(dopasujRozmiar).observe(scenaEl);
+
+function petla() {
+  requestAnimationFrame(petla);
+
+  if (zamiatanieKlatek > 0) {
+    zamiatanieKlatek--;
+    var az = (stan.azymut_slonca_deg + 1) % 360;
+    stan.azymut_slonca_deg = az;
+    widgety.azymut_slonca_deg.suwak.value = az;
+    widgety.azymut_slonca_deg.liczba.value = az;
+    brudne.elewacja = true;
+    brudne.raport = true;
+    if (zamiatanieKlatek === 0) {
+      document.getElementById("btn-slonce").setAttribute("aria-pressed", "false");
+      zapiszHash();
+    }
+  }
+
+  if (brudne.bryla || brudne.elewacja || brudne.tabela) trzebaRysowac = true;
+  if (brudne.bryla) { przebudujBryle(); brudne.bryla = false; brudne.elewacja = true; brudne.tabela = true; }
+  if (brudne.elewacja) { przebudujElewacje(); brudne.elewacja = false; brudne.raport = true; }
+  if (brudne.tabela) {
+    ostatnie.wiersze = przelicz();
+    ostatnie.wszystkoOk = ostatnie.wiersze.every(function (w) { return w.ok; });
+    MAT.plyty.color.copy(kolorCss(ostatnie.wszystkoOk ? "--ok" : "--nie"));
+    MAT.pierscienie.color.copy(MAT.plyty.color);
+    odswiezTabele(ostatnie.wiersze);
+    brudne.tabela = false;
+    brudne.raport = true;
+  }
+  if (brudne.raport) { odswiezRaport(); brudne.raport = false; }
+
+  // Rysujemy tylko wtedy, gdy coś się zmieniło: programowy WebGL (headless,
+  // maszyny bez karty) nie nadąża z klatką na każdą ramkę, a i bateria wdzięczna.
+  if (sterowanie.update()) trzebaRysowac = true;
+  if (trzebaRysowac) rysuj();
+}
+
+// ---------------------------------------------------------------------------
+// Start
+// ---------------------------------------------------------------------------
+
+// Wklejenie linku do otwartej strony ma ja przestawic, a nie tylko zmienic adres.
+window.addEventListener("hashchange", function () {
+  // Trwający przejazd słońca nadpisywałby azymut z nowego linku.
+  zatrzymajZamiatanie();
+  // Zerujemy przed czytaniem: bez tego klucze, których nowy link nie niesie,
+  // zostawałyby z poprzedniego stanu i kolega widziałby inny budynek.
+  zerujStan();
+  czytajHash();
+  document.documentElement.setAttribute("data-theme", stan.motyw);
+  odswiezKolory();
+  ustawJezyk(stan.jezyk);   // ustawJezyk woła odswiezWidgety()
+  document.getElementById("btn-duch").setAttribute("aria-pressed", stan.pokazDucha ? "true" : "false");
+  document.getElementById("btn-ramy").setAttribute("aria-pressed", stan.pokazRamy ? "true" : "false");
+  if (obiekty.duch) obiekty.duch.visible = stan.pokazDucha;
+  wybierzZakladke(stan.zakladka, false);
+  zaznaczPreset(presetZeStanu());
+  brudne.bryla = true;
+  brudne.elewacja = true;
+  brudne.tabela = true;
+  brudne.raport = true;
+});
+
+zbudujKontrolki();
+czytajHash();
+document.documentElement.setAttribute("data-theme", stan.motyw);
+ustawJezyk(stan.jezyk);
+wybierzZakladke(stan.zakladka, false);
+zaznaczPreset(presetZeStanu());
+// Poniżej 1000 px wysokości (projektor 768 px, laptop 900 px) raport i tabela
+// startują zwinięte: scena dostaje miejsce raportu, suwaki miejsce tabeli, a
+// werdykt z sześcioma chipami zostaje widoczny. Na wąskim ekranie tak samo zwija
+// się tabela. Jedno kliknięcie przywraca każde z nich.
+var niski = window.innerHeight < 1000;
+if (niski) document.getElementById("szczegoly-raportu").open = false;
+if (niski || window.innerWidth < 980) document.getElementById("szczegoly-tabeli").open = false;
+podepnijZakladki();
+podepnijPrzyciski();
+odswiezKolory();
+zbudujTeren();
+zbudujDucha();
+dopasujRozmiar();
+petla();
+</script>
+</body>
+</html>
