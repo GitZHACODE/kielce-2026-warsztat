@@ -5,6 +5,9 @@
 Na koniec masz własny plik moje/plan.json, zbudowany wyłącznie z pełnego tekstu uchwały planu, oraz widok porównania w VS Code, który dowodzi, że jego liczby zgadzają się z plikiem wzorcowym.
 To jest właśnie umiejętność całego warsztatu: agent sam odnajduje w 34 stronach uchwały ustalenia dla jednego terenu i zamienia je na uporządkowane liczby.
 
+![Tekst uchwały i plik plan.json obok siebie w VS Code](zrzuty/00-wczytaj-plan.png)
+*Po lewej ustalenia dla terenu U,M 2 w tekście uchwały (§ 20), po prawej te same liczby w pliku wzorcowym `rozwiazania/plan.json`. Twój `moje/plan.json` ma mieć te same wartości.*
+
 ## Zanim zaczniesz
 - Otwórz dane/uchwala-XLI-1014-2009.md - pełny tekst uchwały, 44 paragrafy; ustalenia szczegółowe dla poszczególnych terenów są w rozdziale 3, a sześć terenów U,M zaczyna się identycznym zdaniem. To jedyne źródło liczb na tę kartę.
 - Otwórz dane/plan-szablon.json - to pusty szablon, w którego kształt agent ma wpisać wartości.

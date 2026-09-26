@@ -5,6 +5,9 @@
 Na koniec masz komponent, który ubiera bryłę z karty 06 w diagrid piramidalnych paneli, których głębokość i kolor zależą od nasłonecznienia sterowanego dwoma suwakami.
 To studium elewacji, którego całą logikę widać w jednej linijce wzoru.
 
+![Diagrid piramidalnych paneli na bryle Solna w Rhino 8](zrzuty/07-elewacja.png)
+*Komponent wzorcowy `rozwiazania/07_elewacja_gh.py` w Rhino 8 na bryle z karty 06, przy domyślnym słońcu: azymut 180°, wysokość 45°.*
+
 ## Zanim zaczniesz
 - Miej uruchomiony komponent z karty 06 i pod ręką jego wyjście bryla; bez niego komponent pokaże diagrid na prostym lofcie masy Solna wbudowanym w skrypt.
 - Dodaj sześć suwaków: kolumny 12-72, rzedy 4-24, glebokosc_min_m 0-0.5, glebokosc_max_m 0.2-2.0, azymut_slonca_deg 0-360, wysokosc_slonca_deg 5-80.

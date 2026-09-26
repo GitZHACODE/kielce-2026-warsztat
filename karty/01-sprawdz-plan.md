@@ -5,6 +5,9 @@
 Na koniec masz działający skrypt moje/sprawdz_mpzp.py, który w kilka sekund liczy sześć wskaźników budynku Solna i porównuje je z limitami planu.
 To jest ta sama kontrola, którą architekt musi wykonać ręcznie i bezbłędnie, zanim zacznie projektować, i powtórzyć przed złożeniem projektu w urzędzie.
 
+![Tabela sześciu wskaźników z wynikiem OK albo NIE w terminalu VS Code](zrzuty/01-sprawdz-plan.png)
+*Wynik skryptu wzorcowego `rozwiazania/01_sprawdz_mpzp.py` w terminalu VS Code. Kod wyjścia 1 oznacza, że co najmniej jeden wskaźnik ma NIE.*
+
 ## Zanim zaczniesz
 - Otwórz moje/plan.json (z karty 00; jeśli go nie masz, rozwiazania/plan.json) i dane/inwestycja.json - to jedyne źródła liczb dla agenta.
 - Wskaźniki dla terenu U,M 2 są w § 20 ust. 2 pkt 6 uchwały XLI/1014/2009.

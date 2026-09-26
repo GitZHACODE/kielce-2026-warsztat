@@ -1,15 +1,38 @@
 # Praktyczne wykorzystanie AI w pracowni architektonicznej - materiały warsztatowe
 
-Warsztat odbywa się w Kielcach, w sobotę 26 września 2026 roku. Efektem warsztatu jest sprawdzacz zgodności z miejscowym planem zagospodarowania przestrzennego (MPZP), napisany przez agenta AI na podstawie tekstu planu dla prawdziwej jednostki terenowej w Kielcach, oraz te same reguły sprawdzone na parametrycznej bryle w Rhino.
+Agent AI potrafi w pracowni architektonicznej czytać przepisy, liczyć wskaźniki i pisać małe narzędzia pod konkretny projekt, a architekt nie musi przy tym programować. W tym repozytorium agent czyta 34 strony uchwały planu miejscowego z Kielc, wypisuje limity dla jednego terenu i pisze skrypt, który w kilka sekund sprawdza z nimi projekt.
+
+Ten sam sposób pracy przenosi się na wiele innych zadań pracowni:
+
+- sprawdzenie projektu z planem miejscowym, Warunkami Technicznymi albo wytycznymi klienta, zanim zrobi to urząd,
+- kalkulator wskaźników albo zestawienie powierzchni w jednym pliku HTML, które otworzysz klientowi na spotkaniu,
+- komponenty Grasshoppera pisane z opisu słownego: bryła sterowana suwakami, elewacja zależna od słońca, kontrola planu wprost na modelu,
+- przeszukiwanie archiwum własnych projektów, raportów i opracowań,
+- powtarzalne czynności w dokumentacji, od nazywania plików po wypełnianie zestawień.
+
+W ZHA z takich narzędzi korzystamy na co dzień, a część z nich powstaje w jedno popołudnie. Ten warsztat pozwala przejść całą drogę samodzielnie, od tekstu uchwały do modelu 3D w przeglądarce. Każda karta ma gotowy prompt do wklejenia i zrzut ekranu wyniku, a gotowe rozwiązania czekają w `rozwiazania/`, gdy coś nie zadziała.
+
+![Karta 08: masa Solna jako model 3D w przeglądarce, z suwakami bryły i elewacji oraz tabelą wskaźników planu](karty/zrzuty/08-pokaz.png)
+*Wynik karty 08: bryła, elewacja i kontrola planu w jednym pliku HTML (`rozwiazania/08_pokaz.html`), napisanym przez zespół agentów.*
+
+> [!TIP]
+> **Prezentacja z warsztatu** leży w folderze [`prezentacja/`](prezentacja/): [PDF do przejrzenia w przeglądarce](prezentacja/warsztat-kielce-2026.pdf) oraz [plik PowerPoint](prezentacja/warsztat-kielce-2026.pptx). 16 slajdów prowadzi przez cały warsztat, od tekstu uchwały po model 3D, ze zrzutem ekranu każdego etapu.
+
+<a href="prezentacja/warsztat-kielce-2026.pdf"><img src="prezentacja/podglad.png" width="640" alt="Slajd z prezentacji: od tekstu uchwały do werdyktu OK albo NIE"></a>
+
+## O warsztacie
+
+Warsztat odbył się w Kielcach, w sobotę 26 września 2026 roku, na konferencji IARP "AI - inteligencja sztuczna, ale rewolucja prawdziwa". Efektem warsztatu jest sprawdzacz zgodności z miejscowym planem zagospodarowania przestrzennego (MPZP), napisany przez agenta AI na podstawie tekstu planu dla prawdziwej jednostki terenowej w Kielcach, oraz te same reguły sprawdzone na parametrycznej bryle w Rhino.
 
 ## Co tu jest
 
-Repozytorium ma siedem folderów, każdy z jednym zadaniem.
+Repozytorium ma osiem folderów, każdy z jednym zadaniem.
 
 | Folder | Co zawiera |
 |---|---|
+| `prezentacja/` | slajdy z warsztatu: PDF do przejrzenia w przeglądarce i plik PowerPoint |
 | `dane/` | pełny tekst uchwały planu (34 strony) w pliku tekstowym, pusty szablon `plan-szablon.json` do wypełnienia przez agenta oraz fikcyjna inwestycja "Solna" w pliku JSON |
-| `karty/` | dziewięć kart ćwiczeniowych, karty statusu na biurko oraz karta 08, pokaz w przeglądarce dla chętnych po warsztacie |
+| `karty/` | dziewięć kart ćwiczeniowych, karty statusu na biurko oraz karta 08, pokaz w przeglądarce dla chętnych po warsztacie; zrzuty ekranu wyników kart leżą w `karty/zrzuty/` |
 | `rozwiazania/` | gotowe skrypty referencyjne do porównania z własnym wynikiem |
 | `narzedzia/` | generator komponentów Grasshoppera oraz narzędzia prowadzącego |
 | `przyklady/` | dwa przykłady zaawansowane do kart 06 i 07 (bryła z atraktorem, elewacja z wyborem wzoru i otworami) z gotowymi plikami `.ghcomp.xml` |
@@ -86,9 +109,9 @@ python narzedzia/gh_params_gen.py moje/moj_komponent.py --clipboard
 - niepublikowanych rysunków,
 - wartości kontraktów.
 
-## W poniedziałek
+## W wolnym czasie
 
-Po powrocie do biura przenieś ćwiczenie na prawdziwy plan w czterech krokach.
+Ćwiczenie przeniesiesz na własny, prawdziwy plan w czterech krokach.
 
 1. Podmień treść pliku `dane/uchwala-XLI-1014-2009.md` na pełny tekst własnego planu i dostosuj w prompcie karty 00 numer uchwały, liczbę stron, symbol terenu oraz zdania o § 4, o sześciu terenach U,M i o zasadzie schodkowej.
 2. Uruchom ponownie kartę 00.

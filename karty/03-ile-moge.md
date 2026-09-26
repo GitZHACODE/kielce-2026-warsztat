@@ -5,6 +5,9 @@
 Na koniec masz skrypt, który zamienia każde NIE z karty 01 na konkretną liczbę: o ile zmniejszyć rzut, ile metrów zieleni dodać, ile miejsc przenieść pod ziemię.
 To jest różnica między "projekt nie przechodzi" a gotową listą zmian dla zespołu projektowego.
 
+![Lista najmniejszych zmian projektu dla każdego wskaźnika w terminalu VS Code](zrzuty/03-ile-moge.png)
+*Wynik skryptu wzorcowego `rozwiazania/03_ile_moge.py`: przy każdym NIE konkretna zmiana w metrach kwadratowych albo w liczbie miejsc postojowych.*
+
 ## Zanim zaczniesz
 - Miej otwarty i uruchomiony moje/sprawdz_mpzp.py z karty 01 - potrzebujesz tych samych definicji i tych samych sześciu wyników jako punktu wyjścia.
 - Maksymalny rzut zabudowy liczy się z powierzchnia_zabudowy_max_pct w moje/plan.json i dzialka_m2 w dane/inwestycja.json.

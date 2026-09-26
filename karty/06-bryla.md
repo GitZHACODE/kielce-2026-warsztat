@@ -5,6 +5,9 @@
 Na koniec masz komponent Grasshoppera, który zamienia prostokątne obrysy kondygnacji w jedną gładką, skręconą i zaokrągloną bryłę sterowaną suwakami, tnie ją z powrotem na płyty kondygnacji i przekazuje te płyty do kontroli z karty 05, tak że kolory zgodności zmieniają się razem z suwakami.
 To jest forma, nad którą pracownia siedziałaby ręcznie cały dzień.
 
+![Skręcona i wybrzuszona bryła Solna w Rhino 8 z obrysami nowych kondygnacji](zrzuty/06-bryla.png)
+*Komponent wzorcowy `rozwiazania/06_bryla_gh.py` w Rhino 8 przy `skret_deg` 25, `wybrzuszenie` 0.15 i `zaokraglenie` 0.6. Czerwone obrysy to nowe płyty kondygnacji, sprawdzone komponentem z karty 05.*
+
 ## Zanim zaczniesz
 - Uruchom rozwiazania/05_szkic_bryly_rhino.py (jak: karta 05, sekcja "Jak uruchomić komponent w Grasshopperze", punkt 2) w Rhino 8, żeby mieć w scenie masę z warstwy Kondygnacje; sam komponent pokaże bryłę także bez tego, na masie wbudowanej w skrypt.
 - Podłącz warstwę Kondygnacje do parametru Curve ustawionego na listę (list) - to wejście kondygnacje.

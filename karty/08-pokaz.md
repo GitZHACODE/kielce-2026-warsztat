@@ -5,6 +5,9 @@
 Na koniec masz jeden plik HTML, który po dwukliku pokazuje masę Solna jako model 3D w przeglądarce: suwaki bryły z karty 06, elewacja z karty 07, kontrola planu z karty 05 i raport, wszystko w jednym oknie, z presetami, linkiem do udostępnienia i eksportem PNG.
 Prompt uruchamia zespół agentów: jeden planuje, kolejni implementują zadania, inni je sprawdzają, a na końcu osobny agent próbuje rozwiązanie zepsuć.
 
+![Pokaz w przeglądarce: model 3D masy Solna, suwaki i tabela wskaźników](zrzuty/08-pokaz.png)
+*`rozwiazania/08_pokaz.html` zaraz po otwarciu w przeglądarce: bryła, elewacja, kontrola planu i raport w jednym oknie.*
+
 ## Zanim zaczniesz
 - Przeczytaj karty 05, 06 i 07 oraz `przyklady/README.md`: pokaz przenosi do przeglądarki oba przykłady zaawansowane i kontrolę z karty 05.
 - Miej zainstalowany node (test `node rozwiazania/08_test.js`) i połączenie z internetem: three.js ładuje się z CDN przy każdym otwarciu pliku.

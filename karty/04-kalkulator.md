@@ -5,6 +5,9 @@
 Na koniec masz jeden plik HTML, który otwierasz podwójnym kliknięciem i od razu widzisz tę samą tabelę sześciu wskaźników, przeliczaną na żywo przy każdej zmianie liczby w formularzu.
 To narzędzie możesz pokazać klientowi na spotkaniu bez instalowania czegokolwiek.
 
+![Kalkulator w przeglądarce z formularzem i tabelą wyników](zrzuty/04-kalkulator.png)
+*Kalkulator wzorcowy `rozwiazania/04_kalkulator.html` po wczytaniu plików `dane/inwestycja.json` i `rozwiazania/plan.json`.*
+
 ## Zanim zaczniesz
 - Miej otwarty moje/sprawdz_mpzp.py z karty 01 - logika liczenia ma być ta sama, tylko przeniesiona do przeglądarki.
 - Miej otwarte moje/plan.json i dane/inwestycja.json - stamtąd biorą się wartości domyślne w formularzu.

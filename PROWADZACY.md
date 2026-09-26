@@ -22,7 +22,7 @@ Blok trwa 90 minut i dzieli się na dwie rundy pracy samodzielnej.
 | 0:52 | 6 | Pokaz 2: karta 05 (płyty czerwone), karta 06 (suwaki zmieniają wynik kontroli), karta 07 (elewacja) |
 | 0:58 | 18 | Samodzielnie 2: z Rhino karty 05, 06, 07; bez Rhino karty 02 do 04 i 99; jedna karta na blok |
 | 1:16 | 5 | Omówienie 2 i pytania |
-| 1:21 | 4 | Plan na poniedziałek: podmień uchwałę, uruchom kartę 00, potem 01 |
+| 1:21 | 4 | W wolnym czasie: podmień uchwałę, uruchom kartę 00, potem 01 |
 | 1:25 | 5 | Rezerwa |
 
 ## Pokaz 1 - scenariusz błędu

@@ -5,6 +5,9 @@
 Na koniec masz skrypt, który sprawdza budynek kondygnacja po kondygnacji według schodkowej zasady wysokości z planu - to jest reguła, którą projektanci najczęściej łamią, bo cofnięcie trzeba liczyć osobno od dwóch różnych granic.
 Widzisz, która konkretnie kondygnacja psuje wynik, zamiast jednej zbiorczej odpowiedzi NIE.
 
+![Tabela kondygnacji z wynikiem reguły schodkowej w terminalu VS Code](zrzuty/02-wysokosc-schodkowa.png)
+*Wynik skryptu wzorcowego `rozwiazania/02_wysokosc_schodkowa.py`: kondygnacja 5 ma cofnięcie od ulicy Solnej 1.2 m zamiast wymaganych 1.5 m.*
+
 ## Zanim zaczniesz
 - Reguła schodkowa jest w uchwale (dane/uchwala-XLI-1014-2009.md) w § 20 ust. 2 pkt 7 lit. e-f (i w moje/plan.json -> wskazniki.wysokosc).
 - W dane/inwestycja.json każda kondygnacja ma pola cofniecie_od_KDP1_m i cofniecie_od_Solnej_m.

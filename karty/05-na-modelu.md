@@ -5,6 +5,9 @@
 Na koniec masz komponent Grasshoppera, który liczy te same sześć wskaźników wprost z krzywych 3D i koloruje każdą płytę kondygnacji na zielono albo czerwono.
 Kontrola planu siedzi wtedy w tej samej bryle, którą już modelujesz, bez przepisywania liczb do osobnego arkusza.
 
+![Płyty kondygnacji masy Solna w Rhino 8, pokolorowane wynikiem kontroli](zrzuty/05-na-modelu.png)
+*Komponent wzorcowy `rozwiazania/05_sprawdz_mpzp_gh.py` w Rhino 8, bez podłączonych wejść, na masie Solna wbudowanej w skrypt. Wszystkie płyty są czerwone, bo trzy wskaźniki mają NIE; na potrzeby zrzutu płyty są pogrubione.*
+
 ## Zanim zaczniesz
 - Otwórz Rhino 8 i Grasshopper z modelem Solna.
 - Dodaj pusty komponent Python 3 Script i podłącz dziewięć wejść z promptu: dzialka, zabudowa, kondygnacje, pbc_grunt, pbc_tarasy, mieszkania, miejsca_podziemne, miejsca_naziemne, plan_json.
