@@ -27,8 +27,29 @@ Każde zdanie promptu ma jedno zadanie i zamyka jedną drogę na skróty; poniż
 Write moje/ile_moge.py. Using the same data and definitions as moje/sprawdz_mpzp.py, reading moje/plan.json (or rozwiazania/plan.json if it does not exist) and dane/inwestycja.json, for every indicator that fails print the smallest change that would make it pass: the maximum footprint in m2, how many m2 of native ground or of green terrace (remember the 50% rule) are missing, how many underground parking spaces are missing and what to do with the surface spaces. Also print how much floor area is still available under the intensity limit (above-ground storeys only, as in the plan's own definition). Run it.
 ```
 
+## Jak uruchomić skrypt
+
+Ten skrypt uruchamiasz obok sprawdzacza z karty 01 i czytasz oba wyniki razem; poniżej każde kliknięcie po kolei.
+
+1. W lewej kolumnie VS Code rozwiń folder `moje` i sprawdź, że leży w nim plik `ile_moge.py`. Nie ma go? Napisz agentowi: "zapisz skrypt do pliku moje/ile_moge.py".
+2. Na górnej belce VS Code otwórz menu `Terminal`, wybierz `New Terminal` (menu VS Code są po angielsku) i sprawdź, że linia na dole kończy się nazwą `kielce-2026-warsztat`.
+3. Wpisz polecenie i naciśnij Enter:
+
+```
+python moje/ile_moge.py
+```
+
+4. Lista brakujących metrów i miejsc postojowych wypisuje się tuż pod poleceniem.
+5. Dla porównania uruchom zaraz potem sprawdzacz z karty 01 - te same wskaźniki mają dać te same wartości:
+
+```
+python moje/sprawdz_mpzp.py
+```
+
+6. Komunikat `python: The term 'python' is not recognized`? Wpisz to samo polecenie ze skrótem `py` zamiast `python`.
+7. Zamiast polskich liter widzisz krzaki? Wpisz raz `chcp 65001`, naciśnij Enter i powtórz polecenie z punktu 3.
+
 ## Sprawdź
-- Uruchom: `python moje/ile_moge.py`.
 - powierzchnia zabudowy: maksymalny dopuszczalny rzut to 925 m2.
 - PBC: brakuje 20 m2 gruntu rodzimego, albo 40 m2 dodatkowego tarasu zielonego (bo liczy się tylko 50 % tarasu).
 - parking: brakuje 3 miejsc podziemnych.

@@ -14,7 +14,7 @@ Zanim wpiszesz cokolwiek do Copilota, zapisz na kartce trzy rzeczy:
 Wpisując pola promptu, trzymaj się zasad z README, sekcja "Czego nie wklejać do promptu": bez nazw klientów i biur, bez prawdziwych numerów działek, bez wartości kontraktów i bez niepublikowanych rysunków.
 
 Jeśli twój problem dotyczy geometrii w Rhino albo Grasshopperze, masz gdzie sięgnąć po wzór:
-- karta 06 pokazuje, jak opisać wejścia i wyjścia komponentu, a README, sekcja "Jak uruchomić gotowy skrypt", pokazuje, jak go wkleić.
+- karta 06 pokazuje, jak opisać wejścia i wyjścia komponentu, a jej sekcja "Jak uruchomić komponent w Grasshopperze" pokazuje, jak go wkleić na kanwę.
 
 ## Prompt krok po kroku
 Każde pole w nawiasach ostrych to jedna decyzja, którą podejmujesz przed wpisaniem promptu; poniżej pola w kolejności, w jakiej je wypełniasz.
@@ -31,6 +31,23 @@ Każde pole w nawiasach ostrych to jedna decyzja, którą podejmujesz przed wpis
 ```text
 I want a script that <what it does, one sentence>. Inputs: <files or numbers and where they live>. Output: <file, table or drawing>. Correct means: <the rule or the check, with its source>. Example: for <this input> the result must be <this>. Use Python 3.9 standard library only, write it to moje/<name>.py, run it and show me the result.
 ```
+
+## Jak uruchomić swój skrypt
+
+Skrypt jest twój i nazwę pliku wybrałeś sam, więc w poleceniu podstawiasz własną nazwę; reszta kroków jest ta sama co na karcie 01.
+
+1. W lewej kolumnie VS Code rozwiń folder `moje` i odczytaj dokładną nazwę pliku, który zapisał agent.
+2. Na górnej belce VS Code otwórz menu `Terminal`, wybierz `New Terminal` (menu VS Code są po angielsku) i sprawdź, że linia na dole kończy się nazwą `kielce-2026-warsztat`.
+3. Wpisz polecenie z własną nazwą pliku zamiast `twoja_nazwa` i naciśnij Enter:
+
+```
+python moje/twoja_nazwa.py
+```
+
+4. Wynik wypisuje się tuż pod poleceniem. Porównaj go z przykładem, który sam policzyłeś przed wpisaniem promptu.
+5. Komunikat `python: The term 'python' is not recognized`? Wpisz to samo polecenie ze skrótem `py` zamiast `python`.
+6. Zamiast polskich liter widzisz krzaki? Wpisz raz `chcp 65001`, naciśnij Enter i powtórz polecenie z punktu 3.
+7. Kolejne uruchomienie po poprawce agenta: kliknij w terminal, naciśnij strzałkę w górę i Enter.
 
 ## Sprawdź
 - wynik pasuje do tego, co sam wpisałeś w polu "Correct means", nawet jeśli agent proponuje coś, co wygląda rozsądniej.

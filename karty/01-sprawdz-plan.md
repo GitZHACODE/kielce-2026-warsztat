@@ -29,8 +29,32 @@ Każde zdanie promptu ma jedno zadanie i zamyka jedną drogę na skróty; poniż
 Read moje/plan.json (if it does not exist, read rozwiazania/plan.json instead) and dane/inwestycja.json. Write moje/sprawdz_mpzp.py in Python 3.9 using only the standard library. It must check the proposal against the plan's indicators, in this order: building coverage (powierzchnia zabudowy), intensity (intensywnosc - use the plan's own definition given in plan.json under "definicje": above-ground storeys only), biologically active area (PBC - apply the plan's rule: 50% of each green terrace or roof of at least 10 m2, smaller ones do not count), height (highest storey top in metres and number of above-ground storeys against the plan's maximum), roof slope, and parking (minimum spaces per flat; the plan allows underground spaces only, so any surface space is a failure). Print a table with the columns: Wskaźnik, Wartość, Limit, Wynik (OK or NIE), Margines. Exit with code 1 if any row is NIE. Then run it and show me the table.
 ```
 
+## Jak uruchomić skrypt
+
+Agent zwykle uruchamia skrypt sam i wkleja tabelę do czatu. Poniższe kroki uruchamiają go jeszcze raz twoimi rękami - dokładnie tak będziesz go uruchamiał w biurze, bez agenta.
+
+1. W lewej kolumnie VS Code rozwiń folder `moje` i sprawdź, że leży w nim plik `sprawdz_mpzp.py`. Nie ma go? Napisz agentowi: "zapisz skrypt do pliku moje/sprawdz_mpzp.py".
+2. Na górnej belce VS Code otwórz menu `Terminal` i wybierz `New Terminal` (menu VS Code są po angielsku). Na dole okna otwiera się panel z jedną linią tekstu zakończoną znakiem zachęty.
+3. Sprawdź, że ta linia kończy się nazwą `kielce-2026-warsztat`. Jeśli kończy się inną nazwą, otwórz `File` > `Open Folder` i wskaż folder repozytorium, a potem otwórz terminal jeszcze raz.
+4. Wpisz polecenie i naciśnij Enter:
+
+```
+python moje/sprawdz_mpzp.py
+```
+
+5. Tabela sześciu wskaźników wypisuje się w terminalu, tuż pod poleceniem.
+6. Wpisz drugie polecenie i naciśnij Enter - wypisze kod wyjścia skryptu, czyli 0 albo 1:
+
+```
+echo $LASTEXITCODE
+```
+
+7. Komunikat `python: The term 'python' is not recognized`? Wpisz to samo polecenie ze skrótem `py` zamiast `python`. Jeśli i to nie działa, brakuje Pythona - instalacja jest opisana w README, sekcja "Wymagania".
+8. Zamiast polskich liter widzisz krzaki? Wpisz raz `chcp 65001`, naciśnij Enter i powtórz polecenie z punktu 4; plik jest poprawny, to ustawienie terminala.
+9. Kolejne uruchomienie: kliknij w terminal, naciśnij strzałkę w górę - wraca ostatnie polecenie - i naciśnij Enter.
+
 ## Sprawdź
-- Uruchom: `python moje/sprawdz_mpzp.py`, a potem `echo $LASTEXITCODE` - oczekiwana wartość to 1.
+- Kod wyjścia, czyli wynik polecenia `echo $LASTEXITCODE` z punktu 6 powyżej: oczekiwana wartość to 1.
 - powierzchnia zabudowy: wartość 52.0 %, wynik NIE (limit 50 %).
 - intensywność: wartość 2.90, wynik OK; wynik 3.65 oznacza, że agent wliczył garaż podziemny do Po.
 - PBC: wartość 8.9 %, wynik NIE (limit 10 %); wynik 11.8 % oznacza, że agent policzył całe tarasy i doliczył taras 8 m2, który jest mniejszy niż próg 10 m2.

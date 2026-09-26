@@ -37,6 +37,8 @@ git clone https://github.com/GitZHACODE/kielce-2026-warsztat.git
 
 ## Jak uruchomić gotowy skrypt
 
+Każda karta ma własny rozdział o uruchomieniu swojego wyniku, rozpisany na kliknięcia i na nazwę pliku z tej karty; poniższe cztery punkty są skrótem dla kogoś, kto szuka samego polecenia.
+
 1. Plik Python z terminala VS Code: otwórz Terminal, New Terminal, uruchom skrypt, a kod wyjścia odczytaj zaraz po nim.
 
 ```

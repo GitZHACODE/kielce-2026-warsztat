@@ -31,9 +31,28 @@ Każde zdanie promptu ma jedno zadanie i zamyka jedną drogę na skróty; poniż
 Build moje/08_pokaz.html: one HTML file that shows the Solna massing from rozwiazania/05_szkic_bryly_rhino.py as a three.js model (three@0.186.1 through a jsdelivr import map, nothing else external) and re-implements in JavaScript the geometry of przyklady/bryla_zaawansowana_gh.py and przyklady/elewacja_zaawansowana_gh.py plus the six-row check of rozwiazania/05_sprawdz_mpzp_gh.py, with every slider and number input of those components as a live control, the geometry inputs replaced by the built-in massing, roof slope and the PBC areas added as plain form fields, and the storey plates coloured by the verdict. Dark showcase interface with a light toggle, Polish with an English switch, a side panel with tabs Bryła, Elewacja and Plan and collapsible sections inside them, the six-row table collapsible to six result chips beside a ZGODNE / NIEZGODNE verdict, a collapsible report, both starting collapsed below 1000 px of viewport height, presets (sketch, cards 06 and 07, advanced, tower), a ghost of the original massing, turntable, sun sweep, state in the URL hash and PNG export. The sketch preset must reproduce card 01's table exactly, so keep a rounded rectangle with zaokraglenie 0 as the exact polygon. Keep the pure geometry between "// --- GEOMETRIA ---" and "// --- KONIEC GEOMETRII ---" with no imports and no DOM, so node rozwiazania/08_test.js moje/08_pokaz.html can run it against rozwiazania/08_wzorzec.json, the reference numbers captured from the Python components in Rhino. Work as subagent-driven development: write a short spec and a task plan first, dispatch one implementer subagent per task and a reviewer after each, gate every task on that test printing SELFTEST OK, and finish with one adversarial review of the whole file against the Python components, followed by the fixes it asks for. Follow AGENTS.md.
 ```
 
+## Jak uruchomić pokaz
+
+Pokaz sprawdzasz dwa razy: najpierw testem w terminalu, potem oczami w przeglądarce; poniżej każde kliknięcie po kolei.
+
+1. Na górnej belce VS Code otwórz menu `Terminal`, wybierz `New Terminal` (menu VS Code są po angielsku) i sprawdź, że linia na dole kończy się nazwą `kielce-2026-warsztat`.
+2. Wpisz polecenie testu i naciśnij Enter - ma wypisać `SELFTEST OK`:
+
+```
+node rozwiazania/08_test.js moje/08_pokaz.html
+```
+
+3. Komunikat `node: The term 'node' is not recognized`? Brakuje node - pobierz go ze strony nodejs.org, instalator LTS dla bieżącego użytkownika, i otwórz terminal na nowo. Sam pokaz otworzy się i bez node, tylko bez testu liczb.
+4. Test pokazuje asercję, która nie przeszła? Skopiuj jej treść do czatu i poproś agenta o poprawkę; tolerancje siedzą w `rozwiazania/08_wzorzec.json`.
+5. W lewej kolumnie VS Code rozwiń folder `moje`, kliknij `08_pokaz.html` prawym przyciskiem i wybierz `Reveal in File Explorer` (skrót Shift+Alt+R).
+6. W oknie Eksploratora Windows kliknij plik dwukrotnie - otwiera się w przeglądarce. Włącz internet przed otwarciem: bibliotekę three.js strona pobiera z sieci przy każdym uruchomieniu.
+7. Scena jest pusta? Naciśnij F12, przejdź na zakładkę `Console` i przeczytaj pierwszy czerwony komunikat - błąd o `three` oznacza brak internetu albo zmieniony adres biblioteki.
+8. Panel po prawej ma trzy zakładki: `Bryła`, `Elewacja` i `Plan`. Presety wybierasz z listy u góry panelu, a zwinięte sekcje rozwijasz kliknięciem w ich nagłówek.
+9. Po każdej poprawce agenta wróć do okna przeglądarki i naciśnij F5.
+
 ## Sprawdź
-- Uruchom: `node rozwiazania/08_test.js moje/08_pokaz.html` - wypisuje `SELFTEST OK`; to samo polecenie bez argumentu sprawdza rozwiązanie wzorcowe.
-- Otwórz `moje/08_pokaz.html` dwuklikiem (rozwiązanie wzorcowe: `rozwiazania/08_pokaz.html`); preset "Szkic Solna" pokazuje tabelę z karty 01: powierzchnia zabudowy 52.0 % NIE, intensywność 2.90 OK, PBC 8.9 % NIE, wysokość 20.6 m / 6 kond. OK, dach 5° OK, parking NIE. Na ekranie niższym niż 1000 px (projektor 768 px, laptop 900 px) tabela i raport startują zwinięte: sześć chipów z wynikami i werdykt zostają widoczne, kliknięcie w chipy rozwija tabelę.
+- Test z punktu 2 sekcji "Jak uruchomić pokaz" wypisuje `SELFTEST OK`; to samo polecenie bez nazwy pliku sprawdza rozwiązanie wzorcowe.
+- Po otwarciu pokazu w przeglądarce (punkty 5 i 6 powyżej; rozwiązanie wzorcowe: `rozwiazania/08_pokaz.html`) preset "Szkic Solna" pokazuje tabelę z karty 01: powierzchnia zabudowy 52.0 % NIE, intensywność 2.90 OK, PBC 8.9 % NIE, wysokość 20.6 m / 6 kond. OK, dach 5° OK, parking NIE. Na ekranie niższym niż 1000 px (projektor 768 px, laptop 900 px) tabela i raport startują zwinięte: sześć chipów z wynikami i werdykt zostają widoczne, kliknięcie w chipy rozwija tabelę.
 - Z presetu "Szkic Solna" zmniejsz `zwezenie` do 0.6, a na zakładce Plan ustaw `pbc_grunt_m2` na 200, `miejsca_naziemne` na 0 i `miejsca_podziemne` na 30 - wszystkie sześć wierszy przechodzi, werdykt zmienia się na ZGODNE, a płyty i pierścienie kondygnacji robią się zielone. Przesuń potem `wybrzuszenie` na 0.3 - wiersz powierzchni zabudowy wraca na NIE i kolor wraca na czerwony.
 - Naciśnij przycisk słońca - azymut obiega 360°, a panele elewacji zmieniają głębokość i kolor.
 - Skopiuj link i otwórz go w nowej karcie - te same suwaki i ta sama tabela; widok kamery nie jest częścią linku.

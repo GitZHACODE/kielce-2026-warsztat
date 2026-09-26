@@ -28,8 +28,25 @@ Każde zdanie promptu ma jedno zadanie i zamyka jedną drogę na skróty; poniż
 Extend moje/sprawdz_mpzp.py, or write moje/wysokosc_schodkowa.py, with the plan's stepped height rule from moje/plan.json (or rozwiazania/plan.json if it does not exist) -> wskazniki.wysokosc: count only storeys with nadziemna true (the underground garage is outside this rule and does not count toward maksymalna_kondygnacje); storeys 1 to podstawowa_kondygnacje must have their top at or below podstawowa_m; any storey above that height or above podstawowa_kondygnacje must be set back at least cofniecie_kondygnacji_powyzej_podstawowej_min_m from both KDP-1 and Solna (fields cofniecie_od_KDP1_m and cofniecie_od_Solnej_m in inwestycja.json); the whole building must stay within maksymalna_m and maksymalna_kondygnacje. Print one row per storey with OK or NIE and the reason, plus one summary row for the whole building. Run it.
 ```
 
+## Jak uruchomić skrypt
+
+Agent uruchamia skrypt sam, ale wynik i tak czytasz w terminalu; poniżej każde kliknięcie po kolei.
+
+1. W lewej kolumnie VS Code rozwiń folder `moje` i sprawdź, który plik powstał: `wysokosc_schodkowa.py`, czy rozszerzony `sprawdz_mpzp.py`. Nazwa pliku wchodzi do polecenia z punktu 3.
+2. Na górnej belce VS Code otwórz menu `Terminal`, wybierz `New Terminal` (menu VS Code są po angielsku) i sprawdź, że linia na dole kończy się nazwą `kielce-2026-warsztat`.
+3. Wpisz polecenie z nazwą swojego pliku i naciśnij Enter:
+
+```
+python moje/wysokosc_schodkowa.py
+```
+
+4. Tabela z jednym wierszem na kondygnację wypisuje się tuż pod poleceniem.
+5. Komunikat `python: The term 'python' is not recognized`? Wpisz to samo polecenie ze skrótem `py` zamiast `python`.
+6. Zamiast polskich liter widzisz krzaki? Wpisz raz `chcp 65001`, naciśnij Enter i powtórz polecenie z punktu 3.
+7. Kolejne uruchomienie: kliknij w terminal, naciśnij strzałkę w górę i Enter.
+
 ## Sprawdź
-- Uruchom: `python moje/wysokosc_schodkowa.py` (albo `python moje/sprawdz_mpzp.py`, jeśli agent rozszerzył ten plik).
+- Skrypt uruchamiasz według sekcji "Jak uruchomić skrypt" powyżej, pod nazwą pliku, który zapisał agent.
 - kondygnacja 5: wynik NIE - cofnięcie od Solnej to 1.2 m, a wymagane minimum to 1.5 m.
 - kondygnacja 6 i kondygnacje 1-4: wynik OK.
 - pułapka: cofnięcie od KDP-1 na kondygnacji 5 wynosi akurat 1.5 m i samo w sobie przechodzi - błąd jest tylko po stronie Solnej, obu granic nie wolno sprawdzać łącznie jedną liczbą.

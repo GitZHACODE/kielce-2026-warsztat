@@ -31,8 +31,20 @@ Każde zdanie promptu ma jedno zadanie i zamyka jedną drogę na skróty; poniż
 Read dane/uchwala-XLI-1014-2009.md, the full text of the Kielce local plan (uchwała XLI/1014/2009, 34 pages), and dane/plan-szablon.json, an empty template. Find the detailed provisions for terrain unit U,M 2 (the plan has six U,M units whose opening sentences are identical, so check the symbol at the end of the sentence), the plan's own definitions in its paragraph 4, and follow the cross-reference in the U,M 2 parking rule to the general provisions to find the minimum number of spaces per flat. Write moje/plan.json by filling every field of the template with values taken only from the plan text, never from general knowledge; dane/uchwala-XLI-1014-2009.md is the only source of values, so do not take them from dane/README.md, from the Copilot instructions or from the rozwiazania folder. Numbers stay numbers and booleans stay booleans. In "definicje" quote the plan's own wording for intensity, biologically active area and building height in Polish, shortened but not paraphrased from memory; for powierzchnia zabudowy write that the plan does not define it and that upzp art. 2 pkt 35 applies. Encode the stepped height rule as the base cap (metres and storeys) and the higher cap allowed with the setback. Fill "zrodla_paragrafy" with the exact paragraph, ustęp, punkt and litera each group of values comes from. Do not open the rozwiazania folder. Print the finished file.
 ```
 
+## Jak obejrzeć wynik
+
+Agent zapisuje plik sam, ale to ty musisz go otworzyć i porównać z wzorcem; poniżej każde kliknięcie po kolei.
+
+1. W lewej kolumnie VS Code (Explorer, pierwsza ikona na bocznym pasku) rozwiń folder `moje` i sprawdź, że leży w nim plik `plan.json`.
+2. Nie ma pliku? Napisz agentowi w czacie jedno zdanie: "zapisz wynik do pliku moje/plan.json" - agent w trybie Agent zapisuje pliki sam, w trybie Ask tylko wypisuje tekst w czacie.
+3. Kliknij `moje/plan.json` raz - plik otwiera się w edytorze po prawej. Przewiń go w całości.
+4. Kliknij `moje/plan.json`, potem przytrzymaj Ctrl i kliknij `rozwiazania/plan.json` - oba pliki są teraz podświetlone.
+5. Kliknij prawym przyciskiem na jednym z nich i wybierz `Compare Selected` (menu VS Code są po angielsku).
+6. Otwiera się widok dwóch kolumn: po lewej twój plik, po prawej wzorcowy, różnice na kolorowym tle. Przewiń go i porównaj z listą liczb z sekcji "Sprawdź" poniżej.
+7. Widok porównania zamykasz krzyżykiem na zakładce albo skrótem Ctrl+W; pliki zostają na dysku.
+
 ## Sprawdź
-- Porównaj: zaznacz moje/plan.json i rozwiazania/plan.json w Eksploratorze VS Code, prawy przycisk, "Compare Selected".
+- Porównanie z wzorcem otwierasz według punktów 4 i 5 sekcji "Jak obejrzeć wynik" powyżej.
 - Liczby, które muszą się zgadzać: 50, 3.5, 10, 14.0 i 4, 21.0 i 6, 1.5, 25, 1, `tylko_podziemny: true`; pola tekstowe (plan, przeznaczenie, definicje, zrodla_paragrafy) mogą różnić się brzmieniem, o ile wskazują te same paragrafy.
 - zrodla_paragrafy muszą wskazywać § 20 ust. 2 pkt 6 i 7, § 15 ust. 1 pkt 3 oraz § 4 pkt 17, 29 i 30; § 19 albo § 21 w tym polu oznacza, że agent wziął sąsiedni teren U,M 1 albo U,M 3.
 - Trzy pułapki: sąsiedni teren U,M o identycznym pierwszym zdaniu, maksymalna_kondygnacje odczytane jako 5 z lit. g zamiast 4 + 2 z lit. f, oraz podstawa 14.0 m zgubiona, gdy agent zakoduje tylko wysokość maksymalną 21.0 m.
